@@ -2,6 +2,7 @@ import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import { FontAwesome6 } from '@expo/vector-icons'
 import { Octicons } from '@expo/vector-icons'
 import { Colors } from '../constants/colors'
+import IconButton from './IconButton'
 
 function Header() {
 	return (
@@ -16,15 +17,9 @@ function Header() {
 				</View>
 			</View>
 			<View style={styles.iconsContainer}>
-				<Pressable style={({ pressed }) => [styles.iconContainer, pressed ? styles.iconContainerPressed : null]}>
-					<FontAwesome6 name="comment" color={Colors.white} size={20} />
-				</Pressable>
-				<Pressable style={({ pressed }) => [styles.iconContainer, pressed ? styles.iconContainerPressed : null]}>
-					<FontAwesome6 name="bell" color={Colors.white} size={20} />
-				</Pressable>
-				<Pressable style={({ pressed }) => [styles.iconContainer, pressed ? styles.iconContainerPressed : null]}>
-					<Octicons name="sign-out" color={Colors.white} size={20} />
-				</Pressable>
+				<IconButton iconName="comment" color={Colors.white} size={20} onPress={() => {}} iconType='FontAwesome6' />
+				<IconButton iconName="bell" color={Colors.white} size={20} onPress={() => {}} iconType='FontAwesome6' />
+				<IconButton iconName="sign-out" color={Colors.white} size={20} onPress={() => {}} iconType='Octicons' />
 			</View>
 		</View>
 	)
@@ -72,16 +67,6 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		gap: 5,
 		alignItems: 'center',
-	},
-	iconContainer: {
-		padding: 6,
-		borderWidth: 1,
-		borderColor: 'transparent',
-	},
-	iconContainerPressed: {
-		borderRadius: 10,
-		// padding: 5,
-		borderColor: Colors.primary67,
 	},
     flexRow: {
         flexDirection: 'row',
