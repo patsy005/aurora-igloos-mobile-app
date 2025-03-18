@@ -12,13 +12,15 @@ import EmployeesScreen from './screens/employees/EmployeesScreen'
 import CustomersScreen from './screens/customers/CustomersScreen'
 import DiscountsScreen from './screens/discounts/DiscountsScreen'
 import ForumScreen from './screens/forum/ForumScreen'
-import BookingItemScreen from './screens/bookings/BookingItemScreen'
+import BookingDetailsScreen from './screens/bookings/BookingDetailsScreen'
 import IglooItemScreen from './screens/igloos/IglooItemScreen'
 import EmployeeItemScreen from './screens/employees/EmployeeItemScreen'
 import CustomerItemScreen from './screens/customers/CustomerItemScreen'
 import DiscountItemScreen from './screens/discounts/DiscountItemScreen'
 import { Colors } from './constants/colors'
 import Header from './components/Header'
+import { ScrollView } from 'react-native'
+import IconButton from './components/IconButton'
 
 const Stack = createNativeStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -34,7 +36,6 @@ function DrawerNavigation({ navigation }) {
 					backgroundColor: Colors.primary13,
 					width: '100%',
 					borderTopRightRadius: 0,
-					
 				},
 				drawerLabelStyle: {
 					color: Colors.white,
@@ -42,7 +43,7 @@ function DrawerNavigation({ navigation }) {
 				drawerActiveBackgroundColor: Colors.primary6,
 				drawerActiveTintColor: Colors.white,
 				drawerInactiveTintColor: Colors.white,
-				drawerType: 'slide'
+				drawerType: 'slide',
 			}}>
 			<Drawer.Screen
 				name="Home"
@@ -56,6 +57,9 @@ function DrawerNavigation({ navigation }) {
 				component={BookingsScreen}
 				options={{
 					drawerIcon: ({ color, size }) => <Ionicons name="calendar-outline" size={size} color={color} />,
+					// headerRight: ({ tintColor }) => (
+					// 	<IconButton iconName="calendar-plus" size={24} color={tintColor} onPress={() => {}} iconType="FontAwesome6" />
+					// ),
 				}}
 			/>
 			<Drawer.Screen
@@ -102,7 +106,7 @@ export default function App() {
 		<>
 			<StatusBar style="light" />
 			<NavigationContainer>
-					<Header />
+				<Header />
 				<Stack.Navigator>
 					<Stack.Screen
 						name="DrawerNavigation"
@@ -111,7 +115,11 @@ export default function App() {
 							headerShown: false,
 						}}
 					/>
-					<Stack.Screen name="BookingItem" component={BookingItemScreen} />
+					<Stack.Screen name="BookingDetails" component={BookingDetailsScreen} options={{
+						headerStyle: { backgroundColor: Colors.primary13 },
+						headerTintColor: Colors.white,
+						headerTitle: 'Booking details',
+					}} />
 					<Stack.Screen name="IglooItem" component={IglooItemScreen} />
 					<Stack.Screen name="EmployeeItem" component={EmployeeItemScreen} />
 					<Stack.Screen name="CustomerItem" component={CustomerItemScreen} />

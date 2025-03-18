@@ -717,3 +717,25 @@ export const DUMMY_PAYMENT_METHODS = [
 		name: 'ApplePay',
 	},
 ]
+
+export function getBookings() {
+	const bookings = DUMMY_BOOKINGS.map(booking => {
+		const customers = DUMMY_CUSTOMERS.find(customer => customer.id === booking.idCustomer)
+		const igloos = DUMMY_IGLOOS.find(igloo => igloo.id === booking.idIgloo)
+		const paymentMethods = DUMMY_PAYMENT_METHODS.find(paymentMethod => paymentMethod.id === booking.paymentMethodId)
+        const employees = DUMMY_EMPLOYEES.find(employee => employee.id === booking.createdBy)
+		return {
+			...booking,
+			customerName: customers.name,
+			customerSurname: customers.surname,
+			customerEmail: customers.email,
+			customerPhoneNumber: customers.phoneNumber,
+			iglooName: igloos.name,
+			paymentMethod: paymentMethods.name,
+            employeeName: employees.name,
+            employeeSurname: employees.surname,
+		}
+	})
+
+	return bookings
+}
