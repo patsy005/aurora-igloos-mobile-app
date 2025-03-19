@@ -5,25 +5,13 @@ import { Colors } from '../../constants/colors'
 import { FlatList } from 'react-native-gesture-handler'
 import BookingListItem from '../../components/bookings/BookingListItem'
 
-function BookingsScreen() {
-	// const bookings = DUMMY_BOOKINGS
-	// const customers = DUMMY_CUSTOMERS
-	// const igloos = DUMMY_IGLOOS
-
-	// const bookingsData = bookings.map(booking => {
-	// 	const customer = customers.find(customer => customer.id === booking.idCustomer)
-	// 	const igloo = igloos.find(igloo => igloo.id === booking.idIgloo)
-
-	// 	return {
-	// 		...booking,
-	// 		iglooName: igloo.name,
-	// 		customerName: customer.name,
-	// 		customerSurname: customer.surname,
-	// 		customerEmail: customer.email,
-	// 	}
-	// })
+function BookingsScreen({navigation}) {
 
     const bookingsData = getBookings()
+
+	function onAddBooking(){
+		navigation.navigate('BookingForm')
+	}
 
 	function renderBookingListItem(itemData) {
 		return <BookingListItem booking={itemData.item} />
@@ -33,7 +21,7 @@ function BookingsScreen() {
 		<View style={styles.container}>
 			<View>
 				{/* <View> */}
-				<Button onPress={() => {}}>Add booking</Button>
+				<Button onPress={onAddBooking}>Add booking</Button>
 				{/* </View> */}
 
 				<View style={styles.listContainer}>

@@ -10,6 +10,7 @@ function BookingListItem({ booking }) {
 			bookingId: booking.id,
 		})
 	}
+
 	return (
 		<View style={styles.container}>
 			<Pressable onPress={() => getBookingDetailsHandler()} style={({ pressed }) => pressed && styles.pressed}>

@@ -21,6 +21,7 @@ import { Colors } from './constants/colors'
 import Header from './components/Header'
 import { ScrollView } from 'react-native'
 import IconButton from './components/IconButton'
+import BookingFormScreen from './screens/bookings/BookingFormScreen'
 
 const Stack = createNativeStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -107,7 +108,11 @@ export default function App() {
 			<StatusBar style="light" />
 			<NavigationContainer>
 				<Header />
-				<Stack.Navigator>
+				<Stack.Navigator
+					screenOptions={{
+						headerStyle: { backgroundColor: Colors.primary13 },
+						headerTintColor: Colors.white,
+					}}>
 					<Stack.Screen
 						name="DrawerNavigation"
 						component={DrawerNavigation}
@@ -115,11 +120,21 @@ export default function App() {
 							headerShown: false,
 						}}
 					/>
-					<Stack.Screen name="BookingDetails" component={BookingDetailsScreen} options={{
-						headerStyle: { backgroundColor: Colors.primary13 },
-						headerTintColor: Colors.white,
-						headerTitle: 'Booking details',
-					}} />
+					<Stack.Screen
+						name="BookingDetails"
+						component={BookingDetailsScreen}
+						options={{
+							headerTitle: 'Booking details',
+						}}
+					/>
+					<Stack.Screen
+						name="BookingForm"
+						component={BookingFormScreen}
+						options={{
+							presentation: 'modal',
+						}}
+					/>
+
 					<Stack.Screen name="IglooItem" component={IglooItemScreen} />
 					<Stack.Screen name="EmployeeItem" component={EmployeeItemScreen} />
 					<Stack.Screen name="CustomerItem" component={CustomerItemScreen} />

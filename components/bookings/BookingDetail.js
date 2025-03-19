@@ -2,14 +2,23 @@ import { Image, StyleSheet, Text, View } from 'react-native'
 import { getBookings } from '../../constants/dummy-data'
 import { Colors } from '../../constants/colors'
 import IconButton from '../IconButton'
+import { useNavigation } from '@react-navigation/native'
+import { useLayoutEffect } from 'react'
 
 function BookingDetail({ bookingId }) {
 	const booking = getBookings().find(booking => booking.id === bookingId)
+    const navigation = useNavigation()
+
+    function onEditBooking(){
+        navigation.navigate('BookingForm', {
+            bookingId: booking.id
+        })
+    }
 
 	return (
 		<View style={styles.container}>
 			<View style={styles.iconsContainer}>
-				<IconButton iconName="edit" iconType="FontAwesome6" color={Colors.primary67} size={24} onPress={() => {}} />
+				<IconButton iconName="edit" iconType="FontAwesome6" color={Colors.primary67} size={24} onPress={onEditBooking} />
 				<IconButton
 					iconName="trash-can"
 					iconType="FontAwesome6"

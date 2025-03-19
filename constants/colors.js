@@ -26,5 +26,7 @@ export const Colors = {
 	boxBg: '#102e31',
 	inputBg: '#076570',
 
+	red: '#ff9393',
+
 	btnBg: 'linear-gradient(90deg, #cffaff 0%, #5ad7e4 100%)',
 }
