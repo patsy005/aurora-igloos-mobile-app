@@ -1,10 +1,10 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FlatList, Modal, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { Colors } from '../constants/colors'
 
-function Dropdown({ data, onChange, selectedValue, placeholder }) {
+function Dropdown({ data, onChange, selectedValue, placeholder, isEditing }) {
 	const [expanded, setExpanded] = useState(false)
 	const [value, setValue] = useState('')
 	const [top, setTop] = useState(0)
@@ -31,7 +31,15 @@ function Dropdown({ data, onChange, selectedValue, placeholder }) {
 		setExpanded(false)
 	})
 
-    const selectedLabel = data.find(item => item.value === selectedValue?.value)?.label || placeholder
+	let selectedLabel
+
+	if (!isEditing) {
+		selectedLabel = (selectedValue && data.find(item => item.value === selectedValue.value)?.label) || placeholder
+	}
+
+	if(isEditing){
+		selectedLabel = (selectedValue && data.find(item => item.value === selectedValue)?.label) || placeholder
+	}
 
 	return (
 		<View
@@ -44,8 +52,7 @@ function Dropdown({ data, onChange, selectedValue, placeholder }) {
 				const finalValue = topOffset + heightOfComponent + (Platform.OS === 'android' ? -32 : 3)
 
 				setTop(finalValue)
-			}}
-            >
+			}}>
 			<TouchableOpacity style={styles.button} activeOpacity={0.8} onPress={toggleExpanded}>
 				<Text style={[styles.text, styles.buttonText]}>{selectedLabel}</Text>
 				<AntDesign name={expanded ? 'caretup' : 'caretdown'} color={Colors.primary97} />
@@ -56,17 +63,17 @@ function Dropdown({ data, onChange, selectedValue, placeholder }) {
 					<TouchableWithoutFeedback onPress={() => setExpanded(false)}>
 						<View style={styles.backdrop}>
 							<View style={[styles.options, { top }]}>
-									<FlatList
-										keyExtractor={item => item.value}
-										data={data}
-										renderItem={({ item }) => (
-											<TouchableOpacity activeOpacity={0.8} style={styles.optionItem} onPress={() => onSelect(item)}>
-												<Text style={styles.text}>{item.label}</Text>
-											</TouchableOpacity>
-										)}
-										ItemSeparatorComponent={() => <View style={styles.separator} />}
-										keyboardShouldPersistTaps="handled"
-									/>
+								<FlatList
+									keyExtractor={item => item.value}
+									data={data}
+									renderItem={({ item }) => (
+										<TouchableOpacity activeOpacity={0.8} style={styles.optionItem} onPress={() => onSelect(item)}>
+											<Text style={styles.text}>{item.label}</Text>
+										</TouchableOpacity>
+									)}
+									ItemSeparatorComponent={() => <View style={styles.separator} />}
+									keyboardShouldPersistTaps="handled"
+								/>
 							</View>
 						</View>
 					</TouchableWithoutFeedback>
@@ -111,14 +118,14 @@ const styles = StyleSheet.create({
 		height: 50,
 		justifyContent: 'space-between',
 		// backgroundColor: '#fff',
-        backgroundColor: Colors.primary6,
+		backgroundColor: Colors.primary6,
 		flexDirection: 'row',
 		width: '100%',
 		alignItems: 'center',
 		paddingHorizontal: 15,
 		borderRadius: 8,
 	},
-    buttonText: {
-        color: Colors.white,
-    },
+	buttonText: {
+		color: Colors.white,
+	},
 })

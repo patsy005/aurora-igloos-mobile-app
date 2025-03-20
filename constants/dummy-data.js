@@ -217,6 +217,104 @@ export const DUMMY_EMPLOYEE_ROLES = [
 	},
 ]
 
+export const DUMMY_EMPLOYEE_TASKS = [
+	{
+		id: 1,
+		idEmployee: 1,
+		task: 'Check in guests',
+		taskDate: '2024-11-01',
+		idStatus: 2,
+	},
+	{
+		id: 2,
+		idEmployee: 1,
+		task: 'Check out guests',
+		taskDate: '2024-11-02',
+		idStatus: 2,
+	},
+	{
+		id: 3,
+		idEmployee: 1,
+		task: 'Answer phone calls',
+		taskDate: '2024-11-03',
+		idStatus: 1,
+	},
+	{
+		id: 4,
+		idEmployee: 1,
+		task: 'Respond to emails',
+		taskDate: '2024-11-04',
+		idStatus: 1,
+	},
+	{
+		id: 5,
+		idEmployee: 2,
+		task: 'Check in guests',
+		taskDate: '2024-11-01',
+		idStatus: 2,
+	},
+	{
+		id: 6,
+		idEmployee: 2,
+		task: 'Check out guests',
+		taskDate: '2024-11-02',
+		idStatus: 2,
+	},
+	{
+		id: 7,
+		idEmployee: 2,
+		task: 'Answer phone calls',
+		taskDate: '2024-11-03',
+		idStatus: 1,
+	},
+	{
+		id: 8,
+		idEmployee: 2,
+		task: 'Respond to emails',
+		taskDate: '2024-11-04',
+		idStatus: 1,
+	},
+	{
+		id: 9,
+		idEmployee: 3,
+		task: 'Check in guests',
+		taskDate: '2024-11-01',
+		idStatus: 2,
+	},
+	{
+		id: 10,
+		idEmployee: 3,
+		task: 'Check out guests',
+		taskDate: '2024-11-02',
+		idStatus: 2,
+	},
+	{
+		id: 11,
+		idEmployee: 3,
+		task: 'Answer phone calls',
+		taskDate: '2024-11-03',
+		idStatus: 1,
+	},
+	{
+		id: 12,
+		idEmployee: 3,
+		task: 'Respond to emails',
+		taskDate: '2024-11-04',
+		idStatus: 1,
+	},
+]
+
+export const DUMMY_TASK_STATUS = [
+	{
+		id: 1,
+		status: 'completed',
+	},
+	{
+		id: 2,
+		status: 'pending',
+	},
+]
+
 export const DUMMY_CUSTOMERS = [
 	{
 		id: 4,
@@ -723,7 +821,7 @@ export function getBookings() {
 		const customers = DUMMY_CUSTOMERS.find(customer => customer.id === booking.idCustomer)
 		const igloos = DUMMY_IGLOOS.find(igloo => igloo.id === booking.idIgloo)
 		const paymentMethods = DUMMY_PAYMENT_METHODS.find(paymentMethod => paymentMethod.id === booking.paymentMethodId)
-        const employees = DUMMY_EMPLOYEES.find(employee => employee.id === booking.createdBy)
+		const employees = DUMMY_EMPLOYEES.find(employee => employee.id === booking.createdBy)
 		return {
 			...booking,
 			customerName: customers.name,
@@ -732,15 +830,15 @@ export function getBookings() {
 			customerPhoneNumber: customers.phoneNumber,
 			iglooName: igloos.name,
 			paymentMethod: paymentMethods.name,
-            employeeName: employees.name,
-            employeeSurname: employees.surname,
+			employeeName: employees.name,
+			employeeSurname: employees.surname,
 		}
 	})
 
 	return bookings
 }
 
-export function getIgloos(){
+export function getIgloos() {
 	const igloos = DUMMY_IGLOOS.map(igloo => {
 		const discount = DUMMY_DISCOUNTS.find(discount => discount.idIgloo === igloo.id)
 		return {
@@ -750,4 +848,42 @@ export function getIgloos(){
 	})
 
 	return igloos
+}
+
+export function getEmployees() {
+	const employees = DUMMY_EMPLOYEES.map(employee => {
+		const address = DUMMY_ADDRESSES.find(address => address.id === employee.adressId)
+		const role = DUMMY_EMPLOYEE_ROLES.find(role => role.id === employee.roleId)
+		const tasks = DUMMY_EMPLOYEE_TASKS.filter(task => task.idEmployee === employee.id).map(task => {
+			const status = DUMMY_TASK_STATUS.find(status => status.id === task.idStatus)
+			return {
+				...task,
+				status: status.status,
+			}
+		})
+
+		return {
+			...employee,
+			address: address,
+			role: role.roleName,
+			tasks: tasks,
+		}
+	})
+
+	return employees
+}
+
+export function getCustomers(){
+	const customers = DUMMY_CUSTOMERS.map(customer => {
+		const address = DUMMY_ADDRESSES.find(address => address.id === customer.adressId)
+		const bookings = DUMMY_BOOKINGS.filter(booking => booking.idCustomer === customer.id)
+
+		return {
+			...customer,
+			address: address,
+			bookings: bookings,
+		}
+	})
+
+	return customers
 }

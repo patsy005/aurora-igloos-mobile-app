@@ -19,6 +19,8 @@ function BookingForm({ bookingId }) {
 	} = useForm()
 	const navigation = useNavigation()
 
+	const isEditing = !!bookingId
+
 	useEffect(() => {
 		if (bookingId) {
 			const booking = getBookings().find(booking => booking.id === bookingId)
@@ -33,7 +35,7 @@ function BookingForm({ bookingId }) {
 		}
 	}, [bookingId])
 
-	function onCancel(){
+	function onCancel() {
 		navigation.goBack()
 	}
 
@@ -63,7 +65,13 @@ function BookingForm({ bookingId }) {
 						<Controller
 							control={control}
 							render={({ field: { onChange, onBlur, value } }) => (
-								<Dropdown data={customersOptions} onChange={onChange} placeholder="Select customer" selectedValue={value} />
+								<Dropdown
+									data={customersOptions}
+									onChange={onChange}
+									placeholder="Select customer"
+									selectedValue={value}
+									isEditing={isEditing}
+								/>
 							)}
 							name="customer"
 							rules={{
@@ -150,7 +158,7 @@ function BookingForm({ bookingId }) {
 						<Controller
 							control={control}
 							render={({ field: { onChange, onBlur, value } }) => (
-								<Dropdown data={iglooOptions} onChange={onChange} placeholder="Select igloo" selectedValue={value} />
+								<Dropdown data={iglooOptions} onChange={onChange} placeholder="Select igloo" selectedValue={value} isEditing={isEditing} />
 							)}
 							name="igloo"
 							rules={{
@@ -200,8 +208,10 @@ function BookingForm({ bookingId }) {
 					/>
 				</View>
 				<View style={styles.buttonsContainer}>
-					<Button onPress={onCancel} mode='secondary'>Cancel</Button>
- 					<Button onPress={handleSubmit(onSubmit)}>{bookingId ? 'Edit' : 'Add'}</Button>
+					<Button onPress={onCancel} mode="secondary">
+						Cancel
+					</Button>
+					<Button onPress={handleSubmit(onSubmit)}>{bookingId ? 'Edit' : 'Add'}</Button>
 				</View>
 			</View>
 		</View>
@@ -245,12 +255,12 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		// justifyContent: 'space-between',
 	},
-	errorText:{
+	errorText: {
 		color: Colors.red,
 	},
 	buttonsContainer: {
 		flexDirection: 'row',
 		justifyContent: 'flex-end',
 		gap: 20,
-	}
+	},
 })

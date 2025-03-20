@@ -13,8 +13,6 @@ import CustomersScreen from './screens/customers/CustomersScreen'
 import DiscountsScreen from './screens/discounts/DiscountsScreen'
 import ForumScreen from './screens/forum/ForumScreen'
 import BookingDetailsScreen from './screens/bookings/BookingDetailsScreen'
-import EmployeeItemScreen from './screens/employees/EmployeeItemScreen'
-import CustomerItemScreen from './screens/customers/CustomerItemScreen'
 import DiscountItemScreen from './screens/discounts/DiscountItemScreen'
 import { Colors } from './constants/colors'
 import Header from './components/Header'
@@ -23,6 +21,10 @@ import IconButton from './components/IconButton'
 import BookingFormScreen from './screens/bookings/BookingFormScreen'
 import IglooDetailsScreen from './screens/igloos/IglooDetailsScreen'
 import IglooFormScreen from './screens/igloos/IglooFormScreen'
+import EmployeeDetailScreen from './screens/employees/EmployeeDetailScreen'
+import EmployeeFormScreen from './screens/employees/EmployeeFormScreen'
+import CustomerDetailScreen from './screens/customers/CustomerDetailScreen'
+import CustomerFormScreen from './screens/customers/CustomerFormScreen'
 
 const Stack = createNativeStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -151,8 +153,24 @@ export default function App() {
 						}}
 					/>
 
-					<Stack.Screen name="EmployeeItem" component={EmployeeItemScreen} />
-					<Stack.Screen name="CustomerItem" component={CustomerItemScreen} />
+					<Stack.Screen
+						name="EmployeeDetails"
+						component={EmployeeDetailScreen}
+						options={{
+							headerTitle: 'Employee details',
+						}}
+					/>
+					<Stack.Screen
+						name="EmployeeForm"
+						component={EmployeeFormScreen}
+						options={{
+							presentation: 'modal',
+						}}
+					/>
+
+					<Stack.Screen name="CustomerDetails" component={CustomerDetailScreen} />
+					<Stack.Screen name="CustomerForm" component={CustomerFormScreen} options={{ presentation: 'modal' }} />
+
 					<Stack.Screen name="DiscountItem" component={DiscountItemScreen} />
 				</Stack.Navigator>
 			</NavigationContainer>

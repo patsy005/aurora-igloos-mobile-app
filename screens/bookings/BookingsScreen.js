@@ -4,12 +4,12 @@ import Button from '../../components/Button'
 import { Colors } from '../../constants/colors'
 import { FlatList } from 'react-native-gesture-handler'
 import BookingListItem from '../../components/bookings/BookingListItem'
+import ListScreen from '../screen/ListScreen'
 
-function BookingsScreen({navigation}) {
+function BookingsScreen({ navigation }) {
+	const bookingsData = getBookings()
 
-    const bookingsData = getBookings()
-
-	function onAddBooking(){
+	function onAddBooking() {
 		navigation.navigate('BookingForm')
 	}
 
@@ -18,35 +18,13 @@ function BookingsScreen({navigation}) {
 	}
 
 	return (
-		<View style={styles.container}>
-			<View>
-				{/* <View> */}
-				<Button onPress={onAddBooking}>Add booking</Button>
-				{/* </View> */}
-
-				<View style={styles.listContainer}>
-					<FlatList
-						data={bookingsData}
-						keyExtractor={item => item.id}
-						renderItem={renderBookingListItem}
-						contentContainerStyle={{ paddingBottom: 40 }}
-					/>
-				</View>
-			</View>
-		</View>
+		<ListScreen
+			onAdd={onAddBooking}
+			onRenderListItem={renderBookingListItem}
+			buttonLabel="Add booking"
+			data={bookingsData}
+		/>
 	)
 }
 
 export default BookingsScreen
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: Colors.primary6,
-		paddingVertical: 20,
-		paddingHorizontal: 15,
-	},
-	listContainer: {
-		marginBottom: 40,
-	},
-})

@@ -25,6 +25,7 @@ export default DetailContainer
 
 const styles = StyleSheet.create({
 	container: {
+		flex: 1,
 		marginTop: 20,
 		paddingVertical: 12,
 		paddingHorizontal: 10,
