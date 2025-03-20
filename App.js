@@ -13,7 +13,6 @@ import CustomersScreen from './screens/customers/CustomersScreen'
 import DiscountsScreen from './screens/discounts/DiscountsScreen'
 import ForumScreen from './screens/forum/ForumScreen'
 import BookingDetailsScreen from './screens/bookings/BookingDetailsScreen'
-import DiscountItemScreen from './screens/discounts/DiscountItemScreen'
 import { Colors } from './constants/colors'
 import Header from './components/Header'
 import { ScrollView } from 'react-native'
@@ -25,6 +24,8 @@ import EmployeeDetailScreen from './screens/employees/EmployeeDetailScreen'
 import EmployeeFormScreen from './screens/employees/EmployeeFormScreen'
 import CustomerDetailScreen from './screens/customers/CustomerDetailScreen'
 import CustomerFormScreen from './screens/customers/CustomerFormScreen'
+import DiscountDetailScreen from './screens/discounts/DiscountDetailScreen'
+import DiscountFormScreen from './screens/discounts/DiscountFormScreen'
 
 const Stack = createNativeStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -171,7 +172,14 @@ export default function App() {
 					<Stack.Screen name="CustomerDetails" component={CustomerDetailScreen} />
 					<Stack.Screen name="CustomerForm" component={CustomerFormScreen} options={{ presentation: 'modal' }} />
 
-					<Stack.Screen name="DiscountItem" component={DiscountItemScreen} />
+					<Stack.Screen
+						name="DiscountDetails"
+						component={DiscountDetailScreen}
+						options={{
+							headerTitle: 'Discount details',
+						}}
+					/>
+					<Stack.Screen name="DiscountForm" component={DiscountFormScreen} options={{ presentation: 'modal' }} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</>
