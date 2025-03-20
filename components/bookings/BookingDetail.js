@@ -4,30 +4,20 @@ import { Colors } from '../../constants/colors'
 import IconButton from '../IconButton'
 import { useNavigation } from '@react-navigation/native'
 import { useLayoutEffect } from 'react'
+import DetailContainer from '../shared/DetailContainer'
 
 function BookingDetail({ bookingId }) {
 	const booking = getBookings().find(booking => booking.id === bookingId)
-    const navigation = useNavigation()
+	const navigation = useNavigation()
 
-    function onEditBooking(){
-        navigation.navigate('BookingForm', {
-            bookingId: booking.id
-        })
-    }
+	function onEditBooking() {
+		navigation.navigate('BookingForm', {
+			bookingId: booking.id,
+		})
+	}
 
 	return (
-		<View style={styles.container}>
-			<View style={styles.iconsContainer}>
-				<IconButton iconName="edit" iconType="FontAwesome6" color={Colors.primary67} size={24} onPress={onEditBooking} />
-				<IconButton
-					iconName="trash-can"
-					iconType="FontAwesome6"
-					color={Colors.primary67}
-					size={24}
-					onPress={() => {}}
-				/>
-			</View>
-
+		<DetailContainer onEdit={onEditBooking}>
 			<View style={styles.imageContainer}>
 				<Image source={require('../../assets/images/igloo_6.jpg')} style={styles.image} />
 			</View>
@@ -76,31 +66,13 @@ function BookingDetail({ bookingId }) {
 					<Text style={[styles.detail, styles.customerDetailText]}>{booking.customerPhoneNumber}</Text>
 				</View>
 			</View>
-		</View>
+		</DetailContainer>
 	)
 }
 
 export default BookingDetail
 
 const styles = StyleSheet.create({
-	container: {
-		marginTop: 20,
-		paddingVertical: 12,
-		paddingHorizontal: 10,
-		backgroundColor: Colors.primary13,
-		borderRadius: 8,
-		gap: 20,
-		elevation: 4,
-		shadowColor: 'black',
-		shadowOffset: { width: 0, height: 2 },
-		shadowRadius: 5,
-		shadowOpacity: 0.26,
-	},
-	iconsContainer: {
-		flexDirection: 'row',
-		justifyContent: 'flex-end',
-		gap: 15,
-	},
 	imageContainer: {
 		borderRadius: 8,
 		overflow: 'hidden',

@@ -739,3 +739,15 @@ export function getBookings() {
 
 	return bookings
 }
+
+export function getIgloos(){
+	const igloos = DUMMY_IGLOOS.map(igloo => {
+		const discount = DUMMY_DISCOUNTS.find(discount => discount.idIgloo === igloo.id)
+		return {
+			...igloo,
+			discount: discount ? discount.name : 0,
+		}
+	})
+
+	return igloos
+}

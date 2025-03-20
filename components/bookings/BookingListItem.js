@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { Colors } from '../../constants/colors'
 import { useNavigation } from '@react-navigation/native'
+import ListItemContainer from '../shared/ListItemContainer'
 
 function BookingListItem({ booking }) {
 	const navigation = useNavigation()
@@ -12,7 +13,7 @@ function BookingListItem({ booking }) {
 	}
 
 	return (
-		<View style={styles.container}>
+		<ListItemContainer>
 			<Pressable onPress={() => getBookingDetailsHandler()} style={({ pressed }) => pressed && styles.pressed}>
 				<View>
 					<View style={styles.cabinAndDateContainer}>
@@ -35,7 +36,7 @@ function BookingListItem({ booking }) {
 					</View>
 				</View>
 			</Pressable>
-		</View>
+		</ListItemContainer>
 	)
 }
 

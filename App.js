@@ -13,7 +13,6 @@ import CustomersScreen from './screens/customers/CustomersScreen'
 import DiscountsScreen from './screens/discounts/DiscountsScreen'
 import ForumScreen from './screens/forum/ForumScreen'
 import BookingDetailsScreen from './screens/bookings/BookingDetailsScreen'
-import IglooItemScreen from './screens/igloos/IglooItemScreen'
 import EmployeeItemScreen from './screens/employees/EmployeeItemScreen'
 import CustomerItemScreen from './screens/customers/CustomerItemScreen'
 import DiscountItemScreen from './screens/discounts/DiscountItemScreen'
@@ -22,6 +21,8 @@ import Header from './components/Header'
 import { ScrollView } from 'react-native'
 import IconButton from './components/IconButton'
 import BookingFormScreen from './screens/bookings/BookingFormScreen'
+import IglooDetailsScreen from './screens/igloos/IglooDetailsScreen'
+import IglooFormScreen from './screens/igloos/IglooFormScreen'
 
 const Stack = createNativeStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -135,7 +136,21 @@ export default function App() {
 						}}
 					/>
 
-					<Stack.Screen name="IglooItem" component={IglooItemScreen} />
+					<Stack.Screen
+						name="IglooDetails"
+						component={IglooDetailsScreen}
+						options={{
+							headerTitle: 'Igloo details',
+						}}
+					/>
+					<Stack.Screen
+						name="IglooForm"
+						component={IglooFormScreen}
+						options={{
+							presentation: 'modal',
+						}}
+					/>
+
 					<Stack.Screen name="EmployeeItem" component={EmployeeItemScreen} />
 					<Stack.Screen name="CustomerItem" component={CustomerItemScreen} />
 					<Stack.Screen name="DiscountItem" component={DiscountItemScreen} />
