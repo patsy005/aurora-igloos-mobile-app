@@ -887,3 +887,20 @@ export function getCustomers(){
 
 	return customers
 }
+
+export function getForumPosts(){
+	const forumPosts = DUMMY_FORUM.map(post => {
+		const employee = DUMMY_EMPLOYEES.find(employee => employee.id === post.idEmployee)
+		const category = DUMMY_FORUM_CATEGORIES.find(category => category.id === post.categoryId)
+		const comments = DUMMY_FORUM_COMMNETS.filter(comment => comment.idPost === post.id)
+
+		return {
+			...post,
+			employee: employee,
+			category: category,
+			comments: comments,
+		}
+	})
+
+	return forumPosts
+}

@@ -26,6 +26,10 @@ import CustomerDetailScreen from './screens/customers/CustomerDetailScreen'
 import CustomerFormScreen from './screens/customers/CustomerFormScreen'
 import DiscountDetailScreen from './screens/discounts/DiscountDetailScreen'
 import DiscountFormScreen from './screens/discounts/DiscountFormScreen'
+import ForumFormScreen from './screens/forum/ForumFormScreen'
+import ForumDetilScreen from './screens/forum/ForumDetilScreen'
+import ForumCommentsScreen from './screens/forum/forumComments/ForumCommentsScreen'
+import ForumCommentFormScreen from './screens/forum/forumComments/ForumCommentFormScreen'
 
 const Stack = createNativeStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -180,6 +184,36 @@ export default function App() {
 						}}
 					/>
 					<Stack.Screen name="DiscountForm" component={DiscountFormScreen} options={{ presentation: 'modal' }} />
+
+					<Stack.Screen
+						name="PostDetails"
+						component={ForumDetilScreen}
+						options={{
+							headerTitle: 'Post details',
+						}}
+					/>
+					<Stack.Screen
+						name="PostForm"
+						component={ForumFormScreen}
+						options={{
+							presentation: 'modal',
+						}}
+					/>
+
+					<Stack.Screen
+						name="PostComments"
+						component={ForumCommentsScreen}
+						options={{
+							headerTitle: 'Post comments',
+						}}
+					/>
+					<Stack.Screen
+						name="CommentForm"
+						component={ForumCommentFormScreen}
+						options={{
+							presentation: 'modal',
+						}}
+					/>
 				</Stack.Navigator>
 			</NavigationContainer>
 		</>
