@@ -2,6 +2,7 @@ import { ScrollView, StyleSheet, Text } from 'react-native'
 import { Colors } from '../../constants/colors'
 import DiscountDetail from '../../components/discounts/DiscountDetail'
 import { useSelector } from 'react-redux'
+import Spinner from '../../components/shared/Spinner'
 
 function DiscountDetailScreen({ route }) {
 	const discountId = route.params.discountId
@@ -9,7 +10,12 @@ function DiscountDetailScreen({ route }) {
 	const discount = discounts?.find(discount => discount.id === discountId)
 	const isLoading = useSelector(state => state.discounts.isLoading)
 
-	return <ScrollView style={styles.screen}>{!isLoading && <DiscountDetail discount={discount} />}</ScrollView>
+	return (
+		<ScrollView style={styles.screen}>
+			{isLoading && <Spinner />}
+			{!isLoading && <DiscountDetail discount={discount} />}
+		</ScrollView>
+	)
 }
 
 export default DiscountDetailScreen

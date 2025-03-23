@@ -5,6 +5,7 @@ import IglooListItem from '../../components/igloos/IglooListItem'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { fetchIgloos } from '../../slices/igloosSlice'
+import Spinner from '../../components/shared/Spinner'
 
 function IgloosScreen({ navigation }) {
 	const igloos = useSelector(state => state.igloos.igloos)
@@ -25,6 +26,7 @@ function IgloosScreen({ navigation }) {
 
 	return (
 		<>
+			{isLoading && <Spinner />}
 			{!isLoading && (
 				<ListScreen
 					onAdd={addIglooHandler}

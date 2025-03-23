@@ -3,6 +3,7 @@ import { StyleSheet, Text } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import ForumCommentForm from '../../../components/forum/forumComment/ForumCommentForm'
 import { useSelector } from 'react-redux'
+import Spinner from '../../../components/shared/Spinner'
 
 function ForumCommentFormScreen({ route, navigation }) {
 	const postId = route?.params?.postId
@@ -19,6 +20,7 @@ function ForumCommentFormScreen({ route, navigation }) {
 
 	return (
 		<GestureHandlerRootView style={styles.screen}>
+			{isLoading && <Spinner />}
 			{!isLoading && <ForumCommentForm postId={postId} commentId={commentId} />}
 		</GestureHandlerRootView>
 	)

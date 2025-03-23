@@ -5,6 +5,7 @@ import ForumListItem from '../../components/forum/ForumListItem'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchForumPosts } from '../../slices/forumSlice'
 import { useEffect } from 'react'
+import Spinner from '../../components/shared/Spinner'
 
 function ForumScreen({ navigation }) {
 	const posts = useSelector(state => state.forum.forumPosts)
@@ -25,6 +26,7 @@ function ForumScreen({ navigation }) {
 
 	return (
 		<>
+		{isLoading && <Spinner />}
 			{!isLoading && (
 				<ListScreen onAdd={addPostHandler} onRenderListItem={renderPostListItem} buttonLabel="Add post" data={posts} />
 			)}

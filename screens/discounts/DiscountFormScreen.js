@@ -3,6 +3,7 @@ import { StyleSheet, Text } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import DiscountForm from '../../components/discounts/DiscountForm'
 import { useSelector } from 'react-redux'
+import Spinner from '../../components/shared/Spinner'
 
 function DiscountFormScreen({ route, navigation }) {
 	const discountId = route?.params?.discountId
@@ -18,6 +19,7 @@ function DiscountFormScreen({ route, navigation }) {
 
 	return (
 		<GestureHandlerRootView style={styles.screen}>
+			{isLoading && <Spinner />}
 			{!isLoading && <DiscountForm discountId={discountId} />}
 		</GestureHandlerRootView>
 	)

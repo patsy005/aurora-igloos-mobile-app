@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { fetchCustomers } from '../../slices/customersSlice'
 import { fetchBookings } from '../../slices/bookingsSlice'
+import Spinner from '../../components/shared/Spinner'
 
 function CustomersScreen({ navigation }) {
 	const customersData = useSelector(state => state.customers.customers)
@@ -27,6 +28,7 @@ function CustomersScreen({ navigation }) {
 	}
 	return (
 		<>
+			{isLoading && <Spinner />}
 			{!isLoading && !isBookingsLoading && (
 				<ListScreen
 					onAdd={onAddCustomer}

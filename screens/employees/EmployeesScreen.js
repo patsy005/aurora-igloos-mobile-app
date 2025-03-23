@@ -5,6 +5,7 @@ import ListScreen from '../screen/ListScreen'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { fetchEmployees } from '../../slices/employeesSlice'
+import Spinner from '../../components/shared/Spinner'
 
 function EmployeesScreen({ navigation }) {
 	const employeesData = useSelector(state => state.employees.employees)
@@ -25,6 +26,7 @@ function EmployeesScreen({ navigation }) {
 
 	return (
 		<>
+		{isLoading && <Spinner />}
 			{!isLoading && (
 				<ListScreen
 					onAdd={onAddEmployee}

@@ -8,6 +8,7 @@ import ListScreen from '../screen/ListScreen'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { fetchBookings } from '../../slices/bookingsSlice'
+import Spinner from '../../components/shared/Spinner'
 
 function BookingsScreen({ navigation }) {
 	// const bookingsData = getBookings()
@@ -29,6 +30,7 @@ function BookingsScreen({ navigation }) {
 
 	return (
 		<>
+			{isLoading && <Spinner />}
 			{!isLoading && (
 				<ListScreen
 					onAdd={onAddBooking}

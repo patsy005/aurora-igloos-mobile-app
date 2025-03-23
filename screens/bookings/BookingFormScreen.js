@@ -4,6 +4,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useNavigation } from '@react-navigation/native'
 import { useLayoutEffect } from 'react'
 import { useSelector } from 'react-redux'
+import Spinner from '../../components/shared/Spinner'
 
 function BookingFormScreen({ route }) {
 	const bookingId = route?.params?.bookingId
@@ -20,6 +21,7 @@ function BookingFormScreen({ route }) {
 
 	return (
 		<GestureHandlerRootView style={styles.screen}>
+			{isLoading && <Spinner />}
 			{!isLoading && <BookingForm bookingId={bookingId} />}
 		</GestureHandlerRootView>
 	)

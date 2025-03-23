@@ -6,6 +6,7 @@ import ListScreen from '../../screen/ListScreen'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { fetchForumPosts } from '../../../slices/forumSlice'
+import Spinner from '../../../components/shared/Spinner'
 
 function ForumCommentsScreen({ route, navigation }) {
 	const postId = route.params.postId
@@ -31,6 +32,7 @@ function ForumCommentsScreen({ route, navigation }) {
 
 	return (
 		<>
+		{isLoading && <Spinner />}
 			{!isLoading && (
 				<ListScreen
 					onAdd={addCommentHandler}

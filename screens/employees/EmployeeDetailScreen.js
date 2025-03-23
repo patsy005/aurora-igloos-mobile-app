@@ -2,6 +2,7 @@ import { ScrollView, StyleSheet, Text } from 'react-native'
 import { Colors } from '../../constants/colors'
 import EmployeeDetail from '../../components/employees/EmployeeDetail'
 import { useSelector } from 'react-redux'
+import Spinner from '../../components/shared/Spinner'
 
 function EmployeeDetailScreen({ route }) {
 	const employeeId = route.params.employeeId
@@ -11,6 +12,7 @@ function EmployeeDetailScreen({ route }) {
 
 	return (
 		<ScrollView style={styles.screen} contentContainerStyle={{ paddingBottom: 100 }}>
+			{isLoading && <Spinner />}
 			{!isLoading && employee && <EmployeeDetail employeeId={employeeId} employee={employee} />}
 		</ScrollView>
 	)

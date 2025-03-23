@@ -4,6 +4,7 @@ import { Colors } from '../../constants/colors'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import CustomerForm from '../../components/customers/CustomerForm'
 import { useSelector } from 'react-redux'
+import Spinner from '../../components/shared/Spinner'
 
 function CustomerFormScreen({ route, navigation }) {
 	const customerId = route?.params?.customerId
@@ -20,6 +21,7 @@ function CustomerFormScreen({ route, navigation }) {
 	return (
 		<GestureHandlerRootView style={styles.screen}>
 			<ScrollView contentContainerStyle={{ paddingBottom: 200 }} style={styles.scroll}>
+				{isLoading && <Spinner />}
 				{!isLoading && <CustomerForm customerId={customerId} />}
 			</ScrollView>
 		</GestureHandlerRootView>

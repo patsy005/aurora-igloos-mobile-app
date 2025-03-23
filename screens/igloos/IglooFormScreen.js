@@ -3,6 +3,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import IglooForm from '../../components/igloos/IglooForm'
 import { StyleSheet } from 'react-native'
 import { useSelector } from 'react-redux'
+import Spinner from '../../components/shared/Spinner'
 
 function IglooFormScreen({ route, navigation }) {
 	const iglooId = route?.params?.iglooId
@@ -18,6 +19,7 @@ function IglooFormScreen({ route, navigation }) {
 
 	return (
 		<GestureHandlerRootView style={styles.screen}>
+			{isLoading && <Spinner />}
 			{!isLoading && <IglooForm iglooId={iglooId} />}
 		</GestureHandlerRootView>
 	)

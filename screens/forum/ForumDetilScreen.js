@@ -2,6 +2,7 @@ import { ScrollView, StyleSheet, Text } from 'react-native'
 import { Colors } from '../../constants/colors'
 import ForumDetail from '../../components/forum/ForumDetail'
 import { useSelector } from 'react-redux'
+import Spinner from '../../components/shared/Spinner'
 
 function ForumDetilScreen({ route }) {
 	const postId = route.params.postId
@@ -9,7 +10,12 @@ function ForumDetilScreen({ route }) {
 	const post = posts?.find(post => post.id === postId)
 	const isLoading = useSelector(state => state.forum.isLoading)
 
-	return <ScrollView style={styles.screen}>{!isLoading && <ForumDetail post={post} />}</ScrollView>
+	return (
+		<ScrollView style={styles.screen}>
+			{isLoading && <Spinner />} 
+			{!isLoading && <ForumDetail post={post} />}
+		</ScrollView>
+	)
 }
 
 export default ForumDetilScreen

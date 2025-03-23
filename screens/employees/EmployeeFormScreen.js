@@ -4,6 +4,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import EmployeeForm from '../../components/employees/EmployeeForm'
 import { Colors } from '../../constants/colors'
 import { useSelector } from 'react-redux'
+import Spinner from '../../components/shared/Spinner'
 
 function EmployeeFormScreen({ route, navigation }) {
 	const employeeId = route?.params?.employeeId
@@ -20,6 +21,7 @@ function EmployeeFormScreen({ route, navigation }) {
 	return (
 		<GestureHandlerRootView style={styles.screen}>
 			<ScrollView contentContainerStyle={{ paddingBottom: 200 }} style={styles.scroll}>
+				{isLoading && <Spinner />}
 				{!isLoading && <EmployeeForm employeeId={employeeId} />}
 			</ScrollView>
 		</GestureHandlerRootView>

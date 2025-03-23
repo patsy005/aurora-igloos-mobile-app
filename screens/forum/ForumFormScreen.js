@@ -6,6 +6,7 @@ import ForumForm from '../../components/forum/ForumForm'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchEmployees } from '../../slices/employeesSlice'
 import { fetchForumCategories } from '../../slices/forumSlice'
+import Spinner from '../../components/shared/Spinner'
 
 function ForumFormScreen({ route, navigation }) {
 	const postId = route?.params?.postId
@@ -28,7 +29,10 @@ function ForumFormScreen({ route, navigation }) {
 	}, [navigation, isEditing])
 
 	return (
-		<GestureHandlerRootView style={styles.screen}>{!isLoading && <ForumForm postId={postId} />}</GestureHandlerRootView>
+		<GestureHandlerRootView style={styles.screen}>
+			{isLoading && <Spinner />} {
+			!isLoading && <ForumForm postId={postId} />}
+		</GestureHandlerRootView>
 	)
 }
 

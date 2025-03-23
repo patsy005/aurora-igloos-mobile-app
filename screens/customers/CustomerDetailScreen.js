@@ -4,6 +4,7 @@ import { Colors } from '../../constants/colors'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { fetchBookings } from '../../slices/bookingsSlice'
+import Spinner from '../../components/shared/Spinner'
 
 function CustomerDetailScreen({ route }) {
 	const customerId = route.params.customerId
@@ -18,6 +19,7 @@ function CustomerDetailScreen({ route }) {
 
 	return (
 		<ScrollView style={styles.screen} contentContainerStyle={{ paddingBottom: 100 }}>
+			{isLoading && <Spinner />}
 			{!isLoading && <CustomerDetail customer={customer} />}
 		</ScrollView>
 	)

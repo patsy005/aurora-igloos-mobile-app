@@ -5,6 +5,7 @@ import DiscountListItem from '../../components/discounts/DiscountListItem'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { fetchDiscounts } from '../../slices/discountsSlice'
+import Spinner from '../../components/shared/Spinner'
 
 function DiscountsScreen({ navigation }) {
 	const discounts = useSelector(state => state.discounts.discounts)
@@ -24,6 +25,7 @@ function DiscountsScreen({ navigation }) {
 	}
 	return (
 		<>
+		{isLoading && <Spinner />}
 			{!isLoading && (
 				<ListScreen
 					onAdd={addDiscountHandler}
