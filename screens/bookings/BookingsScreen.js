@@ -5,9 +5,21 @@ import { Colors } from '../../constants/colors'
 import { FlatList } from 'react-native-gesture-handler'
 import BookingListItem from '../../components/bookings/BookingListItem'
 import ListScreen from '../screen/ListScreen'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { fetchBookings } from '../../slices/bookingsSlice'
 
 function BookingsScreen({ navigation }) {
-	const bookingsData = getBookings()
+	// const bookingsData = getBookings()
+	const bookingsData = useSelector(state => state.bookings.bookings)
+	const isLoading = useSelector(state => state.bookings.isLoading)
+	const dispatch = useDispatch()
+
+	useEffect(() => {
+		dispatch(fetchBookings())
+	}, [])
+
+	// console.log(bookingsData)
 
 	function onAddBooking() {
 		navigation.navigate('BookingForm')
@@ -18,12 +30,16 @@ function BookingsScreen({ navigation }) {
 	}
 
 	return (
-		<ListScreen
-			onAdd={onAddBooking}
-			onRenderListItem={renderBookingListItem}
-			buttonLabel="Add booking"
-			data={bookingsData}
-		/>
+		<>
+			{!isLoading && (
+				<ListScreen
+					onAdd={onAddBooking}
+					onRenderListItem={renderBookingListItem}
+					buttonLabel="Add booking"
+					data={bookingsData}
+				/>
+			)}
+		</>
 	)
 }
 

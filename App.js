@@ -30,6 +30,8 @@ import ForumFormScreen from './screens/forum/ForumFormScreen'
 import ForumDetilScreen from './screens/forum/ForumDetilScreen'
 import ForumCommentsScreen from './screens/forum/forumComments/ForumCommentsScreen'
 import ForumCommentFormScreen from './screens/forum/forumComments/ForumCommentFormScreen'
+import { Provider } from 'react-redux'
+import { store } from './store'
 
 const Stack = createNativeStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -115,106 +117,108 @@ export default function App() {
 		<>
 			<StatusBar style="light" />
 			<NavigationContainer>
-				<Header />
-				<Stack.Navigator
-					screenOptions={{
-						headerStyle: { backgroundColor: Colors.primary13 },
-						headerTintColor: Colors.white,
-					}}>
-					<Stack.Screen
-						name="DrawerNavigation"
-						component={DrawerNavigation}
-						options={{
-							headerShown: false,
-						}}
-					/>
-					<Stack.Screen
-						name="BookingDetails"
-						component={BookingDetailsScreen}
-						options={{
-							headerTitle: 'Booking details',
-						}}
-					/>
-					<Stack.Screen
-						name="BookingForm"
-						component={BookingFormScreen}
-						options={{
-							presentation: 'modal',
-						}}
-					/>
+				<Provider store={store}>
+					<Header />
+					<Stack.Navigator
+						screenOptions={{
+							headerStyle: { backgroundColor: Colors.primary13 },
+							headerTintColor: Colors.white,
+						}}>
+						<Stack.Screen
+							name="DrawerNavigation"
+							component={DrawerNavigation}
+							options={{
+								headerShown: false,
+							}}
+						/>
+						<Stack.Screen
+							name="BookingDetails"
+							component={BookingDetailsScreen}
+							options={{
+								headerTitle: 'Booking details',
+							}}
+						/>
+						<Stack.Screen
+							name="BookingForm"
+							component={BookingFormScreen}
+							options={{
+								presentation: 'modal',
+							}}
+						/>
 
-					<Stack.Screen
-						name="IglooDetails"
-						component={IglooDetailsScreen}
-						options={{
-							headerTitle: 'Igloo details',
-						}}
-					/>
-					<Stack.Screen
-						name="IglooForm"
-						component={IglooFormScreen}
-						options={{
-							presentation: 'modal',
-						}}
-					/>
+						<Stack.Screen
+							name="IglooDetails"
+							component={IglooDetailsScreen}
+							options={{
+								headerTitle: 'Igloo details',
+							}}
+						/>
+						<Stack.Screen
+							name="IglooForm"
+							component={IglooFormScreen}
+							options={{
+								presentation: 'modal',
+							}}
+						/>
 
-					<Stack.Screen
-						name="EmployeeDetails"
-						component={EmployeeDetailScreen}
-						options={{
-							headerTitle: 'Employee details',
-						}}
-					/>
-					<Stack.Screen
-						name="EmployeeForm"
-						component={EmployeeFormScreen}
-						options={{
-							presentation: 'modal',
-						}}
-					/>
+						<Stack.Screen
+							name="EmployeeDetails"
+							component={EmployeeDetailScreen}
+							options={{
+								headerTitle: 'Employee details',
+							}}
+						/>
+						<Stack.Screen
+							name="EmployeeForm"
+							component={EmployeeFormScreen}
+							options={{
+								presentation: 'modal',
+							}}
+						/>
 
-					<Stack.Screen name="CustomerDetails" component={CustomerDetailScreen} />
-					<Stack.Screen name="CustomerForm" component={CustomerFormScreen} options={{ presentation: 'modal' }} />
+						<Stack.Screen name="CustomerDetails" component={CustomerDetailScreen} />
+						<Stack.Screen name="CustomerForm" component={CustomerFormScreen} options={{ presentation: 'modal' }} />
 
-					<Stack.Screen
-						name="DiscountDetails"
-						component={DiscountDetailScreen}
-						options={{
-							headerTitle: 'Discount details',
-						}}
-					/>
-					<Stack.Screen name="DiscountForm" component={DiscountFormScreen} options={{ presentation: 'modal' }} />
+						<Stack.Screen
+							name="DiscountDetails"
+							component={DiscountDetailScreen}
+							options={{
+								headerTitle: 'Discount details',
+							}}
+						/>
+						<Stack.Screen name="DiscountForm" component={DiscountFormScreen} options={{ presentation: 'modal' }} />
 
-					<Stack.Screen
-						name="PostDetails"
-						component={ForumDetilScreen}
-						options={{
-							headerTitle: 'Post details',
-						}}
-					/>
-					<Stack.Screen
-						name="PostForm"
-						component={ForumFormScreen}
-						options={{
-							presentation: 'modal',
-						}}
-					/>
+						<Stack.Screen
+							name="PostDetails"
+							component={ForumDetilScreen}
+							options={{
+								headerTitle: 'Post details',
+							}}
+						/>
+						<Stack.Screen
+							name="PostForm"
+							component={ForumFormScreen}
+							options={{
+								presentation: 'modal',
+							}}
+						/>
 
-					<Stack.Screen
-						name="PostComments"
-						component={ForumCommentsScreen}
-						options={{
-							headerTitle: 'Post comments',
-						}}
-					/>
-					<Stack.Screen
-						name="CommentForm"
-						component={ForumCommentFormScreen}
-						options={{
-							presentation: 'modal',
-						}}
-					/>
-				</Stack.Navigator>
+						<Stack.Screen
+							name="PostComments"
+							component={ForumCommentsScreen}
+							options={{
+								headerTitle: 'Post comments',
+							}}
+						/>
+						<Stack.Screen
+							name="CommentForm"
+							component={ForumCommentFormScreen}
+							options={{
+								presentation: 'modal',
+							}}
+						/>
+					</Stack.Navigator>
+				</Provider>
 			</NavigationContainer>
 		</>
 	)

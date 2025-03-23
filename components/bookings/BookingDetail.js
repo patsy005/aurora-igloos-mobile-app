@@ -5,9 +5,9 @@ import IconButton from '../IconButton'
 import { useNavigation } from '@react-navigation/native'
 import { useLayoutEffect } from 'react'
 import DetailContainer from '../shared/DetailContainer'
+import { useSelector } from 'react-redux'
 
-function BookingDetail({ bookingId }) {
-	const booking = getBookings().find(booking => booking.id === bookingId)
+function BookingDetail({ booking }) {
 	const navigation = useNavigation()
 
 	function onEditBooking() {
@@ -37,7 +37,7 @@ function BookingDetail({ bookingId }) {
 
 				<View>
 					<Text style={styles.detailTitle}>Payment</Text>
-					<Text style={styles.detail}>{booking.paymentMethod}</Text>
+					<Text style={styles.detail}>{booking.paymentMethodName}</Text>
 				</View>
 
 				<View>
@@ -63,7 +63,7 @@ function BookingDetail({ bookingId }) {
 
 				<View style={styles.customerContainer}>
 					<Text style={[styles.detailTitle, styles.customerTitleText]}>Phone</Text>
-					<Text style={[styles.detail, styles.customerDetailText]}>{booking.customerPhoneNumber}</Text>
+					<Text style={[styles.detail, styles.customerDetailText]}>{booking.customerPhone}</Text>
 				</View>
 			</View>
 		</DetailContainer>

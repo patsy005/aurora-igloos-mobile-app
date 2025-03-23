@@ -12,6 +12,8 @@ function BookingListItem({ booking }) {
 		})
 	}
 
+	console.log(booking)
+
 	return (
 		<ListItemContainer>
 			<Pressable onPress={() => getBookingDetailsHandler()} style={({ pressed }) => pressed && styles.pressed}>
@@ -32,7 +34,7 @@ function BookingListItem({ booking }) {
 					</View>
 
 					<View style={styles.amountContainer}>
-						<Text style={[styles.textShared, styles.amountText]}>${booking.amount.toFixed(2)}</Text>
+						<Text style={[styles.textShared, styles.amountText]}>${booking?.amount?.toFixed(2)}</Text>
 					</View>
 				</View>
 			</Pressable>
