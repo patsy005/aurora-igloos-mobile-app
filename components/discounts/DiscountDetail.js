@@ -3,9 +3,12 @@ import { DUMMY_DISCOUNTS } from '../../constants/dummy-data'
 import { useNavigation } from '@react-navigation/native'
 import DetailContainer from '../shared/DetailContainer'
 import { Colors } from '../../constants/colors'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { fetchDiscounts } from '../../slices/discountsSlice'
 
-function DiscountDetail({ discountId }) {
-	const discount = DUMMY_DISCOUNTS.find(d => d.id === discountId)
+function DiscountDetail({ discount }) {
+
 	const navigation = useNavigation()
 
 	function onEditDiscount() {

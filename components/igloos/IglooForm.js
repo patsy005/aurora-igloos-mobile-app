@@ -7,8 +7,10 @@ import FormLabel from '../form/FormLabel'
 import Input from '../form/Input'
 import { Colors } from '../../constants/colors'
 import Button from '../Button'
+import { useSelector } from 'react-redux'
 
 function IglooForm({ iglooId }) {
+	const igloos = useSelector(state => state.igloos.igloos)
 	const {
 		handleSubmit,
 		register,
@@ -20,7 +22,7 @@ function IglooForm({ iglooId }) {
 
 	useEffect(() => {
 		if (iglooId) {
-			const igloo = getIgloos().find(igloo => igloo.id === iglooId)
+			const igloo = igloos?.find(igloo => igloo.id === iglooId)
 			if (igloo) {
 				setValue('name', igloo.name)
 				setValue('capacity', String(igloo.capacity))

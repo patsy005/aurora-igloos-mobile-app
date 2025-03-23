@@ -5,9 +5,9 @@ import { Image, StyleSheet, Text, View } from 'react-native'
 import IconButton from '../IconButton'
 import { Colors } from '../../constants/colors'
 
-function ForumDetail({ postId }) {
-	const post = getForumPosts().find(post => post.id === postId)
+function ForumDetail({ post }) {
 	const navigation = useNavigation()
+	const tagsArray = post.tags ? post.tags.split(',').map(tag => tag.trim()) : []
 
 	function onEditPost() {
 		navigation.navigate('PostForm', {
@@ -41,14 +41,14 @@ function ForumDetail({ postId }) {
 						size={24}
 						onPress={onShowPostComments}
 					/>
-					<Text style={styles.commentText}>{post.comments.length}</Text>
+					<Text style={styles.commentText}>{post.forumComment.length}</Text>
 				</View>
 			</View>
 
 			<View style={styles.tagsContainer}>
 				<Text style={styles.header}>Tags</Text>
 				<View style={styles.tagsContainer}>
-					{post.tags.map(tag => (
+					{tagsArray.map(tag => (
 						<View style={styles.tag} key={tag}>
 							<Text style={styles.tagText}>{tag}</Text>
 						</View>
@@ -63,7 +63,7 @@ function ForumDetail({ postId }) {
 						<Image source={require('../../assets/images/user.jpg')} style={styles.image} />
 					</View>
 					<Text style={styles.authorName}>
-						{post.employee.name} {post.employee.surname}
+						{post.employeeName} {post.employeeSurname}
 					</Text>
 				</View>
 			</View>

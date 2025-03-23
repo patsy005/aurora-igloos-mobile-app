@@ -19,8 +19,6 @@ function BookingsScreen({ navigation }) {
 		dispatch(fetchBookings())
 	}, [])
 
-	// console.log(bookingsData)
-
 	function onAddBooking() {
 		navigation.navigate('BookingForm')
 	}

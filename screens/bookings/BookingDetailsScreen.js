@@ -9,11 +9,7 @@ function BookingDetailsScreen({ route }) {
 	const booking = bookings?.find(booking => booking.id === bookingId)
 	const isLoading = useSelector(state => state.bookings.isLoading)
 
-	return (
-		<ScrollView style={styles.screen}>
-			{!isLoading && booking && <BookingDetail bookingId={bookingId} booking={booking} />}
-		</ScrollView>
-	)
+	return <ScrollView style={styles.screen}>{!isLoading && booking && <BookingDetail booking={booking} />}</ScrollView>
 }
 
 export default BookingDetailsScreen

@@ -176,7 +176,13 @@ export default function App() {
 							}}
 						/>
 
-						<Stack.Screen name="CustomerDetails" component={CustomerDetailScreen} />
+						<Stack.Screen
+							name="CustomerDetails"
+							component={CustomerDetailScreen}
+							options={{
+								headerTitle: 'Customer details',
+							}}
+						/>
 						<Stack.Screen name="CustomerForm" component={CustomerFormScreen} options={{ presentation: 'modal' }} />
 
 						<Stack.Screen

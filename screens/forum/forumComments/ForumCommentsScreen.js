@@ -3,11 +3,21 @@ import ForumCommentListItem from '../../../components/forum/forumComment/ForumCo
 import { Colors } from '../../../constants/colors'
 import { getForumPosts } from '../../../constants/dummy-data'
 import ListScreen from '../../screen/ListScreen'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { fetchForumPosts } from '../../../slices/forumSlice'
 
 function ForumCommentsScreen({ route, navigation }) {
 	const postId = route.params.postId
+	const posts = useSelector(state => state.forum.forumPosts)
+	const isLoading = useSelector(state => state.forum.isLoading)
+	const dispatch = useDispatch()
 
-	const postComments = getForumPosts().find(post => post.id === postId).comments
+	const postComments = posts?.find(post => post.id === postId).forumComment
+
+	useEffect(() => {
+		dispatch(fetchForumPosts())
+	}, [])
 
 	function addCommentHandler() {
 		navigation.navigate('CommentForm', {
@@ -16,16 +26,20 @@ function ForumCommentsScreen({ route, navigation }) {
 	}
 
 	function renderPostCommentListItem(itemData) {
-		return <ForumCommentListItem comment={itemData.item} />
+		return <ForumCommentListItem comment={itemData.item} posts={posts} />
 	}
 
 	return (
-		<ListScreen
-			onAdd={addCommentHandler}
-			onRenderListItem={renderPostCommentListItem}
-			buttonLabel="Add comment"
-			data={postComments}
-		/>
+		<>
+			{!isLoading && (
+				<ListScreen
+					onAdd={addCommentHandler}
+					onRenderListItem={renderPostCommentListItem}
+					buttonLabel="Add comment"
+					data={postComments}
+				/>
+			)}
+		</>
 	)
 }
 

@@ -4,8 +4,7 @@ import { useNavigation } from '@react-navigation/native'
 import DetailContainer from '../shared/DetailContainer'
 import { Colors } from '../../constants/colors'
 
-function EmployeeDetail({ employeeId }) {
-	const employee = getEmployees().find(employee => employee.id === employeeId)
+function EmployeeDetail({ employee }) {
 	const navigation = useNavigation()
 
 	function onEditEmployee() {
@@ -46,10 +45,10 @@ function EmployeeDetail({ employeeId }) {
 					<Text style={[styles.detailTitle, styles.boxTitle]}>Address</Text>
 					<View style={styles.addressBox}>
 						<Text style={[styles.detail, styles.boxDetail]}>
-							{employee.address.street} {employee.address.streetNumber}
+							{employee.street} {employee.streetNumber}
 						</Text>
-						<Text style={styles.addressText}>{employee.address.city}</Text>
-						<Text style={styles.addressText}>{employee.address.country}</Text>
+						<Text style={styles.addressText}>{employee.city}</Text>
+						<Text style={styles.addressText}>{employee.country}</Text>
 					</View>
 				</View>
 			</View>

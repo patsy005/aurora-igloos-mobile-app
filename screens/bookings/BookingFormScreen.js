@@ -3,9 +3,11 @@ import BookingForm from '../../components/bookings/BookingForm'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useNavigation } from '@react-navigation/native'
 import { useLayoutEffect } from 'react'
+import { useSelector } from 'react-redux'
 
 function BookingFormScreen({ route }) {
 	const bookingId = route?.params?.bookingId
+	const isLoading = useSelector(state => state.bookings.isLoading)
 	const navigation = useNavigation()
 
 	const isEditing = !!bookingId
@@ -18,7 +20,7 @@ function BookingFormScreen({ route }) {
 
 	return (
 		<GestureHandlerRootView style={styles.screen}>
-			<BookingForm bookingId={bookingId} />
+			{!isLoading && <BookingForm bookingId={bookingId} />}
 		</GestureHandlerRootView>
 	)
 }

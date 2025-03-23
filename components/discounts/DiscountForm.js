@@ -7,8 +7,10 @@ import FormLabel from '../form/FormLabel'
 import Input from '../form/Input'
 import Button from '../Button'
 import { DUMMY_DISCOUNTS } from '../../constants/dummy-data'
+import { useSelector } from 'react-redux'
 
 function DiscountForm({ discountId }) {
+	const discounts = useSelector(state => state.discounts.discounts)
 	const {
 		handleSubmit,
 		register,
@@ -20,7 +22,7 @@ function DiscountForm({ discountId }) {
 
 	useEffect(() => {
 		if (discountId) {
-			const discount = DUMMY_DISCOUNTS.find(discount => discount.id === discountId)
+			const discount = discounts?.find(discount => discount.id === discountId)
 			if (discount) {
 				setValue('name', discount.name)
 				setValue('discount', String(discount.discount))

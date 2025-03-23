@@ -3,10 +3,17 @@ import { getCustomers } from '../../constants/dummy-data'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import DetailContainer from '../shared/DetailContainer'
 import { Colors } from '../../constants/colors'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { fetchBookings } from '../../slices/bookingsSlice'
+import { getCustomerBooking } from '../../slices/customersSlice'
 
-function CustomerDetail({ customerId }) {
-	const customer = getCustomers().find(customer => customer.id === customerId)
+function CustomerDetail({ customer }) {
+	const bookings = useSelector(state => state.bookings.bookings)
+	const dispatch = useDispatch()
 	const navigation = useNavigation()
+
+	const customerBookings = bookings.filter(b => b.idCustomer === customer.id) ?? []
 
 	function onEditCustomer() {
 		navigation.navigate('CustomerForm', {
@@ -15,45 +22,49 @@ function CustomerDetail({ customerId }) {
 	}
 
 	return (
-		<DetailContainer onEdit={onEditCustomer}>
-			<View style={styles.imageContainer}>
-				<Image source={require('../../assets/images/user.jpg')} style={styles.image} />
-			</View>
-
-			<View>
-				<Text style={styles.nameText}>
-					{customer.name} {customer.surname}
-				</Text>
-			</View>
-
-			<View>
-				<Text style={styles.detailTitle}>email address</Text>
-				<Text style={styles.detail}>{customer.email}</Text>
-			</View>
-
-			<View style={styles.boxesContainer}>
-				<View style={styles.boxContainer}>
-					<Text style={[styles.detailTitle, styles.boxTitle]}>phone number</Text>
-					<Text style={[styles.detail, styles.boxDetail]}>{customer.phoneNumber}</Text>
-				</View>
-
-				<View style={styles.boxContainer}>
-					<Text style={[styles.detailTitle, styles.boxTitle]}>number of bookings</Text>
-					<Text style={[styles.detail, styles.boxDetail]}>{customer.bookings.length}</Text>
-				</View>
-
-				<View style={styles.boxContainer}>
-					<Text style={[styles.detailTitle, styles.boxTitle]}>Address</Text>
-					<View style={styles.addressBox}>
-						<Text style={[styles.detail, styles.boxDetail]}>
-							{customer.address.street} {customer.address.streetNumber}
-						</Text>
-						<Text style={styles.addressText}>{customer.address.city}</Text>
-						<Text style={styles.addressText}>{customer.address.country}</Text>
+		<>
+			{customerBookings.length > 0 && (
+				<DetailContainer onEdit={onEditCustomer}>
+					<View style={styles.imageContainer}>
+						<Image source={require('../../assets/images/user.jpg')} style={styles.image} />
 					</View>
-				</View>
-			</View>
-		</DetailContainer>
+
+					<View>
+						<Text style={styles.nameText}>
+							{customer.name} {customer.surname}
+						</Text>
+					</View>
+
+					<View>
+						<Text style={styles.detailTitle}>email address</Text>
+						<Text style={styles.detail}>{customer.email}</Text>
+					</View>
+
+					<View style={styles.boxesContainer}>
+						<View style={styles.boxContainer}>
+							<Text style={[styles.detailTitle, styles.boxTitle]}>phone number</Text>
+							<Text style={[styles.detail, styles.boxDetail]}>{customer.phone}</Text>
+						</View>
+
+						<View style={styles.boxContainer}>
+							<Text style={[styles.detailTitle, styles.boxTitle]}>number of bookings</Text>
+							<Text style={[styles.detail, styles.boxDetail]}>{customerBookings.length}</Text>
+						</View>
+
+						<View style={styles.boxContainer}>
+							<Text style={[styles.detailTitle, styles.boxTitle]}>Address</Text>
+							<View style={styles.addressBox}>
+								<Text style={[styles.detail, styles.boxDetail]}>
+									{customer.street} {customer.streetNumber}
+								</Text>
+								<Text style={styles.addressText}>{customer.city}</Text>
+								<Text style={styles.addressText}>{customer.country}</Text>
+							</View>
+						</View>
+					</View>
+				</DetailContainer>
+			)}
+		</>
 	)
 }
 

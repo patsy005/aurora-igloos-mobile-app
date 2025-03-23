@@ -6,10 +6,17 @@ import { Colors } from '../../constants/colors'
 import FormLabel from '../form/FormLabel'
 import Input from '../form/Input'
 import Button from '../Button'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchIgloos } from '../../slices/igloosSlice'
+import { fetchCustomers } from '../../slices/customersSlice'
 
 function BookingForm({ bookingId }) {
+	const bookings = useSelector(state => state.bookings.bookings)
+	const igloos = useSelector(state => state.igloos.igloos)
+	const customers = useSelector(state => state.customers.customers)
+	const dispatch = useDispatch()
 	const {
 		handleSubmit,
 		register,
@@ -22,8 +29,13 @@ function BookingForm({ bookingId }) {
 	const isEditing = !!bookingId
 
 	useEffect(() => {
+		dispatch(fetchIgloos())
+		dispatch(fetchCustomers())
+	}, [dispatch])
+
+	useEffect(() => {
 		if (bookingId) {
-			const booking = getBookings().find(booking => booking.id === bookingId)
+			const booking = bookings?.find(booking => booking.id === bookingId)
 			if (booking) {
 				setValue('customer', booking.idCustomer)
 				setValue('checkInDate', booking.checkIn)
@@ -43,8 +55,8 @@ function BookingForm({ bookingId }) {
 		console.log(data)
 	}
 
-	const customers = DUMMY_CUSTOMERS
-	const igloos = DUMMY_IGLOOS
+	// const customers = DUMMY_CUSTOMERS
+	// const igloos = DUMMY_IGLOOS
 
 	const customersOptions = customers.map(customer => ({
 		label: `${customer.name} ${customer.surname}`,
@@ -55,6 +67,14 @@ function BookingForm({ bookingId }) {
 		label: igloo.name,
 		value: igloo.id,
 	}))
+
+	// const iglooOptions = useCallback(() => {
+	// 	const options = igloos.map(igloo => ({
+	// 		label: igloo.name,
+	// 		value: igloo.id,
+	// 	}))
+	// 	return options
+	// }, [igloos])
 
 	return (
 		<View style={styles.screen}>
@@ -158,7 +178,13 @@ function BookingForm({ bookingId }) {
 						<Controller
 							control={control}
 							render={({ field: { onChange, onBlur, value } }) => (
-								<Dropdown data={iglooOptions} onChange={onChange} placeholder="Select igloo" selectedValue={value} isEditing={isEditing} />
+								<Dropdown
+									data={iglooOptions}
+									onChange={onChange}
+									placeholder="Select igloo"
+									selectedValue={value}
+									isEditing={isEditing}
+								/>
 							)}
 							name="igloo"
 							rules={{

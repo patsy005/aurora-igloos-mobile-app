@@ -8,10 +8,13 @@ import Button from '../Button'
 import { Colors } from '../../constants/colors'
 import { useNavigation } from '@react-navigation/native'
 import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+
 
 function ForumForm({ postId }) {
-	const employees = DUMMY_EMPLOYEES
-	const categories = DUMMY_FORUM_CATEGORIES
+	const employees = useSelector(state => state.employees.employees) ?? []
+	const categories = useSelector(state => state.forum.forumCategories) ?? []
+	const posts = useSelector(state => state.forum.forumPosts) ?? []
 
 	const {
 		handleSubmit,
@@ -22,11 +25,12 @@ function ForumForm({ postId }) {
 	} = useForm()
 	const navigation = useNavigation()
 
+
 	const isEditing = !!postId
 
 	useEffect(() => {
 		if (postId) {
-			const post = getForumPosts().find(post => post.id === postId)
+			const post = posts?.find(post => post.id === postId)
 			if (post) {
 				setValue('title', post.title)
 				setValue('postContent', post.postContent)
@@ -50,7 +54,7 @@ function ForumForm({ postId }) {
 	}))
 
 	const categoryOptions = categories.map(category => ({
-		label: category.categoryName,
+		label: category.name,
 		value: category.id,
 	}))
 

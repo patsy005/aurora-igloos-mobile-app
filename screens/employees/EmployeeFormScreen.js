@@ -3,9 +3,11 @@ import { ScrollView, StyleSheet, Text } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import EmployeeForm from '../../components/employees/EmployeeForm'
 import { Colors } from '../../constants/colors'
+import { useSelector } from 'react-redux'
 
 function EmployeeFormScreen({ route, navigation }) {
 	const employeeId = route?.params?.employeeId
+	const isLoading = useSelector(state => state.employees.isLoading)
 
 	const isEditing = !!employeeId
 
@@ -18,7 +20,7 @@ function EmployeeFormScreen({ route, navigation }) {
 	return (
 		<GestureHandlerRootView style={styles.screen}>
 			<ScrollView contentContainerStyle={{ paddingBottom: 200 }} style={styles.scroll}>
-				<EmployeeForm employeeId={employeeId} />
+				{!isLoading && <EmployeeForm employeeId={employeeId} />}
 			</ScrollView>
 		</GestureHandlerRootView>
 	)

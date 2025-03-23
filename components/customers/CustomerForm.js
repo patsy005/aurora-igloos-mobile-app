@@ -7,8 +7,10 @@ import { Colors } from '../../constants/colors'
 import Button from '../Button'
 import Input from '../form/Input'
 import FormLabel from '../form/FormLabel'
+import { useSelector } from 'react-redux'
 
 function CustomerForm({customerId}) {
+	const customers = useSelector(state => state.customers.customers)
 	const {
 		handleSubmit,
 		register,
@@ -20,18 +22,18 @@ function CustomerForm({customerId}) {
 
 	useEffect(() => {
 		if (customerId) {
-			const customer = getCustomers().find(customer => customer.id === customerId)
+			const customer = customers?.find(customer => customer.id === customerId)
 			if (customer) {
 				setValue('name', customer.name)
 				setValue('surname', customer.surname)
 				setValue('email', customer.email)
-				setValue('phoneNumber', customer.phoneNumber)
-				setValue('street', customer.address.street)
-				setValue('streetNumber', customer.address.streetNumber)
-				setValue('houseNumber', customer.address.houseNumber)
-				setValue('city', customer.address.city)
-				setValue('country', customer.address.country)
-				setValue('postalCode', customer.address.postalCode)
+				setValue('phoneNumber', customer.phone)
+				setValue('street', customer.street)
+				setValue('streetNumber', customer.streetNumber)
+				setValue('houseNumber', customer.houseNumber)
+				setValue('city', customer.city)
+				setValue('country', customer.country)
+				setValue('postalCode', customer.postalCode)
 			}
 		}
 	}, [customerId, setValue])

@@ -6,11 +6,11 @@ import IconButton from '../IconButton'
 import { Colors } from '../../constants/colors'
 import Rate from '../shared/Rate'
 
-function IglooDetail({ iglooId }) {
-	const igloo = getIgloos().find(igloo => igloo.id === iglooId)
+function IglooDetail({ igloo }) {
 	const navigation = useNavigation()
+	
 
-	const discountAmount = igloo.discount === 0 ? 'No discount' : `${igloo.discount}% off`
+	const discountAmount = igloo?.discount === 0 ? 'No discount' : `${igloo.discount}% off`
 
 	function onEditIgloo() {
 		navigation.navigate('IglooForm', {

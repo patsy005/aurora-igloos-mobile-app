@@ -4,9 +4,9 @@ import DetailContainer from '../../shared/DetailContainer'
 import { Colors } from '../../../constants/colors'
 import { getForumPosts } from '../../../constants/dummy-data'
 
-function ForumCommentListItem({ comment }) {
+function ForumCommentListItem({ comment, posts }) {
 	const navigation = useNavigation()
-	const post = getForumPosts().find(post => post.id === comment.idPost)
+	const post = posts?.find(post => post.id === comment.idPost)
 
 	function getPostCommentDetailHandler() {
 		navigation.navigate('CommentDetails', {
@@ -29,7 +29,7 @@ function ForumCommentListItem({ comment }) {
 						<Image source={require('../../../assets/images/user.jpg')} style={styles.image} />
 					</View>
 					<Text style={styles.authorName}>
-						{post.employee.name} {post.employee.surname}
+						{post.employeeName} {post.employeeSurname}
 					</Text>
 				</View>
 				<Text style={styles.postDate}>{comment.commentDate}</Text>
@@ -37,7 +37,7 @@ function ForumCommentListItem({ comment }) {
 
 			<View>
 				<Text style={styles.postTitle}>{post.title}</Text>
-				<Text style={styles.postCategory}>{post.category.categoryName}</Text>
+				<Text style={styles.postCategory}>{post.category}</Text>
 			</View>
 
 			<View>

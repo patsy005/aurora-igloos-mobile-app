@@ -2,9 +2,18 @@ import { Text } from 'react-native'
 import { DUMMY_DISCOUNTS } from '../../constants/dummy-data'
 import ListScreen from '../screen/ListScreen'
 import DiscountListItem from '../../components/discounts/DiscountListItem'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { fetchDiscounts } from '../../slices/discountsSlice'
 
 function DiscountsScreen({ navigation }) {
-	const discounts = DUMMY_DISCOUNTS
+	const discounts = useSelector(state => state.discounts.discounts)
+	const isLoading = useSelector(state => state.discounts.isLoading)
+	const dispatch = useDispatch()
+
+	useEffect(() => {
+		dispatch(fetchDiscounts())
+	}, [])
 
 	function addDiscountHandler() {
 		navigation.navigate('DiscountForm')
@@ -14,12 +23,16 @@ function DiscountsScreen({ navigation }) {
 		return <DiscountListItem discount={itemData.item} />
 	}
 	return (
-		<ListScreen
-			onAdd={addDiscountHandler}
-			onRenderListItem={renderDiscountListItem}
-			buttonLabel="Add discount"
-			data={discounts}
-		/>
+		<>
+			{!isLoading && (
+				<ListScreen
+					onAdd={addDiscountHandler}
+					onRenderListItem={renderDiscountListItem}
+					buttonLabel="Add discount"
+					data={discounts}
+				/>
+			)}
+		</>
 	)
 }
 

@@ -8,8 +8,13 @@ import { DUMMY_EMPLOYEE_ROLES, getEmployees } from '../../constants/dummy-data'
 import Dropdown from '../Dropdown'
 import { useEffect } from 'react'
 import Button from '../Button'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchEmploteeRoles } from '../../slices/employeeRolesSlice'
 
 function EmployeeForm({ employeeId }) {
+	const employees = useSelector(state => state.employees.employees)
+	const roles = useSelector(state => state.employeeRoles.employeeRoles)
+	const dispatch = useDispatch()
 	const {
 		handleSubmit,
 		register,
@@ -18,25 +23,27 @@ function EmployeeForm({ employeeId }) {
 		formState: { errors, isLoading },
 	} = useForm()
 	const navigation = useNavigation()
-	const roles = DUMMY_EMPLOYEE_ROLES
 
-    const isEditing = employeeId ? true : false
+	const isEditing = employeeId ? true : false
 
+	useEffect(() => {
+		dispatch(fetchEmploteeRoles())
+	}, [dispatch])
 
 	useEffect(() => {
 		if (employeeId) {
-			const employee = getEmployees().find(employee => employee.id === employeeId)
+			const employee = employees?.find(employee => employee.id === employeeId)
 			if (employee) {
 				setValue('name', employee.name)
 				setValue('surname', employee.surname)
 				setValue('email', employee.email)
 				setValue('phoneNumber', employee.phoneNumber)
-				setValue('street', employee.address.street)
-				setValue('streetNumber', employee.address.streetNumber)
-				setValue('houseNumber', employee.address.houseNumber)
-				setValue('city', employee.address.city)
-				setValue('country', employee.address.country)
-				setValue('postalCode', employee.address.postalCode)
+				setValue('street', employee.street)
+				setValue('streetNumber', employee.streetNumber)
+				setValue('houseNumber', employee.houseNumber)
+				setValue('city', employee.city)
+				setValue('country', employee.country)
+				setValue('postalCode', employee.postalCode)
 				setValue('role', employee.roleId)
 			}
 		}
@@ -373,7 +380,7 @@ function EmployeeForm({ employeeId }) {
 									onChange={onChange}
 									placeholder="Select employee role"
 									selectedValue={value}
-                                    isEditing={isEditing}
+									isEditing={isEditing}
 								/>
 							)}
 							name="role"

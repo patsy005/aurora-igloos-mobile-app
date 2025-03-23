@@ -6,6 +6,7 @@ import { Colors } from '../../constants/colors'
 
 function ForumListItem({ post }) {
 	const navigation = useNavigation()
+	const tagsArray = post.tags ? post.tags.split(',').map(tag => tag.trim()) : [];
 
 	function getPostDetaulHandler() {
 		navigation.navigate('PostDetails', {
@@ -25,11 +26,11 @@ function ForumListItem({ post }) {
 				<View style={styles.titleContainer}>
 					<View>
 						<Text style={styles.postTitle}>{post.title}</Text>
-						<Text style={styles.postCategory}>{post.category.categoryName}</Text>
+						<Text style={styles.postCategory}>{post.category}</Text>
 					</View>
 					<View>
 						<Text style={styles.createdBy}>
-							{post.employee.name} {post.employee.surname}
+							{post.employeeName} {post.employeeSurname}
 						</Text>
 						<Text style={styles.postDate}>{post.postDate}</Text>
 					</View>
@@ -41,7 +42,7 @@ function ForumListItem({ post }) {
 
 				<View style={styles.bottomContainer}>
 					<View style={styles.tagsContainer}>
-						{post.tags.map(tag => (
+						{tagsArray.map(tag => (
 							<View style={styles.tag} key={tag}>
 								<Text style={styles.tagText}>{tag}</Text>
 							</View>
@@ -50,7 +51,7 @@ function ForumListItem({ post }) {
 
 					<View style={styles.commentsContainer}>
 						<IconButton iconName="comment-dots" iconType="FontAwesome6" color={Colors.primary67} size={20} onPress={() => onShowPostComments()} />
-						<Text style={styles.commentText}>{post.comments.length}</Text>
+						<Text style={styles.commentText}>{post.forumComment.length}</Text>
 					</View>
 				</View>
 			</Pressable>

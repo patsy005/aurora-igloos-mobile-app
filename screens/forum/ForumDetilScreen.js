@@ -1,24 +1,24 @@
-import { ScrollView, StyleSheet, Text } from "react-native"
-import { Colors } from "../../constants/colors"
-import ForumDetail from "../../components/forum/ForumDetail"
+import { ScrollView, StyleSheet, Text } from 'react-native'
+import { Colors } from '../../constants/colors'
+import ForumDetail from '../../components/forum/ForumDetail'
+import { useSelector } from 'react-redux'
 
-function ForumDetilScreen({route}) {
-    const postId = route.params.postId
+function ForumDetilScreen({ route }) {
+	const postId = route.params.postId
+	const posts = useSelector(state => state.forum.forumPosts)
+	const post = posts?.find(post => post.id === postId)
+	const isLoading = useSelector(state => state.forum.isLoading)
 
-    return (
-        <ScrollView style={styles.screen}>
-            <ForumDetail postId={postId} />
-        </ScrollView>
-    )
+	return <ScrollView style={styles.screen}>{!isLoading && <ForumDetail post={post} />}</ScrollView>
 }
 
 export default ForumDetilScreen
 
 const styles = StyleSheet.create({
-    screen: {
-        flex: 1,
-        backgroundColor: Colors.primary6,
-        paddingVertical: 20,
-        paddingHorizontal: 15,
-    },
+	screen: {
+		flex: 1,
+		backgroundColor: Colors.primary6,
+		paddingVertical: 20,
+		paddingHorizontal: 15,
+	},
 })

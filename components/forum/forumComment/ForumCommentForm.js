@@ -7,8 +7,10 @@ import FormLabel from '../../form/FormLabel'
 import Input from '../../form/Input'
 import { Colors } from '../../../constants/colors'
 import Button from '../../Button'
+import { useSelector } from 'react-redux'
 
 function ForumCommentForm({ postId, commentId }) {
+	const posts = useSelector(state => state.forum.forumPosts)
 	const {
 		handleSubmit,
 		register,
@@ -22,8 +24,8 @@ function ForumCommentForm({ postId, commentId }) {
 
 	useEffect(() => {
 		if (commentId) {
-			const post = getForumPosts().find(post => post.id === postId)
-			const comment = post.comments.find(comment => comment.id === commentId)
+			const post = posts?.find(post => post.id === postId)
+			const comment = post.forumComment.find(comment => comment.id === commentId)
 			if (comment) {
 				setValue('comment', comment.comment)
 			}

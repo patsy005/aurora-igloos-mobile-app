@@ -2,9 +2,15 @@ import { useNavigation } from '@react-navigation/native'
 import ListItemContainer from '../shared/ListItemContainer'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { Colors } from '../../constants/colors'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { fetchBookings } from '../../slices/bookingsSlice'
 
 function CustomerListItem({ customer }) {
+	const bookings = useSelector(state => state.bookings.bookings)
 	const navigation = useNavigation()
+
+	const customerBookings = bookings.filter(b => b.idCustomer === customer.id) ?? []
 
 	function getCustomerDetailHandler() {
 		navigation.navigate('CustomerDetails', {
@@ -12,25 +18,29 @@ function CustomerListItem({ customer }) {
 		})
 	}
 	return (
-		<ListItemContainer>
-			<Pressable
-				onPress={() => getCustomerDetailHandler()}
-				style={({ pressed }) => [styles.pressable, pressed && styles.pressed]}>
-				<View style={styles.container}>
-					<View style={styles.textContainer}>
-						<Text style={styles.nameText}>
-							{customer.name} {customer.surname}
-						</Text>
-						<Text style={styles.emailText}>{customer.email}</Text>
-					</View>
+		<>
+			{customerBookings.length > 0 && (
+				<ListItemContainer>
+					<Pressable
+						onPress={() => getCustomerDetailHandler()}
+						style={({ pressed }) => [styles.pressable, pressed && styles.pressed]}>
+						<View style={styles.container}>
+							<View style={styles.textContainer}>
+								<Text style={styles.nameText}>
+									{customer.name} {customer.surname}
+								</Text>
+								<Text style={styles.emailText}>{customer.email}</Text>
+							</View>
 
-					<View>
-						<Text style={styles.numOfBookingsText}>Number of bookings</Text>
-						<Text style={styles.bookingsNumberText}>{customer.bookings.length}</Text>
-					</View>
-				</View>
-			</Pressable>
-		</ListItemContainer>
+							<View>
+								<Text style={styles.numOfBookingsText}>Number of bookings</Text>
+								<Text style={styles.bookingsNumberText}>{customerBookings?.length}</Text>
+							</View>
+						</View>
+					</Pressable>
+				</ListItemContainer>
+			)}
+		</>
 	)
 }
 
