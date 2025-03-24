@@ -7,10 +7,12 @@ import FormLabel from '../form/FormLabel'
 import Input from '../form/Input'
 import { Colors } from '../../constants/colors'
 import Button from '../Button'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { addNewIgloo, editIgloo, fetchIgloos } from '../../slices/igloosSlice'
 
 function IglooForm({ iglooId }) {
 	const igloos = useSelector(state => state.igloos.igloos)
+	const dispatch = useDispatch()
 	const {
 		handleSubmit,
 		register,
@@ -36,6 +38,25 @@ function IglooForm({ iglooId }) {
 	}
 
 	function onSubmit(data) {
+		const newIgloo = {
+			name: data.name,
+			capacity: Number(data.capacity),
+			pricePerNight: Number(data.pricePerNight),
+			discountName: data.discountName ?? '',
+			discount: data.discount ?? 0,
+		}
+
+		if (iglooId) {
+			console.log('editing igloo')
+			dispatch(editIgloo({ id: iglooId, igloo: newIgloo }))
+				.then(() => dispatch(fetchIgloos()))
+				.then(() => navigation.goBack())
+		} else {
+			console.log('adding igloo')
+			dispatch(addNewIgloo(newIgloo))
+				.then(() => dispatch(fetchIgloos()))
+				.then(() => navigation.goBack())
+		}
 		console.log(data)
 	}
 

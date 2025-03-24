@@ -6,10 +6,11 @@ import { Colors } from '../../constants/colors'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { fetchDiscounts } from '../../slices/discountsSlice'
+import { deleteIgloo } from '../../slices/igloosSlice'
 
 function DiscountDetail({ discount }) {
-
 	const navigation = useNavigation()
+	const dispatch = useDispatch()
 
 	function onEditDiscount() {
 		navigation.navigate('DiscountForm', {
@@ -17,8 +18,15 @@ function DiscountDetail({ discount }) {
 		})
 	}
 
+	function onDeleteDiscount() {
+		console.log('delete clicked')
+		dispatch(deleteIgloo(discount.id))
+			.then(() => dispatch(fetchDiscounts()))
+			.then(() => navigation.goBack())
+	}
+
 	return (
-		<DetailContainer onEdit={onEditDiscount}>
+		<DetailContainer onEdit={onEditDiscount} onDelete={onDeleteDiscount}>
 			<View>
 				<Text style={styles.discountName}>{discount.name}</Text>
 			</View>

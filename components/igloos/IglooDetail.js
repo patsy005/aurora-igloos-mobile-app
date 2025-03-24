@@ -5,10 +5,12 @@ import DetailContainer from '../shared/DetailContainer'
 import IconButton from '../IconButton'
 import { Colors } from '../../constants/colors'
 import Rate from '../shared/Rate'
+import { useDispatch } from 'react-redux'
+import { deleteIgloo, fetchIgloos } from '../../slices/igloosSlice'
 
 function IglooDetail({ igloo }) {
 	const navigation = useNavigation()
-	
+	const dispatch = useDispatch()
 
 	const discountAmount = igloo?.discount === 0 ? 'No discount' : `${igloo.discount}% off`
 
@@ -18,8 +20,14 @@ function IglooDetail({ igloo }) {
 		})
 	}
 
+	function onDeleteIgloo() {
+		dispatch(deleteIgloo(igloo.id))
+			.then(() => dispatch(fetchIgloos()))
+			.then(() => navigation.goBack())
+	}
+
 	return (
-		<DetailContainer onEdit={onEditIgloo}>
+		<DetailContainer onEdit={onEditIgloo} onDelete={onDeleteIgloo}>
 			<View style={styles.imageContainer}>
 				<Image source={require('../../assets/images/igloo_6.jpg')} style={styles.image} />
 			</View>
@@ -119,11 +127,11 @@ const styles = StyleSheet.create({
 		fontSize: 20,
 		alignSelf: 'flex-start',
 	},
-    ratingContainer: {
-        justifyContent: 'flex-start',
-        alignItems: 'flex-start',
-    },
-    rate: {
-        flexDirection: 'row',
-    }
+	ratingContainer: {
+		justifyContent: 'flex-start',
+		alignItems: 'flex-start',
+	},
+	rate: {
+		flexDirection: 'row',
+	},
 })

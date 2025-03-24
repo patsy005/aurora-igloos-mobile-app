@@ -16,10 +16,6 @@ function BookingsScreen({ navigation }) {
 	const isLoading = useSelector(state => state.bookings.isLoading)
 	const dispatch = useDispatch()
 
-	const fetchBookingsFallback = useCallback(() => {
-		dispatch(fetchBookings())
-	}, [bookingsData])
-
 	useEffect(() => {
 		dispatch(fetchBookings())
 	}, [dispatch])
