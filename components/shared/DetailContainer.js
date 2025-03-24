@@ -2,7 +2,7 @@ import { Image, StyleSheet, View } from 'react-native'
 import IconButton from '../IconButton'
 import { Colors } from '../../constants/colors'
 
-function DetailContainer({ onEdit, children }) {
+function DetailContainer({ onEdit, onDelete, children }) {
 	return (
 		<View style={styles.container}>
 			<View style={styles.iconsContainer}>
@@ -12,7 +12,7 @@ function DetailContainer({ onEdit, children }) {
 					iconType="FontAwesome6"
 					color={Colors.primary67}
 					size={24}
-					onPress={() => {}}
+					onPress={onDelete}
 				/>
 			</View>
 

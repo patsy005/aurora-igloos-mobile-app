@@ -2,7 +2,7 @@ import { FlatList, StyleSheet, View } from 'react-native'
 import Button from '../../components/Button'
 import { Colors } from '../../constants/colors'
 
-function ListScreen({ onAdd, onRenderListItem, buttonLabel, data }) {
+function ListScreen({ onAdd, onRenderListItem, buttonLabel, data, extraData }) {
 	return (
 		<View style={styles.container}>
 			<View>
@@ -13,7 +13,8 @@ function ListScreen({ onAdd, onRenderListItem, buttonLabel, data }) {
 				<View style={styles.listContainer}>
 					<FlatList
 						data={data}
-						keyExtractor={item => item.id}
+						extraData={extraData}
+						keyExtractor={item => item.id.toString()}
 						renderItem={onRenderListItem}
 						contentContainerStyle={{ paddingBottom: 40 }}
 					/>

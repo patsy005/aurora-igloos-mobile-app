@@ -6,7 +6,7 @@ import { FlatList } from 'react-native-gesture-handler'
 import BookingListItem from '../../components/bookings/BookingListItem'
 import ListScreen from '../screen/ListScreen'
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { fetchBookings } from '../../slices/bookingsSlice'
 import Spinner from '../../components/shared/Spinner'
 
@@ -16,9 +16,13 @@ function BookingsScreen({ navigation }) {
 	const isLoading = useSelector(state => state.bookings.isLoading)
 	const dispatch = useDispatch()
 
+	const fetchBookingsFallback = useCallback(() => {
+		dispatch(fetchBookings())
+	}, [bookingsData])
+
 	useEffect(() => {
 		dispatch(fetchBookings())
-	}, [])
+	}, [dispatch])
 
 	function onAddBooking() {
 		navigation.navigate('BookingForm')
@@ -37,6 +41,7 @@ function BookingsScreen({ navigation }) {
 					onRenderListItem={renderBookingListItem}
 					buttonLabel="Add booking"
 					data={bookingsData}
+					extraData={bookingsData}
 				/>
 			)}
 		</>

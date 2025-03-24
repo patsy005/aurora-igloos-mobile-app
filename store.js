@@ -6,6 +6,7 @@ import { employeesSlice } from './slices/employeesSlice'
 import { employeeRolesSlice } from './slices/employeeRolesSlice'
 import { discountsSlice } from './slices/discountsSlice'
 import { forumSlice } from './slices/forumSlice'
+import { paymentMethodsSlice } from './slices/paymentMethodsSlice'
 
 export const store = configureStore({
 	reducer: {
@@ -15,6 +16,11 @@ export const store = configureStore({
 		employees: employeesSlice.reducer,
 		employeeRoles: employeeRolesSlice.reducer,
 		discounts: discountsSlice.reducer,
-        forum: forumSlice.reducer
+		forum: forumSlice.reducer,
+        paymentMethods: paymentMethodsSlice.reducer,
 	},
+	middleware: getDefaultMiddleware =>
+		getDefaultMiddleware({
+			serializableCheck: false, // Wyłącza SerializableStateInvariantMiddleware
+		}),
 })

@@ -5,10 +5,12 @@ import IconButton from '../IconButton'
 import { useNavigation } from '@react-navigation/native'
 import { useLayoutEffect } from 'react'
 import DetailContainer from '../shared/DetailContainer'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { deleteBooking, fetchBookings } from '../../slices/bookingsSlice'
 
 function BookingDetail({ booking }) {
 	const navigation = useNavigation()
+	const dispatch = useDispatch()
 
 	function onEditBooking() {
 		navigation.navigate('BookingForm', {
@@ -16,8 +18,13 @@ function BookingDetail({ booking }) {
 		})
 	}
 
+	function onDeleteBooking(){
+		console.log(booking.id)
+		dispatch(deleteBooking(booking.id)).then(() => dispatch(fetchBookings())).then(() => navigation.goBack())
+	}
+
 	return (
-		<DetailContainer onEdit={onEditBooking}>
+		<DetailContainer onEdit={onEditBooking} onDelete={onDeleteBooking}>
 			<View style={styles.imageContainer}>
 				<Image source={require('../../assets/images/igloo_6.jpg')} style={styles.image} />
 			</View>

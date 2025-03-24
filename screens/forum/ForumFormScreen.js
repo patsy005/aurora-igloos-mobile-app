@@ -30,8 +30,8 @@ function ForumFormScreen({ route, navigation }) {
 
 	return (
 		<GestureHandlerRootView style={styles.screen}>
-			{isLoading && <Spinner />} {
-			!isLoading && <ForumForm postId={postId} />}
+			{isLoading && <Spinner />}
+			{!isLoading && <ForumForm postId={postId} />}
 		</GestureHandlerRootView>
 	)
 }

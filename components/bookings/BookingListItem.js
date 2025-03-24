@@ -12,7 +12,7 @@ function BookingListItem({ booking }) {
 		})
 	}
 
-	console.log(booking)
+	// console.log(booking)
 
 	return (
 		<ListItemContainer>

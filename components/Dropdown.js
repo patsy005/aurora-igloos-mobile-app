@@ -6,9 +6,22 @@ import { Colors } from '../constants/colors'
 
 function Dropdown({ data, onChange, selectedValue, placeholder, isEditing }) {
 	const [expanded, setExpanded] = useState(false)
-	const [value, setValue] = useState('')
+	const [value, setValue] = useState(selectedValue ? selectedValue.label : placeholder)
 	const [top, setTop] = useState(0)
 	const buttonRef = useRef()
+
+	// const selectedLabel = useMemo(() => {
+	// 	if (isEditing && selectedValue) {
+	// 		return data.find(item => item.value === selectedValue)?.label || placeholder
+	// 	}
+	// 	return selectedValue?.label || placeholder
+	// }, [isEditing, selectedValue, data, placeholder])
+
+	useEffect(() => {
+		if (selectedValue) {
+			setValue(selectedValue.label)
+		}
+	}, [selectedValue])
 
 	const toggleExpanded = useCallback(() => {
 		if (buttonRef.current) {
@@ -37,9 +50,11 @@ function Dropdown({ data, onChange, selectedValue, placeholder, isEditing }) {
 		selectedLabel = (selectedValue && data.find(item => item.value === selectedValue.value)?.label) || placeholder
 	}
 
-	if(isEditing){
+	if (isEditing) {
 		selectedLabel = (selectedValue && data.find(item => item.value === selectedValue)?.label) || placeholder
 	}
+
+	// const selectedLabel = (selectedValue && data.find(item => item.value === selectedValue.value)?.label) || placeholder
 
 	return (
 		<View
@@ -54,7 +69,7 @@ function Dropdown({ data, onChange, selectedValue, placeholder, isEditing }) {
 				setTop(finalValue)
 			}}>
 			<TouchableOpacity style={styles.button} activeOpacity={0.8} onPress={toggleExpanded}>
-				<Text style={[styles.text, styles.buttonText]}>{selectedLabel}</Text>
+				<Text style={[styles.text, styles.buttonText]}>{value}</Text>
 				<AntDesign name={expanded ? 'caretup' : 'caretdown'} color={Colors.primary97} />
 			</TouchableOpacity>
 

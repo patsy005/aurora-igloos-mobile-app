@@ -11,19 +11,30 @@ import { useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchIgloos } from '../../slices/igloosSlice'
 import { fetchCustomers } from '../../slices/customersSlice'
+import { addNewBooking, editBooking, fetchBookings } from '../../slices/bookingsSlice'
+import { fetchEmployees } from '../../slices/employeesSlice'
+import { fetchPaymentMethods } from '../../slices/paymentMethodsSlice'
 
 function BookingForm({ bookingId }) {
 	const bookings = useSelector(state => state.bookings.bookings)
 	const igloos = useSelector(state => state.igloos.igloos)
 	const customers = useSelector(state => state.customers.customers)
+	const paymentMethods = useSelector(state => state.paymentMethods.paymentMethods)
+	const employees = useSelector(state => state.employees.employees)
 	const dispatch = useDispatch()
 	const {
 		handleSubmit,
 		register,
 		setValue,
+		getValues,
 		control,
 		formState: { errors, isLoading },
-	} = useForm()
+	} = useForm({
+		defaultValues: {
+			// checkInDate: bookingId ? bookings.find(b => b.id === bookingId)?.checkIn || '' : '',
+			// checkOutDate: bookingId ? bookings.find(b => b.id === bookingId)?.checkOut || '' : '',
+		},
+	})
 	const navigation = useNavigation()
 
 	const isEditing = !!bookingId
@@ -31,18 +42,25 @@ function BookingForm({ bookingId }) {
 	useEffect(() => {
 		dispatch(fetchIgloos())
 		dispatch(fetchCustomers())
+		dispatch(fetchPaymentMethods())
+		dispatch(fetchEmployees())
 	}, [dispatch])
 
 	useEffect(() => {
 		if (bookingId) {
 			const booking = bookings?.find(booking => booking.id === bookingId)
 			if (booking) {
-				setValue('customer', booking.idCustomer)
+				setValue('customer', { label: `${booking.customerName} ${booking.customerSurname}`, value: booking.idCustomer })
 				setValue('checkInDate', booking.checkIn)
 				setValue('checkOutDate', booking.checkOut)
-				setValue('igloo', booking.idIgloo)
-				setValue('earlyCheckIn', booking.earlyCheckInRequest)
-				setValue('lateCheckOut', booking.lateCheckOutRequest)
+				setValue('igloo', { label: booking.iglooName, value: booking.idIgloo })
+				setValue('earlyCheckIn', !!booking.earlyCheckInRequest)
+				setValue('lateCheckOut', !!booking.lateCheckOutRequest)
+				setValue('employee', {
+					label: `${booking.employeeName} ${booking.employeeSurname}`,
+					value: booking.createdById,
+				})
+				setValue('paymentMethod', { label: booking.paymentMethodName, value: booking.paymentMethodId })
 			}
 		}
 	}, [bookingId])
@@ -52,7 +70,44 @@ function BookingForm({ bookingId }) {
 	}
 
 	function onSubmit(data) {
+		console.log(bookingId)
 		console.log(data)
+		const newBooking = {
+			idCustomer: data.customer.value,
+			checkIn: data.checkInDate,
+			checkOut: data.checkOutDate,
+			idIgloo: data.igloo.value,
+			earlyCheckInRequest: !!data.earlyCheckIn,
+			lateCheckOutRequest: !!data.lateCheckOut,
+			createdById: data.employee.value,
+			paymentMethodId: data.paymentMethod.value === 0 ? 1 : data.paymentMethod.value,
+			customerName: customers.find(c => c.id === data.customer.value).name,
+			customerSurname: customers.find(c => c.id === data.customer.value).surname,
+			customerEmail: customers.find(c => c.id === data.customer.value).email,
+			iglooName: igloos.find(i => i.id === data.igloo.value).name,
+			employeeName: employees.find(e => e.id === data.employee.value).name,
+			employeeSurname: employees.find(e => e.id === data.employee.value).surname,
+			paymentMethodName: paymentMethods.find(pm => pm.id === data.paymentMethod.value).name,
+		}
+		console.log('newBooking', newBooking)
+
+		if (bookingId) {
+			console.log('editing')
+			dispatch(editBooking({ id: bookingId, booking: newBooking })).then(() => {
+				dispatch(fetchBookings()).then(() => navigation.goBack())
+			})
+		} else {
+			dispatch(addNewBooking(newBooking)).then(() => {
+				dispatch(fetchBookings()).then(() => navigation.goBack())
+			})
+			console.log('adding')
+		}
+
+		// dispatch(fetchBookings())
+
+		// navigation.goBack()
+
+		console.log('aaaaa')
 	}
 
 	// const customers = DUMMY_CUSTOMERS
@@ -66,6 +121,16 @@ function BookingForm({ bookingId }) {
 	const iglooOptions = igloos.map(igloo => ({
 		label: igloo.name,
 		value: igloo.id,
+	}))
+
+	const employeeOptions = employees.map(e => ({
+		label: `${e.name} ${e.surname}`,
+		value: e.id,
+	}))
+
+	const paymentMethodOptions = paymentMethods.map(pm => ({
+		label: pm.name,
+		value: pm.id,
 	}))
 
 	// const iglooOptions = useCallback(() => {
@@ -114,7 +179,7 @@ function BookingForm({ bookingId }) {
 										textInputConfig={{
 											onChangeText: onChange,
 											onBlur: onBlur,
-											value,
+											value: value ?? '',
 											placeholder: 'YYYY-MM-DD',
 											placeholderTextColor: Colors.greyLight,
 										}}
@@ -129,8 +194,10 @@ function BookingForm({ bookingId }) {
 									},
 									validate: value => {
 										const date = new Date(value)
-										const isValidDate = !isNaN(date) && value === date.toISOString().split('T')[0] && date >= new Date()
-										return isValidDate || 'Enter a valid date (YYYY-MM-DD)'
+										if (isNaN(date)) return 'Enter a valid date (YYYY-MM-DD)'
+										if (date < new Date() && !isEditing) return 'Check-in date cannot be in the past'
+										if (date > getValues('checkOutDate')) return 'Check-in date must be before check-out date'
+										return true
 									},
 								}}
 							/>
@@ -147,7 +214,7 @@ function BookingForm({ bookingId }) {
 										textInputConfig={{
 											onChangeText: onChange,
 											onBlur: onBlur,
-											value,
+											value: value ?? '',
 											placeholder: 'YYYY-MM-DD',
 											placeholderTextColor: Colors.greyLight,
 										}}
@@ -162,8 +229,12 @@ function BookingForm({ bookingId }) {
 									},
 									validate: value => {
 										const date = new Date(value)
-										const isValidDate = !isNaN(date) && value === date.toISOString().split('T')[0] && date >= new Date()
-										return isValidDate || 'Enter a valid date (YYYY-MM-DD)'
+										// const isValidDate = !isNaN(date) && value === date.toISOString().split('T')[0] && date >= new Date()
+										// return isValidDate || 'Enter a valid date (YYYY-MM-DD)'
+										if (isNaN(date)) return 'Enter a valid date (YYYY-MM-DD)'
+										if (date < new Date() && !isEditing) return 'Check-in date cannot be in the past'
+										if (date < new Date(getValues('checkInDate'))) return 'Check-out date must be after check-in date'
+										return true
 									},
 								}}
 							/>
@@ -196,13 +267,61 @@ function BookingForm({ bookingId }) {
 					</View>
 				</View>
 
+				<View style={styles.inputContainer}>
+					<FormLabel>Employee</FormLabel>
+					<View>
+						<Controller
+							control={control}
+							render={({ field: { onChange, onBlur, value } }) => (
+								<Dropdown
+									data={employeeOptions}
+									onChange={onChange}
+									placeholder="Select employee"
+									selectedValue={value}
+									isEditing={isEditing}
+								/>
+							)}
+							name="employee"
+							rules={{
+								required: 'Please select an employee',
+								validate: value => value !== '' || 'Please select an employee',
+							}}
+						/>
+						{errors.employee && <Text style={styles.errorText}>{errors.employee.message}</Text>}
+					</View>
+				</View>
+
+				<View style={styles.inputContainer}>
+					<FormLabel>Payment method</FormLabel>
+					<View>
+						<Controller
+							control={control}
+							render={({ field: { onChange, onBlur, value } }) => (
+								<Dropdown
+									data={paymentMethodOptions}
+									onChange={onChange}
+									placeholder="Select payment method"
+									selectedValue={value}
+									isEditing={isEditing}
+								/>
+							)}
+							name="paymentMethod"
+							rules={{
+								required: 'Please select a payment method',
+								validate: value => value !== '' || 'Please select a payment method',
+							}}
+						/>
+						{errors.paymentMethod && <Text style={styles.errorText}>{errors.paymentMethod.message}</Text>}
+					</View>
+				</View>
+
 				<View style={[styles.inputContainer, styles.switchContainer]}>
 					<FormLabel>Early check in</FormLabel>
 					<Controller
 						control={control}
 						render={({ field: { onChange, onBlur, value } }) => (
 							<Switch
-								value={value}
+								value={!!value}
 								onValueChange={onChange}
 								trackColor={{ false: Colors.primary6, true: Colors.primary37 }}
 								thumbColor={value ? Colors.white : Colors.greyLight}
@@ -221,7 +340,7 @@ function BookingForm({ bookingId }) {
 						control={control}
 						render={({ field: { onChange, onBlur, value } }) => (
 							<Switch
-								value={value}
+								value={!!value}
 								onValueChange={onChange}
 								trackColor={{ false: Colors.primary6, true: Colors.primary37 }}
 								thumbColor={value ? Colors.white : Colors.greyLight}

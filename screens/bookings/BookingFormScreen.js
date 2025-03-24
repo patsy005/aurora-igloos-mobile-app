@@ -1,10 +1,11 @@
-import { StyleSheet } from 'react-native'
+import { ScrollView, StyleSheet } from 'react-native'
 import BookingForm from '../../components/bookings/BookingForm'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useNavigation } from '@react-navigation/native'
 import { useLayoutEffect } from 'react'
 import { useSelector } from 'react-redux'
 import Spinner from '../../components/shared/Spinner'
+import { Colors } from '../../constants/colors'
 
 function BookingFormScreen({ route }) {
 	const bookingId = route?.params?.bookingId
@@ -21,8 +22,10 @@ function BookingFormScreen({ route }) {
 
 	return (
 		<GestureHandlerRootView style={styles.screen}>
-			{isLoading && <Spinner />}
-			{!isLoading && <BookingForm bookingId={bookingId} />}
+			<ScrollView contentContainerStyle={{ paddingBottom: 200 }} style={styles.scroll}>
+				{isLoading && <Spinner />}
+				{!isLoading && <BookingForm bookingId={bookingId} />}
+			</ScrollView>
 		</GestureHandlerRootView>
 	)
 }
@@ -32,5 +35,8 @@ export default BookingFormScreen
 const styles = StyleSheet.create({
 	screen: {
 		flex: 1,
+	},
+	scroll: {
+		backgroundColor: Colors.primary6,
 	},
 })
