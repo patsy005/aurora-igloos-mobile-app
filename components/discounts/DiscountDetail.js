@@ -5,7 +5,7 @@ import DetailContainer from '../shared/DetailContainer'
 import { Colors } from '../../constants/colors'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
-import { fetchDiscounts } from '../../slices/discountsSlice'
+import { deleteDiscount, fetchDiscounts } from '../../slices/discountsSlice'
 import { deleteIgloo } from '../../slices/igloosSlice'
 
 function DiscountDetail({ discount }) {
@@ -20,9 +20,10 @@ function DiscountDetail({ discount }) {
 
 	function onDeleteDiscount() {
 		console.log('delete clicked')
-		dispatch(deleteIgloo(discount.id))
-			.then(() => dispatch(fetchDiscounts()))
+		dispatch(deleteDiscount(discount.id))
+			.unwrap()
 			.then(() => navigation.goBack())
+			.then(() => dispatch(fetchDiscounts()))
 	}
 
 	return (

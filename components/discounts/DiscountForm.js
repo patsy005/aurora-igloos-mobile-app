@@ -7,10 +7,14 @@ import FormLabel from '../form/FormLabel'
 import Input from '../form/Input'
 import Button from '../Button'
 import { DUMMY_DISCOUNTS } from '../../constants/dummy-data'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { addNewDiscount, editDiscount, fetchDiscounts } from '../../slices/discountsSlice'
+import { fetchIgloos } from '../../slices/igloosSlice'
+import Dropdown from '../Dropdown'
 
 function DiscountForm({ discountId }) {
 	const discounts = useSelector(state => state.discounts.discounts)
+	const igloos = useSelector(state => state.igloos.igloos)
 	const {
 		handleSubmit,
 		register,
@@ -19,6 +23,13 @@ function DiscountForm({ discountId }) {
 		formState: { errors, isLoading },
 	} = useForm()
 	const navigation = useNavigation()
+	const dispatch = useDispatch()
+
+	const isEditing = !!discountId
+
+	useEffect(() => {
+		dispatch(fetchIgloos())
+	}, [])
 
 	useEffect(() => {
 		if (discountId) {
@@ -27,9 +38,12 @@ function DiscountForm({ discountId }) {
 				setValue('name', discount.name)
 				setValue('discount', String(discount.discount))
 				setValue('description', discount.description)
+				setValue('igloo', { label: discount.iglooName, value: discount.idIgloo })
 			}
 		}
 	}, [discountId])
+
+	const iglooOptions = igloos.map(igloo => ({ label: igloo.name, value: igloo.id }))
 
 	function onCancel() {
 		navigation.goBack()
@@ -37,6 +51,24 @@ function DiscountForm({ discountId }) {
 
 	function onSubmit(data) {
 		console.log(data)
+
+		const newDiscount = {
+			name: data.name,
+			discount: data.discount,
+			description: data.description,
+			idIgloo: data.igloo.value,
+			iglooName: data.igloo.label,
+		}
+
+		if (discountId) {
+			dispatch(editDiscount({ id: discountId, discount: newDiscount }))
+				.then(() => dispatch(fetchDiscounts()))
+				.then(() => navigation.goBack())
+		} else {
+			dispatch(addNewDiscount(newDiscount))
+				.then(() => dispatch(fetchDiscounts()))
+				.then(() => navigation.goBack())
+		}
 	}
 	return (
 		<View style={styles.screen}>
@@ -128,6 +160,30 @@ function DiscountForm({ discountId }) {
 							}}
 						/>
 						{errors.description && <Text style={styles.errorText}>{errors.description.message}</Text>}
+					</View>
+				</View>
+
+				<View style={styles.inputContainer}>
+					<FormLabel>Igloo</FormLabel>
+					<View>
+						<Controller
+							control={control}
+							render={({ field: { onChange, onBlur, value } }) => (
+								<Dropdown
+									data={iglooOptions}
+									onChange={onChange}
+									placeholder="Select igloo"
+									selectedValue={value}
+									isEditing={isEditing}
+								/>
+							)}
+							name="igloo"
+							rules={{
+								required: 'Please select an igloo',
+								validate: value => value !== '' || 'Please select an customer',
+							}}
+						/>
+						{errors.igloo && <Text style={styles.errorText}>{errors.igloo.message}</Text>}
 					</View>
 				</View>
 

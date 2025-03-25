@@ -13,7 +13,7 @@ function DiscountDetailScreen({ route }) {
 	return (
 		<ScrollView style={styles.screen}>
 			{isLoading && <Spinner />}
-			{!isLoading && <DiscountDetail discount={discount} />}
+			{!isLoading && discount && <DiscountDetail discount={discount} />}
 		</ScrollView>
 	)
 }
