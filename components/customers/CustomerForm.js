@@ -7,9 +7,10 @@ import { Colors } from '../../constants/colors'
 import Button from '../Button'
 import Input from '../form/Input'
 import FormLabel from '../form/FormLabel'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { addNewCustomer, editCustomer, fetchCustomers } from '../../slices/customersSlice'
 
-function CustomerForm({customerId}) {
+function CustomerForm({ customerId }) {
 	const customers = useSelector(state => state.customers.customers)
 	const {
 		handleSubmit,
@@ -19,6 +20,7 @@ function CustomerForm({customerId}) {
 		formState: { errors, isLoading },
 	} = useForm()
 	const navigation = useNavigation()
+	const dispatch = useDispatch()
 
 	useEffect(() => {
 		if (customerId) {
@@ -44,6 +46,29 @@ function CustomerForm({customerId}) {
 
 	function onSubmit(data) {
 		console.log(data)
+
+		const newCustomer = {
+			name: data.name,
+			surname: data.surname,
+			email: data.email,
+			phone: data.phoneNumber,
+			street: data.street,
+			streetNumber: data.streetNumber,
+			houseNumber: data.houseNumber,
+			city: data.city,
+			country: data.country,
+			postalCode: data.postalCode,
+		}
+
+		if (customerId) {
+			dispatch(editCustomer({ id: customerId, customer: newCustomer }))
+				.then(() => dispatch(fetchCustomers()))
+				.then(() => navigation.goBack())
+		} else {
+			dispatch(addNewCustomer(newCustomer))
+				.then(() => dispatch(fetchCustomers()))
+				.then(() => navigation.goBack())
+		}
 	}
 
 	return (

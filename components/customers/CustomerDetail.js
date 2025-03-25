@@ -6,7 +6,7 @@ import { Colors } from '../../constants/colors'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { fetchBookings } from '../../slices/bookingsSlice'
-import { getCustomerBooking } from '../../slices/customersSlice'
+import { deleteCustomer, getCustomerBooking } from '../../slices/customersSlice'
 
 function CustomerDetail({ customer }) {
 	const bookings = useSelector(state => state.bookings.bookings)
@@ -21,10 +21,14 @@ function CustomerDetail({ customer }) {
 		})
 	}
 
+	function onDeleteCustomer(){
+		dispatch(deleteCustomer(customer.id))
+	}
+
 	return (
 		<>
 			{customerBookings.length > 0 && (
-				<DetailContainer onEdit={onEditCustomer}>
+				<DetailContainer onEdit={onEditCustomer} onDelete={onDeleteCustomer}>
 					<View style={styles.imageContainer}>
 						<Image source={require('../../assets/images/user.jpg')} style={styles.image} />
 					</View>

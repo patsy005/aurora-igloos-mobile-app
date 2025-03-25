@@ -17,6 +17,9 @@ function ListScreen({ onAdd, onRenderListItem, buttonLabel, data, extraData }) {
 						keyExtractor={item => item.id.toString()}
 						renderItem={onRenderListItem}
 						contentContainerStyle={{ paddingBottom: 40 }}
+						removeClippedSubviews={false}
+						initialNumToRender={50}
+						maxToRenderPerBatch={100}
 					/>
 				</View>
 			</View>

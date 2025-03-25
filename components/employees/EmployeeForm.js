@@ -10,6 +10,7 @@ import { useEffect } from 'react'
 import Button from '../Button'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchEmploteeRoles } from '../../slices/employeeRolesSlice'
+import { addNewEmployee, editEmployee, fetchEmployees } from '../../slices/employeesSlice'
 
 function EmployeeForm({ employeeId }) {
 	const employees = useSelector(state => state.employees.employees)
@@ -44,7 +45,7 @@ function EmployeeForm({ employeeId }) {
 				setValue('city', employee.city)
 				setValue('country', employee.country)
 				setValue('postalCode', employee.postalCode)
-				setValue('role', employee.roleId)
+				setValue('role', { label: employee.role, value: employee.roleId })
 			}
 		}
 	}, [employeeId])
@@ -54,6 +55,27 @@ function EmployeeForm({ employeeId }) {
 	}
 
 	function onSubmit(data) {
+		const newEmployee = {
+			name: data.name,
+			surname: data.surname,
+			email: data.email,
+			phoneNumber: data.phoneNumber,
+			street: data.street,
+			streetNumber: data.streetNumber,
+			houseNumber: data.houseNumber,
+			city: data.city,
+			country: data.country,
+			postalCode: data.postalCode,
+			roleId: data.role.value,
+			role: data.role.label,
+			
+		}
+
+		if(employeeId){
+			dispatch(editEmployee({id: employeeId, employee: newEmployee})).then(() => dispatch(fetchEmployees())).then(() => navigation.goBack())
+		} else {
+			dispatch(addNewEmployee(newEmployee)).then(() => dispatch(fetchEmployees())).then(() => navigation.goBack())
+		}
 		console.log(data)
 	}
 

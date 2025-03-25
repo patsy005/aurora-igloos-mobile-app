@@ -19,6 +19,8 @@ function CustomersScreen({ navigation }) {
 		dispatch(fetchBookings())
 	}, [])
 
+	console.log(customersData.length)
+
 	function onAddCustomer() {
 		navigation.navigate('CustomerForm')
 	}
@@ -28,13 +30,14 @@ function CustomersScreen({ navigation }) {
 	}
 	return (
 		<>
-			{isLoading && <Spinner />}
+			{isLoading && isBookingsLoading && <Spinner />}
 			{!isLoading && !isBookingsLoading && (
 				<ListScreen
 					onAdd={onAddCustomer}
 					onRenderListItem={renderCustomerListItem}
 					buttonLabel="Add customer"
 					data={customersData}
+					extraData={customersData}
 				/>
 			)}
 		</>

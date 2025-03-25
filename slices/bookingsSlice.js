@@ -101,7 +101,6 @@ export const bookingsSlice = createSlice({
 				state.isLoading = false
 				state.bookings = action.payload
 				state.error = null
-				sortBookings()
 			})
 			.addCase(fetchBookings.rejected, (state, action) => {
 				state.isLoading = false

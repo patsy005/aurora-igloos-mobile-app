@@ -1,11 +1,13 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
-import { getEmployees } from '../../constants/dummy-data'
 import { useNavigation } from '@react-navigation/native'
 import DetailContainer from '../shared/DetailContainer'
 import { Colors } from '../../constants/colors'
+import { deleteEmployee, fetchEmployees } from '../../slices/employeesSlice'
+import { useDispatch } from 'react-redux'
 
 function EmployeeDetail({ employee }) {
 	const navigation = useNavigation()
+	const dispatch = useDispatch()
 
 	function onEditEmployee() {
         navigation.navigate('EmployeeForm', {
@@ -13,8 +15,14 @@ function EmployeeDetail({ employee }) {
         })
     }
 
+	function onDeleteEmployee(){
+		dispatch(deleteEmployee(employee.id))
+		.then(() => dispatch(fetchEmployees()))
+		.then(() => navigation.goBack())
+	}
+
 	return (
-		<DetailContainer onEdit={onEditEmployee}>
+		<DetailContainer onEdit={onEditEmployee} onDelete={onDeleteEmployee}>
 			<View style={styles.imageContainer}>
 				<Image source={require('../../assets/images/user.jpg')} style={styles.image} />
 			</View>
