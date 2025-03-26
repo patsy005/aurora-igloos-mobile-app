@@ -14,7 +14,8 @@ function ForumScreen({ navigation }) {
 
 	useEffect(() => {
 		dispatch(fetchForumPosts())
-	}, [])
+		console.log('posts from forum screen', posts)
+	}, [dispatch])
 
 	function addPostHandler() {
 		navigation.navigate('PostForm')
@@ -26,9 +27,15 @@ function ForumScreen({ navigation }) {
 
 	return (
 		<>
-		{isLoading && <Spinner />}
+			{isLoading && <Spinner />}
 			{!isLoading && (
-				<ListScreen onAdd={addPostHandler} onRenderListItem={renderPostListItem} buttonLabel="Add post" data={posts} />
+				<ListScreen
+					onAdd={addPostHandler}
+					onRenderListItem={renderPostListItem}
+					buttonLabel="Add post"
+					data={posts}
+					extraData={posts}
+				/>
 			)}
 		</>
 	)

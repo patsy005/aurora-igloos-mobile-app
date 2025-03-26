@@ -1,6 +1,6 @@
 import { Controller, useForm } from 'react-hook-form'
 import { DUMMY_EMPLOYEES, DUMMY_FORUM_CATEGORIES, getForumPosts } from '../../constants/dummy-data'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import FormLabel from '../form/FormLabel'
 import Input from '../form/Input'
 import Dropdown from '../Dropdown'
@@ -9,12 +9,14 @@ import { Colors } from '../../constants/colors'
 import { useNavigation } from '@react-navigation/native'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-
+import { addNewForumPost, editPost, fetchForumPosts } from '../../slices/forumSlice'
+import { fetchEmployees } from '../../slices/employeesSlice'
+import { fetchForumCategories } from '../../slices/forumCategoriesSlice'
 
 function ForumForm({ postId }) {
-	const employees = useSelector(state => state.employees.employees) ?? []
-	const categories = useSelector(state => state.forum.forumCategories) ?? []
-	const posts = useSelector(state => state.forum.forumPosts) ?? []
+	const employees = useSelector(state => state.employees.employees)
+	const categories = useSelector(state => state.forumCategories.forumCategories)
+	const posts = useSelector(state => state.forum.forumPosts)
 
 	const {
 		handleSubmit,
@@ -24,7 +26,7 @@ function ForumForm({ postId }) {
 		formState: { errors, isLoading },
 	} = useForm()
 	const navigation = useNavigation()
-
+	const dispatch = useDispatch()
 
 	const isEditing = !!postId
 
@@ -34,8 +36,9 @@ function ForumForm({ postId }) {
 			if (post) {
 				setValue('title', post.title)
 				setValue('postContent', post.postContent)
-				setValue('category', post.categoryId)
-				setValue('employee', post.idEmployee)
+				setValue('category', { label: post.category, value: post.categoryId })
+				setValue('employee', { label: post.employeeName, value: post.idEmployee })
+				setValue('tags', post.tags)
 			}
 		}
 	}, [postId])
@@ -46,6 +49,31 @@ function ForumForm({ postId }) {
 
 	function onSubmit(data) {
 		console.log(data)
+
+		const newPost = {
+			title: data.title,
+			postContent: data.postContent,
+			category: data.category.label,
+			tags: data.tags,
+			idEmployee: data.employee.value,
+			categoryId: data.category.value,
+			forumComment: [],
+			employeeName: employees.find(employee => employee.id === data.employee.value).name,
+			employeeSurname: employees.find(employee => employee.id === data.employee.value).surname,
+			employeePhotoUrl: '',
+		}
+
+		if (postId) {
+			dispatch(editPost({ id: postId, post: newPost }))
+				.unwrap()
+				.then(() => dispatch(fetchForumPosts()))
+				.then(() => navigation.goBack())
+		} else {
+			dispatch(addNewForumPost(newPost))
+				.unwrap()
+				.then(() => dispatch(fetchForumPosts()))
+				.then(() => navigation.goBack())
+		}
 	}
 
 	const employeeOptions = employees.map(employee => ({
@@ -125,6 +153,42 @@ function ForumForm({ postId }) {
 							}}
 						/>
 						{errors.postContent && <Text style={styles.errorText}>{errors.postContent.message}</Text>}
+					</View>
+				</View>
+
+				<View style={styles.inputContainer}>
+					<FormLabel>Tags</FormLabel>
+					<View>
+						<Controller
+							control={control}
+							render={({ field: { onChange, onBlur, value } }) => (
+								<Input
+									textInputConfig={{
+										onChangeText: onChange,
+										onBlur: onBlur,
+										value,
+										placeholder: 'Separate by ,',
+									}}
+								/>
+							)}
+							name="tags"
+							rules={{
+								required: 'Please enter tags',
+								validate: value => {
+									if (value === '') return 'Please enter tags'
+
+									const tags = value.split(',').map(tag => tag.trim())
+
+									if (tags.length < 2) return 'Please enter at least 2 tags'
+
+									const isValid = tags.every(tag => /^[a-zA-Z]+$/.test(tag))
+									if (!isValid) return 'Tags must be words separated by commas'
+
+									return true
+								},
+							}}
+						/>
+						{errors.tags && <Text style={styles.errorText}>{errors.tags.message}</Text>}
 					</View>
 				</View>
 

@@ -12,8 +12,8 @@ function ForumDetilScreen({ route }) {
 
 	return (
 		<ScrollView style={styles.screen}>
-			{isLoading && <Spinner />} 
-			{!isLoading && <ForumDetail post={post} />}
+			{isLoading && <Spinner />}
+			{!isLoading && post && <ForumDetail post={post} />}
 		</ScrollView>
 	)
 }

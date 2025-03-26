@@ -4,15 +4,23 @@ import DetailContainer from '../shared/DetailContainer'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import IconButton from '../IconButton'
 import { Colors } from '../../constants/colors'
+import { deletePost } from '../../slices/forumSlice'
+import { useDispatch } from 'react-redux'
 
 function ForumDetail({ post }) {
 	const navigation = useNavigation()
 	const tagsArray = post.tags ? post.tags.split(',').map(tag => tag.trim()) : []
+	const dispatch = useDispatch()
 
 	function onEditPost() {
 		navigation.navigate('PostForm', {
 			postId: post.id,
 		})
+	}
+
+	function onDeletePost() {
+		dispatch(deletePost(post.id))
+		navigation.goBack()
 	}
 
 	function onShowPostComments() {
@@ -22,7 +30,7 @@ function ForumDetail({ post }) {
 	}
 
 	return (
-		<DetailContainer onEdit={() => onEditPost()}>
+		<DetailContainer onEdit={() => onEditPost()} onDelete={onDeletePost}>
 			<View>
 				<Text style={styles.postTitle}>{post.title}</Text>
 			</View>
