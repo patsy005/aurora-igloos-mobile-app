@@ -9,6 +9,7 @@ import { forumSlice } from './slices/forumSlice'
 import { paymentMethodsSlice } from './slices/paymentMethodsSlice'
 import { forumCategoriesSlice } from './slices/forumCategoriesSlice'
 import { forumCommentsSlice } from './slices/forumCommentsSlice'
+import { dashboardSlice } from './slices/dashboardSlice'
 
 export const store = configureStore({
 	reducer: {
@@ -22,6 +23,7 @@ export const store = configureStore({
 		paymentMethods: paymentMethodsSlice.reducer,
 		forumCategories: forumCategoriesSlice.reducer,
 		forumComments: forumCommentsSlice.reducer,
+		dashboard: dashboardSlice.reducer,
 	},
 	middleware: getDefaultMiddleware =>
 		getDefaultMiddleware({

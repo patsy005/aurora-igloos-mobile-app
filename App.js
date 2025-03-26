@@ -57,7 +57,7 @@ function DrawerNavigation({ navigation }) {
 				drawerType: 'slide',
 			}}>
 			<Drawer.Screen
-				name="Home"
+				name="Dashboard"
 				component={HomeScreen}
 				options={{
 					drawerIcon: ({ color, size }) => <Ionicons name="home-outline" size={size} color={color} />,
