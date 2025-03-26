@@ -7,7 +7,9 @@ import FormLabel from '../../form/FormLabel'
 import Input from '../../form/Input'
 import { Colors } from '../../../constants/colors'
 import Button from '../../Button'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { addNewComment, editComment } from '../../../slices/forumCommentsSlice'
+import { fetchForumPosts } from '../../../slices/forumSlice'
 
 function ForumCommentForm({ postId, commentId }) {
 	const posts = useSelector(state => state.forum.forumPosts)
@@ -19,6 +21,7 @@ function ForumCommentForm({ postId, commentId }) {
 		formState: { errors, isLoading },
 	} = useForm()
 	const navigation = useNavigation()
+	const dispatch = useDispatch()
 
 	const isEditing = !!commentId
 
@@ -38,6 +41,29 @@ function ForumCommentForm({ postId, commentId }) {
 
 	function onSubmit(data) {
 		console.log(data)
+
+		const post = posts?.find(post => post.id === postId)
+
+		const newComment = {
+			comment: data.comment,
+			idPost: postId,
+			idEmployee: post.idEmployee,
+			commentDate: new Date().toISOString().split('T')[0],
+			employeeName: post.employeeName,
+			employeeSurname: post.employeeSurname,
+			employeePhotoUrl: post.employeePhotoUrl,
+			postTitle: post.title,
+		}
+
+		if (isEditing) {
+			dispatch(editComment({ id: commentId, comment: newComment }))
+				.then(() => dispatch(fetchForumPosts()))
+				.then(() => onCancel())
+		} else {
+			dispatch(addNewComment(newComment))
+				.then(() => dispatch(fetchForumPosts()))
+				.then(() => onCancel())
+		}
 	}
 
 	return (

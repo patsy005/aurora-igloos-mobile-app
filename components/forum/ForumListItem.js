@@ -8,8 +8,6 @@ function ForumListItem({ post }) {
 	const navigation = useNavigation()
 	const tagsArray = post.tags ? post.tags.split(',').map(tag => tag.trim()) : [];
 
-	console.log('post z forum list item', post)
-
 	function getPostDetaulHandler() {
 		navigation.navigate('PostDetails', {
 			postId: post.id,

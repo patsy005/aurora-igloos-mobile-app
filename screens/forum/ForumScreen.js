@@ -14,7 +14,6 @@ function ForumScreen({ navigation }) {
 
 	useEffect(() => {
 		dispatch(fetchForumPosts())
-		console.log('posts from forum screen', posts)
 	}, [dispatch])
 
 	function addPostHandler() {

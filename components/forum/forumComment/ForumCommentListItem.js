@@ -3,10 +3,14 @@ import { Image, StyleSheet, Text, View } from 'react-native'
 import DetailContainer from '../../shared/DetailContainer'
 import { Colors } from '../../../constants/colors'
 import { getForumPosts } from '../../../constants/dummy-data'
+import { useDispatch } from 'react-redux'
+import { deleteComment } from '../../../slices/forumCommentsSlice'
+import { fetchForumPosts } from '../../../slices/forumSlice'
 
 function ForumCommentListItem({ comment, posts }) {
 	const navigation = useNavigation()
 	const post = posts?.find(post => post.id === comment.idPost)
+	const dispatch = useDispatch()
 
 	function getPostCommentDetailHandler() {
 		navigation.navigate('CommentDetails', {
@@ -21,8 +25,12 @@ function ForumCommentListItem({ comment, posts }) {
 		})
 	}
 
+	function onDeleteComment() {
+		dispatch(deleteComment(comment.id)).then(() => dispatch(fetchForumPosts())).then(() => navigation.goBack())
+	}
+
 	return (
-		<DetailContainer onEdit={onEditComment}>
+		<DetailContainer onEdit={onEditComment} onDelete={onDeleteComment}>
 			<View style={styles.topContainer}>
 				<View style={styles.authorContainer}>
 					<View style={styles.imageContainer}>
