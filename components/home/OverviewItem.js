@@ -17,8 +17,6 @@ function OverviewItem({ statName, statValue, statPerc, color, iconName, iconColo
 	}
 
 	const statPercentageContainerStyle = () => {
-		// const isPositive = statPerc > 0 ? true : false
-
 		return {
 			backgroundColor: isPositive ? '#4bf84724' : '#c1040f36',
 			borderRadius: 8,
@@ -31,8 +29,6 @@ function OverviewItem({ statName, statValue, statPerc, color, iconName, iconColo
 	}
 
 	const statPercentageStyle = () => {
-		// const isPositive = statPerc > 0 ? true : false
-
 		return {
 			color: isPositive ? Colors.greenBright : Colors.red,
 			fontWeight: 'bold',

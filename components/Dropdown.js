@@ -10,13 +10,6 @@ function Dropdown({ data, onChange, selectedValue, placeholder, isEditing }) {
 	const [top, setTop] = useState(0)
 	const buttonRef = useRef()
 
-	// const selectedLabel = useMemo(() => {
-	// 	if (isEditing && selectedValue) {
-	// 		return data.find(item => item.value === selectedValue)?.label || placeholder
-	// 	}
-	// 	return selectedValue?.label || placeholder
-	// }, [isEditing, selectedValue, data, placeholder])
-
 	useEffect(() => {
 		if (selectedValue) {
 			setValue(selectedValue.label)
@@ -25,10 +18,6 @@ function Dropdown({ data, onChange, selectedValue, placeholder, isEditing }) {
 
 	const toggleExpanded = useCallback(() => {
 		if (buttonRef.current) {
-			// buttonRef.current.measure((fx, fy, width, height, px, py) => {
-			//     setTop(py + height + (Platform.OS === 'android' ? -32 : 3))
-			// })
-
 			buttonRef.current.measure((fx, fy, width, height, px, py) => {
 				setTop(py + height)
 			})
@@ -36,7 +25,6 @@ function Dropdown({ data, onChange, selectedValue, placeholder, isEditing }) {
 			setExpanded(prev => !prev)
 		}
 	}, [])
-	// const toggleExpanded = useCallback(() => setExpanded(prev => !prev), [expanded])
 
 	const onSelect = useCallback(item => {
 		onChange(item)
@@ -53,8 +41,6 @@ function Dropdown({ data, onChange, selectedValue, placeholder, isEditing }) {
 	if (isEditing) {
 		selectedLabel = (selectedValue && data.find(item => item.value === selectedValue)?.label) || placeholder
 	}
-
-	// const selectedLabel = (selectedValue && data.find(item => item.value === selectedValue.value)?.label) || placeholder
 
 	return (
 		<View

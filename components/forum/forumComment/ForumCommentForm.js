@@ -2,7 +2,6 @@ import { useNavigation } from '@react-navigation/native'
 import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { StyleSheet, Text, View } from 'react-native'
-import { getForumPosts } from '../../../constants/dummy-data'
 import FormLabel from '../../form/FormLabel'
 import Input from '../../form/Input'
 import { Colors } from '../../../constants/colors'
@@ -40,8 +39,6 @@ function ForumCommentForm({ postId, commentId }) {
 	}
 
 	function onSubmit(data) {
-		console.log(data)
-
 		const post = posts?.find(post => post.id === postId)
 
 		const newComment = {

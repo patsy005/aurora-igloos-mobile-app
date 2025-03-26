@@ -12,7 +12,6 @@ function BookingListItem({ booking }) {
 		})
 	}
 
-	// console.log(booking)
 
 	return (
 		<ListItemContainer>

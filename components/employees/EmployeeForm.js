@@ -4,7 +4,6 @@ import { StyleSheet, Text, View } from 'react-native'
 import FormLabel from '../form/FormLabel'
 import Input from '../form/Input'
 import { Colors } from '../../constants/colors'
-import { DUMMY_EMPLOYEE_ROLES, getEmployees } from '../../constants/dummy-data'
 import Dropdown from '../Dropdown'
 import { useEffect } from 'react'
 import Button from '../Button'
@@ -76,7 +75,6 @@ function EmployeeForm({ employeeId }) {
 		} else {
 			dispatch(addNewEmployee(newEmployee)).then(() => dispatch(fetchEmployees())).then(() => navigation.goBack())
 		}
-		console.log(data)
 	}
 
 	const rolesOptions = roles.map(role => ({

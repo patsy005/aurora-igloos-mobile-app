@@ -2,7 +2,6 @@ import { useNavigation } from '@react-navigation/native'
 import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { StyleSheet, Text, View } from 'react-native'
-import { getCustomers } from '../../constants/dummy-data'
 import { Colors } from '../../constants/colors'
 import Button from '../Button'
 import Input from '../form/Input'
@@ -45,8 +44,6 @@ function CustomerForm({ customerId }) {
 	}
 
 	function onSubmit(data) {
-		console.log(data)
-
 		const newCustomer = {
 			name: data.name,
 			surname: data.surname,

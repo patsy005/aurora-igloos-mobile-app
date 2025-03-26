@@ -1,5 +1,4 @@
 import { Controller, useForm } from 'react-hook-form'
-import { DUMMY_EMPLOYEES, DUMMY_FORUM_CATEGORIES, getForumPosts } from '../../constants/dummy-data'
 import { StyleSheet, Text, View } from 'react-native'
 import FormLabel from '../form/FormLabel'
 import Input from '../form/Input'
@@ -48,8 +47,6 @@ function ForumForm({ postId }) {
 	}
 
 	function onSubmit(data) {
-		console.log(data)
-
 		const newPost = {
 			title: data.title,
 			postContent: data.postContent,

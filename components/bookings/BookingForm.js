@@ -1,12 +1,11 @@
 import { Controller, useForm } from 'react-hook-form'
-import { StyleSheet, Switch, Text, TextInput, View } from 'react-native'
-import { DUMMY_CUSTOMERS, DUMMY_IGLOOS, getBookings } from '../../constants/dummy-data'
+import { StyleSheet, Switch, Text, View } from 'react-native'
 import Dropdown from '../Dropdown'
 import { Colors } from '../../constants/colors'
 import FormLabel from '../form/FormLabel'
 import Input from '../form/Input'
 import Button from '../Button'
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchIgloos } from '../../slices/igloosSlice'
@@ -70,8 +69,6 @@ function BookingForm({ bookingId }) {
 	}
 
 	function onSubmit(data) {
-		console.log(bookingId)
-		console.log(data)
 		const newBooking = {
 			idCustomer: data.customer.value,
 			checkIn: data.checkInDate,
@@ -89,10 +86,8 @@ function BookingForm({ bookingId }) {
 			employeeSurname: employees.find(e => e.id === data.employee.value).surname,
 			paymentMethodName: paymentMethods.find(pm => pm.id === data.paymentMethod.value).name,
 		}
-		console.log('newBooking', newBooking)
 
 		if (bookingId) {
-			console.log('editing')
 			dispatch(editBooking({ id: bookingId, booking: newBooking })).then(() => {
 				dispatch(fetchBookings()).then(() => navigation.goBack())
 			})
@@ -100,18 +95,8 @@ function BookingForm({ bookingId }) {
 			dispatch(addNewBooking(newBooking)).then(() => {
 				dispatch(fetchBookings()).then(() => navigation.goBack())
 			})
-			console.log('adding')
 		}
-
-		// dispatch(fetchBookings())
-
-		// navigation.goBack()
-
-		console.log('aaaaa')
 	}
-
-	// const customers = DUMMY_CUSTOMERS
-	// const igloos = DUMMY_IGLOOS
 
 	const customersOptions = customers.map(customer => ({
 		label: `${customer.name} ${customer.surname}`,
@@ -132,14 +117,6 @@ function BookingForm({ bookingId }) {
 		label: pm.name,
 		value: pm.id,
 	}))
-
-	// const iglooOptions = useCallback(() => {
-	// 	const options = igloos.map(igloo => ({
-	// 		label: igloo.name,
-	// 		value: igloo.id,
-	// 	}))
-	// 	return options
-	// }, [igloos])
 
 	return (
 		<View style={styles.screen}>

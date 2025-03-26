@@ -1,5 +1,4 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
-import { getIgloos } from '../../constants/dummy-data'
 import { useNavigation } from '@react-navigation/native'
 import DetailContainer from '../shared/DetailContainer'
 import IconButton from '../IconButton'

@@ -6,7 +6,6 @@ import { Colors } from '../../constants/colors'
 import FormLabel from '../form/FormLabel'
 import Input from '../form/Input'
 import Button from '../Button'
-import { DUMMY_DISCOUNTS } from '../../constants/dummy-data'
 import { useDispatch, useSelector } from 'react-redux'
 import { addNewDiscount, editDiscount, fetchDiscounts } from '../../slices/discountsSlice'
 import { fetchIgloos } from '../../slices/igloosSlice'
@@ -50,7 +49,6 @@ function DiscountForm({ discountId }) {
 	}
 
 	function onSubmit(data) {
-		console.log(data)
 
 		const newDiscount = {
 			name: data.name,

@@ -1,11 +1,8 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
-import { getBookings } from '../../constants/dummy-data'
 import { Colors } from '../../constants/colors'
-import IconButton from '../IconButton'
 import { useNavigation } from '@react-navigation/native'
-import { useLayoutEffect } from 'react'
 import DetailContainer from '../shared/DetailContainer'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { deleteBooking, fetchBookings } from '../../slices/bookingsSlice'
 
 function BookingDetail({ booking }) {
@@ -18,9 +15,11 @@ function BookingDetail({ booking }) {
 		})
 	}
 
-	function onDeleteBooking(){
+	function onDeleteBooking() {
 		console.log(booking.id)
-		dispatch(deleteBooking(booking.id)).then(() => dispatch(fetchBookings())).then(() => navigation.goBack())
+		dispatch(deleteBooking(booking.id))
+			.then(() => dispatch(fetchBookings()))
+			.then(() => navigation.goBack())
 	}
 
 	return (

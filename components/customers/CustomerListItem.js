@@ -2,9 +2,7 @@ import { useNavigation } from '@react-navigation/native'
 import ListItemContainer from '../shared/ListItemContainer'
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { Colors } from '../../constants/colors'
-import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
-import { fetchBookings } from '../../slices/bookingsSlice'
+import { useSelector } from 'react-redux'
 
 function CustomerListItem({ customer }) {
 	const bookings = useSelector(state => state.bookings.bookings)

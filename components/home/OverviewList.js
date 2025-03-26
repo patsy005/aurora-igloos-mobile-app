@@ -9,7 +9,6 @@ import Spinner from '../shared/Spinner'
 
 function OverviewList() {
 	const dispatch = useDispatch()
-	// const days = useSelector(state => state.dashboard.days)
 	const data = useSelector(state => state.dashboard.data)
 	const [days, setDays] = useState(30)
 	const isLoading = useSelector(state => state.dashboard.isLoading)

@@ -2,7 +2,6 @@ import { useNavigation } from '@react-navigation/native'
 import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { StyleSheet, Text, View } from 'react-native'
-import { getIgloos } from '../../constants/dummy-data'
 import FormLabel from '../form/FormLabel'
 import Input from '../form/Input'
 import { Colors } from '../../constants/colors'
@@ -47,17 +46,14 @@ function IglooForm({ iglooId }) {
 		}
 
 		if (iglooId) {
-			console.log('editing igloo')
 			dispatch(editIgloo({ id: iglooId, igloo: newIgloo }))
 				.then(() => dispatch(fetchIgloos()))
 				.then(() => navigation.goBack())
 		} else {
-			console.log('adding igloo')
 			dispatch(addNewIgloo(newIgloo))
 				.then(() => dispatch(fetchIgloos()))
 				.then(() => navigation.goBack())
 		}
-		console.log(data)
 	}
 
 	return (

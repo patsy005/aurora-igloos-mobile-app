@@ -1,12 +1,9 @@
 import { useNavigation } from '@react-navigation/native'
-import { getCustomers } from '../../constants/dummy-data'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import DetailContainer from '../shared/DetailContainer'
 import { Colors } from '../../constants/colors'
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
-import { fetchBookings } from '../../slices/bookingsSlice'
-import { deleteCustomer, getCustomerBooking } from '../../slices/customersSlice'
+import { deleteCustomer } from '../../slices/customersSlice'
 
 function CustomerDetail({ customer }) {
 	const bookings = useSelector(state => state.bookings.bookings)

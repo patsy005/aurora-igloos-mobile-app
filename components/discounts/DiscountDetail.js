@@ -1,12 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native'
-import { DUMMY_DISCOUNTS } from '../../constants/dummy-data'
 import { useNavigation } from '@react-navigation/native'
 import DetailContainer from '../shared/DetailContainer'
 import { Colors } from '../../constants/colors'
-import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { deleteDiscount, fetchDiscounts } from '../../slices/discountsSlice'
-import { deleteIgloo } from '../../slices/igloosSlice'
 
 function DiscountDetail({ discount }) {
 	const navigation = useNavigation()
@@ -19,7 +16,6 @@ function DiscountDetail({ discount }) {
 	}
 
 	function onDeleteDiscount() {
-		console.log('delete clicked')
 		dispatch(deleteDiscount(discount.id))
 			.unwrap()
 			.then(() => navigation.goBack())
