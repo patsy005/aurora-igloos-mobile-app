@@ -4,7 +4,7 @@ import { igloosSlice } from './slices/igloosSlice'
 import { customersSlice } from './slices/customersSlice'
 import { employeesSlice } from './slices/employeesSlice'
 import { employeeRolesSlice } from './slices/employeeRolesSlice'
-import { discountsSlice } from './slices/discountsSlice'
+import discountsSlice  from './slices/discountsSlice'
 import { forumSlice } from './slices/forumSlice'
 import { paymentMethodsSlice } from './slices/paymentMethodsSlice'
 import { forumCategoriesSlice } from './slices/forumCategoriesSlice'
@@ -19,7 +19,7 @@ export const store = configureStore({
 		customers: customersSlice.reducer,
 		employees: employeesSlice.reducer,
 		employeeRoles: employeeRolesSlice.reducer,
-		discounts: discountsSlice.reducer,
+		discounts: discountsSlice,
 		forum: forumSlice.reducer,
 		paymentMethods: paymentMethodsSlice.reducer,
 		forumCategories: forumCategoriesSlice.reducer,
