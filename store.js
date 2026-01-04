@@ -1,21 +1,21 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { bookingsSlice } from './slices/bookingsSlice'
-import { igloosSlice } from './slices/igloosSlice'
+import igloosSlice from './slices/igloosSlice'
 import { customersSlice } from './slices/customersSlice'
 import { employeesSlice } from './slices/employeesSlice'
 import { employeeRolesSlice } from './slices/employeeRolesSlice'
-import discountsSlice  from './slices/discountsSlice'
+import discountsSlice from './slices/discountsSlice'
 import { forumSlice } from './slices/forumSlice'
 import { paymentMethodsSlice } from './slices/paymentMethodsSlice'
 import { forumCategoriesSlice } from './slices/forumCategoriesSlice'
 import { forumCommentsSlice } from './slices/forumCommentsSlice'
 import { dashboardSlice } from './slices/dashboardSlice'
-import authSlice  from './slices/authSlice'
+import authSlice from './slices/authSlice'
 
 export const store = configureStore({
 	reducer: {
 		bookings: bookingsSlice.reducer,
-		igloos: igloosSlice.reducer,
+		igloos: igloosSlice,
 		customers: customersSlice.reducer,
 		employees: employeesSlice.reducer,
 		employeeRoles: employeeRolesSlice.reducer,
