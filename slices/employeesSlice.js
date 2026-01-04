@@ -8,7 +8,7 @@ const initialState = {
 }
 
 export const fetchEmployees = createAsyncThunk('employees/fetchEmployees', async () => {
-	const res = await fetch(`${API_URL}/api/Employees`)
+	const res = await fetch(`${API_URL}/Employees`)
 
 	if (!res.ok) {
 		throw new Error('Failed to fetch employees')
@@ -19,7 +19,7 @@ export const fetchEmployees = createAsyncThunk('employees/fetchEmployees', async
 })
 
 export const addNewEmployee = createAsyncThunk('employees/addNewEmployee', async employee => {
-	const res = await fetch(`${API_URL}/api/Employees`, {
+	const res = await fetch(`${API_URL}/Employees`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -33,8 +33,6 @@ export const addNewEmployee = createAsyncThunk('employees/addNewEmployee', async
 		throw new Error('Failed to add employee')
 	}
 
-	
-
 	const data = await res.json()
 
 	return data
@@ -46,7 +44,7 @@ export const editEmployee = createAsyncThunk('employees/editEmployee', async ({ 
 
 	const employeeData = { id: id, ...employee }
 
-	const res = await fetch(`${API_URL}/api/Employees/${id}`, {
+	const res = await fetch(`${API_URL}/Employees/${id}`, {
 		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json',
@@ -62,7 +60,7 @@ export const editEmployee = createAsyncThunk('employees/editEmployee', async ({ 
 
 	if (res.status === 204) {
 		console.log('No content returned, assuming success')
-		return { id, ...employee }  // Zwróć zmienionego pracownika
+		return { id, ...employee } // Zwróć zmienionego pracownika
 	}
 
 	const data = await res.json()
@@ -71,7 +69,7 @@ export const editEmployee = createAsyncThunk('employees/editEmployee', async ({ 
 })
 
 export const deleteEmployee = createAsyncThunk('employees/deleteEmployee', async id => {
-	const res = await fetch(`${API_URL}/api/Employees/${id}`, {
+	const res = await fetch(`${API_URL}/Employees/${id}`, {
 		method: 'DELETE',
 	})
 

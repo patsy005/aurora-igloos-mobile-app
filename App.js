@@ -270,10 +270,12 @@ import ForumDetilScreen from './screens/forum/ForumDetilScreen'
 import ForumCommentsScreen from './screens/forum/forumComments/ForumCommentsScreen'
 import ForumCommentFormScreen from './screens/forum/forumComments/ForumCommentFormScreen'
 import Spinner from './components/shared/Spinner'
+import TripsScreen from './screens/trips/TripsScreen'
+import TripDetailsScreen from './screens/trips/TripDetailsScreen'
+import TripFormScreen from './screens/trips/TripFormScreen'
 
 const Stack = createNativeStackNavigator()
 const Drawer = createDrawerNavigator()
-
 
 function DrawerNavigation() {
 	const role = useSelector(selectRole)
@@ -315,6 +317,14 @@ function DrawerNavigation() {
 				component={IgloosScreen}
 				options={{
 					drawerIcon: ({ color, size }) => <FontAwesome6 name="igloo" size={size} color={color} />,
+				}}
+			/>
+
+			<Drawer.Screen
+				name="Trips"
+				component={TripsScreen}
+				options={{
+					drawerIcon: ({ color, size }) => <FontAwesome6 name="route" size={size} color={color} />,
 				}}
 			/>
 
@@ -378,6 +388,9 @@ function AppStack() {
 
 				<Stack.Screen name="IglooDetails" component={IglooDetailsScreen} options={{ headerTitle: 'Igloo details' }} />
 				<Stack.Screen name="IglooForm" component={IglooFormScreen} options={{ presentation: 'modal' }} />
+
+				<Stack.Screen name="TripDetails" component={TripDetailsScreen} options={{ headerTitle: 'Trip details' }} />
+				<Stack.Screen name="TripForm" component={TripFormScreen} options={{ presentation: 'modal' }} />
 
 				<Stack.Screen
 					name="EmployeeDetails"

@@ -11,6 +11,9 @@ import { forumCategoriesSlice } from './slices/forumCategoriesSlice'
 import { forumCommentsSlice } from './slices/forumCommentsSlice'
 import { dashboardSlice } from './slices/dashboardSlice'
 import authSlice from './slices/authSlice'
+import tripsSlice from './slices/tripsSlice'
+import tripLevelSlice from './slices/tripLevelSlice'
+import tripSeasonSlice from './slices/tripSeasonSlice'
 
 export const store = configureStore({
 	reducer: {
@@ -26,6 +29,9 @@ export const store = configureStore({
 		forumComments: forumCommentsSlice.reducer,
 		dashboard: dashboardSlice.reducer,
 		auth: authSlice,
+		trips: tripsSlice,
+		tripLevels: tripLevelSlice,
+		tripSeasons: tripSeasonSlice,
 	},
 	middleware: getDefaultMiddleware =>
 		getDefaultMiddleware({
