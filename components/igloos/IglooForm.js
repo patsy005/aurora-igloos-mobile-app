@@ -2,12 +2,12 @@ import { useNavigation } from '@react-navigation/native'
 import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { StyleSheet, Text, View } from 'react-native'
-import FormLabel from '../form/FormLabel'
 import Input from '../form/Input'
 import { Colors } from '../../constants/colors'
 import Button from '../Button'
 import { useDispatch, useSelector } from 'react-redux'
 import { addNewIgloo, editIgloo, fetchIgloos } from '../../slices/igloosSlice'
+import FormLabel from '../form/FormLabel'
 
 function IglooForm({ iglooId }) {
 	const igloos = useSelector(state => state.igloos.igloos)
