@@ -1,156 +1,128 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { API_URL } from '../constants/consts'
+import { logoutThunk } from './authSlice'
+import { apiFetch } from './_fetchWithAuth'
 
 const initialState = {
 	customers: [],
-	isLoading: false,
-	error: null,
+	error: '',
+	status: 'idle',
+	isFetching: false,
+	myProfile: null,
 }
 
-export const fetchCustomers = createAsyncThunk('customers/fetchCustomers', async () => {
-	const response = await fetch(`${API_URL}/api/Customers?page=1&size=50`)
-
-	if (!response.ok) {
-		throw new Error('Failed to fetch customers')
-	}
-
-	const data = await response.json()
-	return data
+export const fetchCustomers = createAsyncThunk('customers/fetchCustomers', async (_, thunkApi) => {
+	return await apiFetch('/Customers', {}, thunkApi)
 })
 
-export const addNewCustomer = createAsyncThunk('customers/addNewCustomer', async customer => {
-	const res = await fetch(`${API_URL}/api/Customers`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
+export const addNewCustomer = createAsyncThunk('customers/addNewCustomer', async (newCustomer, thunkApi) => {
+	return await apiFetch(
+		'/Customers',
+		{
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(newCustomer),
 		},
-		body: JSON.stringify(customer),
-	})
-
-	if (!res.ok) {
-		const errorMessage = await res.text()
-		console.log(errorMessage)
-		throw new Error('Failed to add customer')
-	}
-
-	const data = await res.json()
-
-	return data
+		thunkApi
+	)
 })
 
-export const editCustomer = createAsyncThunk('customers/editCustomer', async ({id, customer}) => {
-	console.log('editing customer with id: ', id)
-	console.log('customer data: ', customer)
-
-	const customerData = {id: id, ...customer}
-
-	const res = await fetch(`${API_URL}/api/Customers/${id}`, {
-		method: 'PUT',
-		headers: {
-			'Content-Type': 'application/json',
+export const editCustomer = createAsyncThunk('customers/editCustomer', async ({ id, updatedCustomer }, thunkApi) => {
+	return await apiFetch(
+		`/Customers/${id}`,
+		{
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(updatedCustomer),
 		},
-		body: JSON.stringify(customerData),
-	})
-
-	if (!res.ok) {
-		const errorMessage = await res.text()
-		console.log(errorMessage)
-		throw new Error('Failed to edit customer')
-	}
-
-	if(res.status === 204){
-		return customerData
-	}
-
-	const data = await res.json()
-
-	return data
+		thunkApi
+	)
 })
 
-export const deleteCustomer = createAsyncThunk('customers/deleteCustomer', async id => {
-	const res = await fetch(`${API_URL}/api/Customers/${id}`, {
-		method: 'DELETE',
-	})
-
-	if (!res.ok) {
-		const errorMessage = await res.text()
-		console.log(errorMessage)
-		throw new Error('Failed to delete customer')
-	}
-
-	return id
+export const deleteCustomer = createAsyncThunk('customers/deleteCustomer', async (id, thunkApi) => {
+	return await apiFetch(
+		`/Customers/${id}`,
+		{
+			method: 'DELETE',
+		},
+		thunkApi
+	)
 })
 
-export const customersSlice = createSlice({
+export const getMyCustomerProfile = createAsyncThunk('customers/getMyCustomerProfile', async (_, thunkApi) => {
+	return await apiFetch('/Customers/my-profile', {}, thunkApi)
+})
+
+const customersSlice = createSlice({
 	name: 'customers',
 	initialState,
 	reducers: {},
 	extraReducers: builder => {
 		builder
-			.addCase(fetchCustomers.pending, state => {
-				state.isLoading = true
-				state.error = null
-				console.log('fetch customers pending')
-			})
 			.addCase(fetchCustomers.fulfilled, (state, action) => {
-				state.isLoading = false
 				state.customers = action.payload
-				state.error = null
-				console.log('fetch customers fulfilled')
+				state.status = 'idle'
+				state.isFetching = false
+			})
+			.addCase(fetchCustomers.pending, state => {
+				state.status = 'loading'
+				state.isFetching = true
 			})
 			.addCase(fetchCustomers.rejected, (state, action) => {
-				state.isLoading = false
+				state.status = 'error'
 				state.error = action.error.message
-				console.log('fetch customers rejected')
-			})
-
-			.addCase(addNewCustomer.pending, state => {
-				state.isLoading = true
-				state.error = null
-				console.log('add custumer pending')
+				state.isFetching = false
 			})
 			.addCase(addNewCustomer.fulfilled, (state, action) => {
-				state.isLoading = false
 				state.customers.push(action.payload)
-				console.log('add customer fulfilled')
+				state.isFetching
+				state.error = ''
 			})
 			.addCase(addNewCustomer.rejected, (state, action) => {
-				state.isLoading = false
-				state.error = action.error.message
-				console.log('add customer rejected')
+				state.error = action.payload.message
 			})
-
-			.addCase(editCustomer.pending, state => {
-				state.isLoading = true
-				state.error = null
-				console.log('edit customer pending')
+			.addCase(addNewCustomer.pending, state => {
+				state.isFetching = true
 			})
 			.addCase(editCustomer.fulfilled, (state, action) => {
-				state.isLoading = false
-				const index = state.customers.findIndex(customer => customer.id === action.payload.id)
-				state.customers[index] = action.payload
-				console.log('edit customer fulfilled')
+				state.isFetching = false
+				state.error = ''
 			})
 			.addCase(editCustomer.rejected, (state, action) => {
-				state.isLoading = false
-				state.error = action.error.message
-				console.log('edit customer rejected')
+				state.error = action.payload.message
 			})
-
-			.addCase(deleteCustomer.pending, state => {
-				state.isLoading = true
-				state.error = null
-				console.log('delete customer pending')
+			.addCase(editCustomer.pending, state => {
+				state.isFetching = true
 			})
 			.addCase(deleteCustomer.fulfilled, (state, action) => {
-				state.isLoading = false
-				state.customers = state.customers.filter(customer => customer.id !== action.payload)
-				console.log('delete customer fulfilled')
+				state.customers = state.customers.filter(cust => cust.id !== action.payload)
 			})
 			.addCase(deleteCustomer.rejected, (state, action) => {
-				state.isLoading = false
-				state.error = action.error.message
-				console.log('delete customer rejected')
+				state.error = action.payload.message
+			})
+			.addCase(deleteCustomer.pending, state => {
+				state.isFetching = true
+			})
+			.addCase(getMyCustomerProfile.fulfilled, (state, action) => {
+				state.myProfile = action.payload
+				state.isFetching = false
+				state.error = ''
+			})
+			.addCase(getMyCustomerProfile.rejected, (state, action) => {
+				state.error = action.payload.message
+			})
+			.addCase(getMyCustomerProfile.pending, state => {
+				state.isFetching = true
+			})
+			.addCase(logoutThunk.fulfilled, state => {
+				state.myProfile = null
+				state.customers = []
+				state.error = ''
+				state.status = 'idle'
+				state.isFetching = false
 			})
 	},
 })

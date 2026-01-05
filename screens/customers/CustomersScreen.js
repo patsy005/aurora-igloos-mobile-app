@@ -10,8 +10,8 @@ import Spinner from '../../components/shared/Spinner'
 
 function CustomersScreen({ navigation }) {
 	const customersData = useSelector(state => state.customers.customers)
-	const isLoading = useSelector(state => state.customers.isLoading)
-	const isBookingsLoading = useSelector(state => state.bookings.isLoading)
+	const isLoading = useSelector(state => state.customers.isFetching)
+	const isBookingsLoading = useSelector(state => state.bookings.isFetching)
 	const dispatch = useDispatch()
 
 	useEffect(() => {
@@ -19,7 +19,7 @@ function CustomersScreen({ navigation }) {
 		dispatch(fetchBookings())
 	}, [])
 
-	console.log(customersData.length)
+	// console.log(customersData)
 
 	function onAddCustomer() {
 		navigation.navigate('CustomerForm')

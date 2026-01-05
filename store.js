@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { bookingsSlice } from './slices/bookingsSlice'
+import bookingsSlice from './slices/bookingsSlice'
 import igloosSlice from './slices/igloosSlice'
-import { customersSlice } from './slices/customersSlice'
+import customersSlice from './slices/customersSlice'
 import { employeesSlice } from './slices/employeesSlice'
 import { employeeRolesSlice } from './slices/employeeRolesSlice'
 import discountsSlice from './slices/discountsSlice'
@@ -14,12 +14,13 @@ import authSlice from './slices/authSlice'
 import tripsSlice from './slices/tripsSlice'
 import tripLevelSlice from './slices/tripLevelSlice'
 import tripSeasonSlice from './slices/tripSeasonSlice'
+import usersSlice from './slices/usersSlice'
 
 export const store = configureStore({
 	reducer: {
-		bookings: bookingsSlice.reducer,
+		bookings: bookingsSlice,
 		igloos: igloosSlice,
-		customers: customersSlice.reducer,
+		customers: customersSlice,
 		employees: employeesSlice.reducer,
 		employeeRoles: employeeRolesSlice.reducer,
 		discounts: discountsSlice,
@@ -32,6 +33,7 @@ export const store = configureStore({
 		trips: tripsSlice,
 		tripLevels: tripLevelSlice,
 		tripSeasons: tripSeasonSlice,
+		users: usersSlice,
 	},
 	middleware: getDefaultMiddleware =>
 		getDefaultMiddleware({

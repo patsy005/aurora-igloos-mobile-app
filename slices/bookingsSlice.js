@@ -1,163 +1,154 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { API_URL } from '../constants/consts'
+import { logoutThunk } from './authSlice'
+import { apiFetch } from './_fetchWithAuth'
 
 const initialState = {
 	bookings: [],
-	isLoading: false,
-	error: null,
+	error: '',
+	status: 'idle',
+	isFetching: false,
 }
 
-export const fetchBookings = createAsyncThunk('bookings/fetchBookings', async () => {
-	const response = await fetch(`${API_URL}/api/Bookings`)
-
-	if (!response.ok) {
-		throw new Error('Failed to fetch bookings')
-	}
-
-	const data = await response.json()
-	return data
+export const fetchBookings = createAsyncThunk('bookings/fetchBookings', async (_, thunkApi) => {
+	return await apiFetch('/Bookings', {}, thunkApi)
 })
 
-export const addNewBooking = createAsyncThunk('bookings/addNewBooking', async booking => {
-	const res = await fetch(`${API_URL}/api/Bookings`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
+export const addNewBooking = createAsyncThunk('bookings/addNewBooking', async (newBooking, thunkApi) => {
+	return await apiFetch(
+		'/Bookings',
+		{
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(newBooking),
 		},
-		body: JSON.stringify(booking),
-	})
-
-	if (!res.ok) {
-		const errorMessage = await res.text()
-		console.log(errorMessage)
-		throw new Error('Failed to add booking')
-	}
-
-	const data = await res.json()
-
-	return data
+		thunkApi
+	)
 })
 
-export const editBooking = createAsyncThunk('bookings/editBooking', async ({ id, booking }) => {
-	console.log('Editing Booking with ID:', id)
-	console.log('Booking Data:', booking)
-
-	const bookingData = { id: id, ...booking }
-
-	const res = await fetch(`${API_URL}/api/Bookings/${id}`, {
-		method: 'PUT',
-		headers: {
-			'Content-Type': 'application/json',
+export const editBooking = createAsyncThunk('bookings/editBooking', async ({ id, updatedBooking }, thunkApi) => {
+	const result = await apiFetch(
+		`/Bookings/${id}`,
+		{
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(updatedBooking),
 		},
-		body: JSON.stringify(bookingData),
-	})
-
-	if (!res.ok) {
-		const errorMessage = await res.text()
-		console.log(errorMessage)
-		throw new Error('Failed to edit booking')
-	}
-
-	// const data = await res.json()
-
-	// return data
-
-	const text = await res.text()
-
-	return text ? JSON.parse(text) : {}
+		thunkApi
+	)
+	return result ?? { id, ...updatedBooking }
 })
 
-export const deleteBooking = createAsyncThunk('bookings/deleteBooking', async id => {
-	const res = await fetch(`${API_URL}/api/Bookings/${id}`, {
-		method: 'DELETE',
-	})
-
-	if (!res.ok) {
-		const errorMessage = await res.text()
-		console.log(errorMessage)
-		throw new Error('Failed to delete booking')
-	}
-
-	// const data = await res.json()
-
-	// return data
-
-	const text = await res.text()
-
-	return text ? JSON.parse(text) : {}
+export const deleteBooking = createAsyncThunk('bookings/deleteBooking', async (id, thunkApi) => {
+	const result = await apiFetch(
+		`/Bookings/${id}`,
+		{
+			method: 'DELETE',
+		},
+		thunkApi
+	)
+	return result ?? { id }
 })
 
-export const bookingsSlice = createSlice({
+export const fetchCustomerBookings = createAsyncThunk('bookings/fetchCustomerBookings', async (_, thunkApi) => {
+	// try {
+	// 	const token = getState().auth.accessToken
+	// 	if (!token) return rejectWithValue('No token')
+
+	// 	const res = await fetch('http://localhost:5212/api/Bookings/me', {
+	// 		headers: {
+	// 			Authorization: `Bearer ${token}`,
+	// 		},
+	// 	})
+
+	// 	if (!res.ok) {
+	// 		const msg = await res.text()
+	// 		return rejectWithValue(msg || 'Failed to fetch customer bookings')
+	// 	}
+
+	// 	return await res.json()
+	// } catch (e) {
+	// 	return rejectWithValue(e.message || 'Network error')
+	// }
+	return await apiFetch('/Bookings/me', {}, thunkApi)
+})
+
+const bookingsSlice = createSlice({
 	name: 'bookings',
 	initialState,
 	reducers: {},
 	extraReducers: builder => {
 		builder
-			.addCase(fetchBookings.pending, state => {
-				state.isLoading = true
-				state.error = null
-			})
 			.addCase(fetchBookings.fulfilled, (state, action) => {
-				state.isLoading = false
 				state.bookings = action.payload
-				state.error = null
+				state.status = 'idle'
+				state.isFetching = false
+			})
+			.addCase(fetchBookings.pending, state => {
+				state.status = 'loading'
+				state.isFetching = true
 			})
 			.addCase(fetchBookings.rejected, (state, action) => {
-				state.isLoading = false
+				state.status = 'error'
 				state.error = action.error.message
-				console.log('rejected', action.error.message)
-			})
-
-			.addCase(addNewBooking.pending, state => {
-				state.isLoading = true
-				state.error = null
+				state.isFetching = false
 			})
 			.addCase(addNewBooking.fulfilled, (state, action) => {
-				state.isLoading = false
-				state.bookings = [...state.bookings, action.payload]
-				state.error = null
+				state.bookings.push(action.payload)
+				state.fetch = false
+				state.error = ''
 			})
 			.addCase(addNewBooking.rejected, (state, action) => {
-				state.isLoading = false
-				state.error = action.error.message
-				console.log('rejected', action.error.message)
+				state.error = action.payload.message
+				state.isFetching = false
 			})
-
-			.addCase(editBooking.pending, state => {
-				state.isLoading = true
-				state.error = null
-				console.log('editBooking.pending')
+			.addCase(addNewBooking.pending, state => {
+				state.isFetching = true
 			})
 			.addCase(editBooking.fulfilled, (state, action) => {
-				state.isLoading = false
-				// state.bookings = state.bookings.map(booking => (booking.id === action.payload.id ? action.payload : booking))
-				const { id, booking } = action.payload
-				const index = state.bookings.findIndex(booking => booking.id === id)
-				state.bookings[index] = booking
-				state.error = null
-				console.log('editBooking.fulfilled')
+				state.isFetching = false
+				state.error = ''
 			})
 			.addCase(editBooking.rejected, (state, action) => {
-				state.isLoading = false
-				state.error = action.error.message
-				console.log('rejected', action.error.message)
+				state.error = action.payload.message
 			})
-
-			.addCase(deleteBooking.pending, state => {
-				state.isLoading = true
-				state.error = null
-				console.log('deleteBooking.pending')
+			.addCase(editBooking.pending, state => {
+				state.isFetching = true
 			})
 			.addCase(deleteBooking.fulfilled, (state, action) => {
-				state.isLoading = false
 				state.bookings = state.bookings.filter(booking => booking.id !== action.payload.id)
-				state.error = null
-				console.log('deleteBooking.fulfilled')
+				state.error = ''
+				state.isFetching = false
 			})
 			.addCase(deleteBooking.rejected, (state, action) => {
-				state.isLoading = false
+				state.error = action.payload.message
+				state.isFetching = false
+			})
+			.addCase(deleteBooking.pending, state => {
+				state.isFetching = true
+			})
+			.addCase(fetchCustomerBookings.fulfilled, (state, action) => {
+				state.bookings = action.payload
+				state.status = 'idle'
+				state.isFetching = false
+			})
+			.addCase(fetchCustomerBookings.pending, state => {
+				state.status = 'loading'
+				// state.isFetching = true
+			})
+			.addCase(fetchCustomerBookings.rejected, (state, action) => {
+				state.status = 'error'
 				state.error = action.error.message
-				console.log('rejected', action.error.message)
+				state.isFetching = false
+			})
+			.addCase(logoutThunk.fulfilled, state => {
+				state.bookings = []
+				state.error = ''
+				state.status = 'idle'
+				state.isFetching = false
 			})
 	},
 })
