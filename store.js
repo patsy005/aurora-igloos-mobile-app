@@ -8,7 +8,7 @@ import forumPostsSlice from './slices/forumPostsSlice'
 import paymentMethodsSlice from './slices/paymentMethodsSlice'
 import forumCategorySlice from './slices/forumCategorySlice'
 import forumCommentSlice from './slices/forumCommentSlice'
-import { dashboardSlice } from './slices/dashboardSlice'
+import dashboardSlice from './slices/dashboardSlice'
 import authSlice from './slices/authSlice'
 import tripsSlice from './slices/tripsSlice'
 import tripLevelSlice from './slices/tripLevelSlice'
@@ -28,7 +28,7 @@ export const store = configureStore({
 		paymentMethods: paymentMethodsSlice,
 		forumCategories: forumCategorySlice,
 		forumComments: forumCommentSlice,
-		dashboard: dashboardSlice.reducer,
+		dashboard: dashboardSlice,
 		auth: authSlice,
 		trips: tripsSlice,
 		tripLevels: tripLevelSlice,
