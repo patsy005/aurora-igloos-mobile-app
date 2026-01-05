@@ -6,11 +6,11 @@ import ForumForm from '../../components/forum/ForumForm'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchEmployees } from '../../slices/employeesSlice'
 import Spinner from '../../components/shared/Spinner'
-import { fetchForumCategories } from '../../slices/forumCategoriesSlice'
+import { fetchForumCategories } from '../../slices/forumCategorySlice'
 
 function ForumFormScreen({ route, navigation }) {
 	const postId = route?.params?.postId
-	const isLoading = useSelector(state => state.forum.isLoading)
+	const isLoading = useSelector(state => state.forumPosts.isLoading)
 	const isLoadingEmployees = useSelector(state => state.employees.isLoading)
 	const isLoadingCategories = useSelector(state => state.forumCategories.isLoading)
 	const dispatch = useDispatch()

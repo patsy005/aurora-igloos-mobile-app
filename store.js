@@ -4,10 +4,10 @@ import igloosSlice from './slices/igloosSlice'
 import customersSlice from './slices/customersSlice'
 import employeesSlice from './slices/employeesSlice'
 import discountsSlice from './slices/discountsSlice'
-import { forumSlice } from './slices/forumSlice'
+import forumPostsSlice from './slices/forumPostsSlice'
 import { paymentMethodsSlice } from './slices/paymentMethodsSlice'
-import { forumCategoriesSlice } from './slices/forumCategoriesSlice'
-import { forumCommentsSlice } from './slices/forumCommentsSlice'
+import forumCategorySlice from './slices/forumCategorySlice'
+import forumCommentSlice from './slices/forumCommentSlice'
 import { dashboardSlice } from './slices/dashboardSlice'
 import authSlice from './slices/authSlice'
 import tripsSlice from './slices/tripsSlice'
@@ -24,10 +24,10 @@ export const store = configureStore({
 		customers: customersSlice,
 		employees: employeesSlice,
 		discounts: discountsSlice,
-		forum: forumSlice.reducer,
+		forumPosts: forumPostsSlice,
 		paymentMethods: paymentMethodsSlice.reducer,
-		forumCategories: forumCategoriesSlice.reducer,
-		forumComments: forumCommentsSlice.reducer,
+		forumCategories: forumCategorySlice,
+		forumComments: forumCommentSlice,
 		dashboard: dashboardSlice.reducer,
 		auth: authSlice,
 		trips: tripsSlice,

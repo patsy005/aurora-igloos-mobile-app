@@ -8,7 +8,7 @@ import Spinner from '../../../components/shared/Spinner'
 function ForumCommentFormScreen({ route, navigation }) {
 	const postId = route?.params?.postId
 	const commentId = route?.params?.commentId
-	const isLoading = useSelector(state => state.forum.isLoading)
+	const isLoading = useSelector(state => state.forumPosts.isLoading)
 
 	const isEditing = !!commentId
 

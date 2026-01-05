@@ -5,13 +5,13 @@ import { getForumPosts } from '../../../constants/dummy-data'
 import ListScreen from '../../screen/ListScreen'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
-import { fetchForumPosts } from '../../../slices/forumSlice'
+import { fetchForumPosts } from '../../../slices/forumPostsSlice'
 import Spinner from '../../../components/shared/Spinner'
 
 function ForumCommentsScreen({ route, navigation }) {
 	const postId = route.params.postId
-	const posts = useSelector(state => state.forum.forumPosts)
-	const isLoading = useSelector(state => state.forum.isLoading)
+	const posts = useSelector(state => state.forumPosts.forumPosts)
+	const isLoading = useSelector(state => state.forumPosts.isLoading)
 	const dispatch = useDispatch()
 
 	const postComments = posts?.find(post => post.id === postId).forumComment
@@ -32,7 +32,7 @@ function ForumCommentsScreen({ route, navigation }) {
 
 	return (
 		<>
-		{isLoading && <Spinner />}
+			{isLoading && <Spinner />}
 			{!isLoading && (
 				<ListScreen
 					onAdd={addCommentHandler}
