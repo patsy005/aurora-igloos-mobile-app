@@ -1,85 +1,54 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { API_URL } from '../constants/consts'
+import { logoutThunk } from './authSlice'
+import { apiFetch } from './_fetchWithAuth'
 
 const initialState = {
 	employees: [],
-	isLoading: false,
-	error: null,
+	status: 'idle',
+	isFetching: false,
+	error: '',
 }
 
-export const fetchEmployees = createAsyncThunk('employees/fetchEmployees', async () => {
-	const res = await fetch(`${API_URL}/Employees`)
-
-	if (!res.ok) {
-		throw new Error('Failed to fetch employees')
-	}
-
-	const data = await res.json()
-	return data
+export const fetchEmployees = createAsyncThunk('employees/fetchEmployees', async (_, thunkApi) => {
+	return await apiFetch('/Employees', {}, thunkApi)
 })
 
-export const addNewEmployee = createAsyncThunk('employees/addNewEmployee', async employee => {
-	const res = await fetch(`${API_URL}/Employees`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
+export const addNewEmployee = createAsyncThunk('employees/addNewEmployee', async (newEmployye, thunkApi) => {
+	return await apiFetch(
+		'/Employees',
+		{
+			method: 'POST',
+			body: newEmployye,
 		},
-		body: JSON.stringify(employee),
-	})
-
-	if (!res.ok) {
-		const errorMessage = await res.text()
-		console.log(errorMessage)
-		throw new Error('Failed to add employee')
-	}
-
-	const data = await res.json()
-
-	return data
+		thunkApi
+	)
 })
 
-export const editEmployee = createAsyncThunk('employees/editEmployee', async ({ id, employee }) => {
-	console.log('Editing Employee with ID:', id)
-	console.log('Employee Data:', employee)
-
-	const employeeData = { id: id, ...employee }
-
-	const res = await fetch(`${API_URL}/Employees/${id}`, {
-		method: 'PUT',
-		headers: {
-			'Content-Type': 'application/json',
+export const editEmployee = createAsyncThunk('employees/editEmployee', async ({ id, updatedEmployee }, thunkApi) => {
+	const result = await apiFetch(
+		`/Employees/${id}`,
+		{
+			method: 'PUT',
+			body: updatedEmployee,
 		},
-		body: JSON.stringify(employeeData),
-	})
+		thunkApi
+	)
 
-	if (!res.ok) {
-		const errorMessage = await res.text()
-		console.log(errorMessage)
-		throw new Error('Failed to edit employee')
-	}
-
-	if (res.status === 204) {
-		console.log('No content returned, assuming success')
-		return { id, ...employee } // Zwróć zmienionego pracownika
-	}
-
-	const data = await res.json()
-
-	return data
+	//  JEŚLI backend zwrócił 204 → sami składamy payload
+	return result ?? { id }
 })
 
-export const deleteEmployee = createAsyncThunk('employees/deleteEmployee', async id => {
-	const res = await fetch(`${API_URL}/Employees/${id}`, {
-		method: 'DELETE',
-	})
+export const deleteEmployee = createAsyncThunk('employees/deleteEmployee', async (id, thunkApi) => {
+	const result = await apiFetch(
+		`/Employees/${id}`,
+		{
+			method: 'DELETE',
+		},
+		thunkApi
+	)
 
-	if (!res.ok) {
-		const errorMessage = await res.text()
-		console.log(errorMessage)
-		throw new Error('Failed to delete employee')
-	}
-
-	return id
+	//  JEŚLI backend zwrócił 204 → sami składamy payload
+	return result ?? id
 })
 
 export const employeesSlice = createSlice({
@@ -88,68 +57,86 @@ export const employeesSlice = createSlice({
 	reducers: {},
 	extraReducers: builder => {
 		builder
-			.addCase(fetchEmployees.pending, state => {
-				state.isLoading = true
-				state.error = null
-			})
 			.addCase(fetchEmployees.fulfilled, (state, action) => {
-				state.isLoading = false
 				state.employees = action.payload
+				state.status = 'idle'
+				state.isFetching = false
+				state.error = ''
+			})
+			.addCase(fetchEmployees.pending, state => {
+				state.status = 'loading'
+				state.isFetching = true
 			})
 			.addCase(fetchEmployees.rejected, (state, action) => {
-				state.isLoading = false
+				state.status = 'error'
 				state.error = action.error.message
-			})
-
-			.addCase(addNewEmployee.pending, state => {
-				state.isLoading = true
-				state.error = null
-				console.log('employee pending')
+				state.isFetching = false
 			})
 			.addCase(addNewEmployee.fulfilled, (state, action) => {
-				state.isLoading = false
 				state.employees.push(action.payload)
-				console.log('emplotee fulfilled')
+				state.error = ''
+				state.isFetching = false
 			})
 			.addCase(addNewEmployee.rejected, (state, action) => {
-				state.isLoading = false
-				state.error = action.error.message
-				console.log('employee rejected')
+				state.error = action.payload.message
+				state.isFetching = false
 			})
-
-			.addCase(editEmployee.pending, state => {
-				state.isLoading = true
-				state.error = null
-				console.log('employee edit pending')
+			.addCase(addNewEmployee.pending, state => {
+				state.isFetching = true
 			})
 			.addCase(editEmployee.fulfilled, (state, action) => {
-				state.isLoading = false
-				const index = state.employees.findIndex(employee => employee.id === action.payload.id)
-				state.employees[index] = action.payload
-				console.log('employee edit fulfilled')
+				state.isEditing = false
+				state.isFetching = false
+				state.error = ''
 			})
 			.addCase(editEmployee.rejected, (state, action) => {
-				state.isLoading = false
-				state.error = action.error.message
-				console.log('employee edit rejected')
+				state.error = action.payload.message
 			})
-
-			.addCase(deleteEmployee.pending, state => {
-				state.isLoading = true
-				state.error = null
-				console.log('employee ddeletion pending')
+			.addCase(editEmployee.pending, state => {
+				state.isFetching = true
 			})
 			.addCase(deleteEmployee.fulfilled, (state, action) => {
-				state.isLoading = false
-				state.employees = state.employees.filter(employee => employee.id !== action.payload)
-				console.log('employee deletion fulfilled')
+				state.employees = state.employees.filter(emp => emp.id !== action.payload)
+				state.error = ''
+				state.isFetching = false
 			})
 			.addCase(deleteEmployee.rejected, (state, action) => {
-				state.isLoading = false
-				state.error = action.error.message
-				console.log('employee deletion rejected')
+				state.error = action.payload.message
+				state.isFetching = false
+			})
+			.addCase(deleteEmployee.pending, state => {
+				state.isFetching = true
+			})
+			.addCase(logoutThunk.fulfilled, state => {
+				state.employees = []
+				state.error = ''
+				state.status = 'idle'
+				state.isFetching = false
 			})
 	},
 })
 
 export default employeesSlice.reducer
+
+export const selectEmployeeById = (state, id) => {
+	const employee = state.employees.employees.find(emp => emp.id === id)
+	return employee
+}
+
+export const selectEmployeeIdByUserId = (state, userId) => {
+	const employee = state.employees.employees.find(emp => emp.idUser === userId)
+	if (!employee) return null
+	return employee.id
+}
+
+export const selectEmployeeByName = (state, name) => {
+	const employee = state.employees.employees.find(emp => emp.name === name)
+	return employee
+}
+
+export const selectEmployeeBySurname = (state, surname) => {
+	const employee = state.employees.employees.find(emp => emp.surname === surname)
+	return employee
+}
+
+export const selectEmployees = state => state.employees.employees

@@ -1,62 +1,99 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Image, StyleSheet, Text, View, ScrollView, Alert } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import DetailContainer from '../shared/DetailContainer'
 import { Colors } from '../../constants/colors'
 import { deleteEmployee, fetchEmployees } from '../../slices/employeesSlice'
 import { useDispatch } from 'react-redux'
+import { Ionicons } from '@expo/vector-icons'
 
 function EmployeeDetail({ employee }) {
 	const navigation = useNavigation()
 	const dispatch = useDispatch()
 
-	function onEditEmployee() {
-        navigation.navigate('EmployeeForm', {
-            employeeId: employee.id,
-        })
-    }
+	// Guard clause - if employee is undefined, return null
+	if (!employee) {
+		return null
+	}
 
-	function onDeleteEmployee(){
-		dispatch(deleteEmployee(employee.id))
-		.then(() => dispatch(fetchEmployees()))
-		.then(() => navigation.goBack())
+	function onEditEmployee() {
+		navigation.navigate('EmployeeForm', {
+			employeeId: employee.id,
+		})
+	}
+
+	async function onDeleteEmployee() {
+		try {
+			await dispatch(deleteEmployee(employee.id)).unwrap?.()
+			await dispatch(fetchEmployees())
+			Alert.alert('Success', 'Employee deleted successfully', [{ text: 'OK' }])
+			navigation.goBack()
+		} catch (e) {
+			console.log('Delete error:', e)
+			Alert.alert('Error', 'Failed to delete employee')
+		}
 	}
 
 	return (
 		<DetailContainer onEdit={onEditEmployee} onDelete={onDeleteEmployee}>
-			<View style={styles.imageContainer}>
-				<Image source={require('../../assets/images/user.jpg')} style={styles.image} />
-			</View>
-
-			<View>
+			{/* Header with Avatar and Basic Info */}
+			<View style={styles.headerSection}>
+				<View style={styles.avatarContainer}>
+					{employee.photoUrl ? (
+						<Image source={{ uri: `http://10.0.2.2:5212/${employee.photoUrl}` }} style={styles.avatarImage} />
+					) : (
+						<Ionicons name="person" size={48} color={Colors.primary97} />
+					)}
+				</View>
 				<Text style={styles.nameText}>
 					{employee.name} {employee.surname}
 				</Text>
+				<Text style={styles.emailText}>{employee.email}</Text>
+				<View style={styles.roleBadge}>
+					<Text style={styles.roleText}>{employee.role}</Text>
+				</View>
 			</View>
 
-			<View>
-				<Text style={styles.detailTitle}>emaill address</Text>
-				<Text style={styles.detail}>{employee.email}</Text>
+			{/*  Info Cards */}
+			<View style={styles.quickInfoSection}>
+				<View style={styles.infoCard}>
+					<Ionicons name="call" size={20} color={Colors.primary37} />
+					<Text style={styles.infoLabel}>Phone</Text>
+					<Text style={styles.infoValue}>{employee.phoneNumber}</Text>
+				</View>
+
+				<View style={styles.infoCard}>
+					<Ionicons name="briefcase" size={20} color={Colors.primary37} />
+					<Text style={styles.infoLabel}>Position</Text>
+					<Text style={styles.infoValue}>{employee.role}</Text>
+				</View>
 			</View>
 
-			<View style={styles.boxesContainer}>
-				<View style={styles.boxContainer}>
-					<Text style={[styles.detailTitle, styles.boxTitle]}>phone number</Text>
-					<Text style={[styles.detail, styles.boxDetail]}>{employee.phoneNumber}</Text>
+			{/* Login Information */}
+			{employee.login && (
+				<View style={styles.loginSection}>
+					<Text style={styles.sectionTitle}>Account Information</Text>
+					<View style={styles.loginCard}>
+						<Ionicons name="person-circle" size={20} color={Colors.primary37} />
+						<View style={styles.loginInfo}>
+							<Text style={styles.loginLabel}>Login</Text>
+							<Text style={styles.loginValue}>{employee.login}</Text>
+						</View>
+					</View>
 				</View>
+			)}
 
-				<View style={styles.boxContainer}>
-					<Text style={[styles.detailTitle, styles.boxTitle]}>position</Text>
-					<Text style={[styles.detail, styles.boxDetail]}>{employee.role}</Text>
-				</View>
-
-				<View style={styles.boxContainer}>
-					<Text style={[styles.detailTitle, styles.boxTitle]}>Address</Text>
-					<View style={styles.addressBox}>
-						<Text style={[styles.detail, styles.boxDetail]}>
+			{/* Address Section */}
+			<View style={styles.addressSection}>
+				<Text style={styles.sectionTitle}>Address</Text>
+				<View style={styles.addressCard}>
+					<Ionicons name="location" size={20} color={Colors.primary37} />
+					<View style={styles.addressInfo}>
+						<Text style={styles.addressText}>
 							{employee.street} {employee.streetNumber}
 						</Text>
 						<Text style={styles.addressText}>{employee.city}</Text>
 						<Text style={styles.addressText}>{employee.country}</Text>
+						<Text style={styles.addressText}>{employee.postalCode}</Text>
 					</View>
 				</View>
 			</View>
@@ -67,66 +104,141 @@ function EmployeeDetail({ employee }) {
 export default EmployeeDetail
 
 const styles = StyleSheet.create({
-	imageContainer: {
-		borderRadius: 8,
-		overflow: 'hidden',
-		width: '100%',
-		height: 300,
-		elevation: 4,
-		shadowColor: 'black',
-		shadowOffset: { width: 0, height: 2 },
-		shadowRadius: 5,
-		shadowOpacity: 0.26,
+	headerSection: {
+		alignItems: 'center',
+		marginBottom: 24,
+		paddingBottom: 20,
+		borderBottomWidth: 1,
+		borderBottomColor: Colors.primary19,
 	},
-	image: {
-		width: '100%',
-		height: '100%',
-		objectFit: 'cover',
-		resizeMode: 'contain',
-		// aspectRatio: 16/9,
+	avatarContainer: {
+		width: 80,
+		height: 80,
+		borderRadius: 40,
+		backgroundColor: Colors.primary19,
+		alignItems: 'center',
+		justifyContent: 'center',
+		marginBottom: 16,
+		shadowColor: Colors.primary67,
+		shadowOffset: { width: 0, height: 4 },
+		shadowOpacity: 0.3,
+		shadowRadius: 8,
+		elevation: 6,
+		overflow: 'hidden',
+	},
+	avatarImage: {
+		width: 80,
+		height: 80,
+		borderRadius: 40,
 	},
 	nameText: {
-		fontSize: 22,
+		fontSize: 24,
 		fontWeight: 'bold',
 		color: Colors.primary97,
-		letterSpacing: 1,
+		marginBottom: 8,
+		textAlign: 'center',
 	},
-	detailTitle: {
+	emailText: {
+		fontSize: 16,
+		color: Colors.primary86,
+		textAlign: 'center',
+		marginBottom: 12,
+	},
+	roleBadge: {
+		backgroundColor: Colors.primary37,
+		borderRadius: 16,
+		paddingHorizontal: 16,
+		paddingVertical: 6,
+	},
+	roleText: {
+		fontSize: 13,
+		fontWeight: '600',
+		color: Colors.primary97,
 		textTransform: 'uppercase',
-		fontWeight: 'light',
-		fontSize: 18,
+		letterSpacing: 0.5,
+	},
+	quickInfoSection: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		marginBottom: 24,
+		gap: 12,
+	},
+	infoCard: {
+		flex: 1,
+		backgroundColor: Colors.boxBg,
+		borderRadius: 12,
+		padding: 16,
+		alignItems: 'center',
+		borderWidth: 1,
+		borderColor: Colors.primary19,
+	},
+	infoLabel: {
+		fontSize: 12,
 		color: Colors.greyLight,
+		textTransform: 'uppercase',
+		marginTop: 8,
+		marginBottom: 4,
 	},
-	detail: {
+	infoValue: {
+		fontSize: 14,
 		fontWeight: 'bold',
-		color: Colors.primary67,
-		alignSelf: 'flex-start',
+		color: Colors.primary97,
+		textAlign: 'center',
 	},
-	boxesContainer: {
-		gap: 20,
+	loginSection: {
+		marginBottom: 24,
 	},
-	boxContainer: {
-		backgroundColor: Colors.primary6,
-		borderRadius: 6,
-		padding: 7,
-		gap: 10,
-		elevation: 4,
-		shadowColor: 'black',
-		shadowOffset: { width: 0, height: 2 },
-		shadowRadius: 5,
-		shadowOpacity: 0.26,
+	sectionTitle: {
+		fontSize: 18,
+		fontWeight: '600',
+		color: Colors.primary97,
+		marginBottom: 12,
+		textTransform: 'uppercase',
+		letterSpacing: 0.5,
 	},
-	boxTitle: {
-		fontSize: 15,
+	loginCard: {
+		flexDirection: 'row',
+		backgroundColor: Colors.boxBg,
+		borderRadius: 12,
+		padding: 16,
+		borderWidth: 1,
+		borderColor: Colors.primary19,
+		alignItems: 'center',
 	},
-	boxDetail: {
-		fontSize: 20,
-		alignSelf: 'flex-start',
+	loginInfo: {
+		marginLeft: 12,
+		flex: 1,
 	},
-	addressBox: {
-		// flexDirection: 'row',
+	loginLabel: {
+		fontSize: 12,
+		color: Colors.greyLight,
+		textTransform: 'uppercase',
+		marginBottom: 4,
+	},
+	loginValue: {
+		fontSize: 16,
+		fontWeight: '600',
+		color: Colors.primary97,
+	},
+	addressSection: {
+		marginBottom: 24,
+	},
+	addressCard: {
+		flexDirection: 'row',
+		backgroundColor: Colors.boxBg,
+		borderRadius: 12,
+		padding: 16,
+		borderWidth: 1,
+		borderColor: Colors.primary19,
+		alignItems: 'flex-start',
+	},
+	addressInfo: {
+		marginLeft: 12,
+		flex: 1,
 	},
 	addressText: {
-		color: Colors.greyLight,
+		fontSize: 14,
+		color: Colors.primary86,
+		marginBottom: 4,
 	},
 })

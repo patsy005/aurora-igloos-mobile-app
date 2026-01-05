@@ -9,12 +9,14 @@ import Spinner from '../../components/shared/Spinner'
 
 function EmployeesScreen({ navigation }) {
 	const employeesData = useSelector(state => state.employees.employees)
-	const isLoading = useSelector(state => state.employees.isLoading)
+	const isLoading = useSelector(state => state.employees.isFetching)
 	const dispatch = useDispatch()
 
 	useEffect(() => {
 		dispatch(fetchEmployees())
 	}, [])
+
+	console.log(employeesData)
 
 	function onAddEmployee() {
 		navigation.navigate('EmployeeForm')
@@ -26,7 +28,7 @@ function EmployeesScreen({ navigation }) {
 
 	return (
 		<>
-		{isLoading && <Spinner />}
+			{isLoading && <Spinner />}
 			{!isLoading && (
 				<ListScreen
 					onAdd={onAddEmployee}
