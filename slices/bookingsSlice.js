@@ -54,25 +54,7 @@ export const deleteBooking = createAsyncThunk('bookings/deleteBooking', async (i
 })
 
 export const fetchCustomerBookings = createAsyncThunk('bookings/fetchCustomerBookings', async (_, thunkApi) => {
-	// try {
-	// 	const token = getState().auth.accessToken
-	// 	if (!token) return rejectWithValue('No token')
 
-	// 	const res = await fetch('http://localhost:5212/api/Bookings/me', {
-	// 		headers: {
-	// 			Authorization: `Bearer ${token}`,
-	// 		},
-	// 	})
-
-	// 	if (!res.ok) {
-	// 		const msg = await res.text()
-	// 		return rejectWithValue(msg || 'Failed to fetch customer bookings')
-	// 	}
-
-	// 	return await res.json()
-	// } catch (e) {
-	// 	return rejectWithValue(e.message || 'Network error')
-	// }
 	return await apiFetch('/Bookings/me', {}, thunkApi)
 })
 

@@ -5,7 +5,7 @@ import customersSlice from './slices/customersSlice'
 import employeesSlice from './slices/employeesSlice'
 import discountsSlice from './slices/discountsSlice'
 import forumPostsSlice from './slices/forumPostsSlice'
-import { paymentMethodsSlice } from './slices/paymentMethodsSlice'
+import paymentMethodsSlice from './slices/paymentMethodsSlice'
 import forumCategorySlice from './slices/forumCategorySlice'
 import forumCommentSlice from './slices/forumCommentSlice'
 import { dashboardSlice } from './slices/dashboardSlice'
@@ -25,7 +25,7 @@ export const store = configureStore({
 		employees: employeesSlice,
 		discounts: discountsSlice,
 		forumPosts: forumPostsSlice,
-		paymentMethods: paymentMethodsSlice.reducer,
+		paymentMethods: paymentMethodsSlice,
 		forumCategories: forumCategorySlice,
 		forumComments: forumCommentSlice,
 		dashboard: dashboardSlice.reducer,

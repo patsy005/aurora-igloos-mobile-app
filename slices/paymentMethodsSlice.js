@@ -1,42 +1,156 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { API_URL } from '../constants/consts'
+import { logoutThunk } from './authSlice'
 
 const initialState = {
 	paymentMethods: [],
-	isLoading: false,
-	error: null,
+	error: '',
+	status: 'idle',
+	isFetching: false,
 }
 
-export const fetchPaymentMethods = createAsyncThunk('bookings/fetchPaymentMethods', async () => {
-	const response = await fetch(`${API_URL}/api/PaymentMethods`)
-	if (!response.ok) {
-		throw new Error('Failed to fetch payment methods')
-	}
-
-	const data = await response.json()
-
+export const fetchPaymentMethods = createAsyncThunk('paymentMethods/fetchPaymentMethods', async () => {
+	const res = await fetch('http://10.0.2.2:5212/api/PaymentMethods')
+	const data = await res.json()
 	return data
 })
 
-export const paymentMethodsSlice = createSlice({
+export const addNewPaymentMethod = createAsyncThunk(
+	'paymentMethods/addNewPaymentMethod',
+	async (newPaymentMethod, { getState, rejectWithValue }) => {
+		const token = getState().auth.accessToken
+		const res = await fetch('http://10.0.2.2:5212/api/PaymentMethods', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
+			},
+			body: JSON.stringify(newPaymentMethod),
+		})
+
+		if (!res.ok) {
+			return rejectWithValue('Failed to add new payment method')
+		}
+
+		const data = await res.json()
+		return data
+	}
+)
+
+export const editPaymentMethod = createAsyncThunk(
+	'paymentMethods/editPaymentMethod',
+	async ({ id, updatedPaymentMethod }, { getState, rejectWithValue }) => {
+		const token = getState().auth.accessToken
+		const res = await fetch(`http://localhost:5212/api/PaymentMethods/${id}`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
+			},
+			body: JSON.stringify(updatedPaymentMethod),
+		})
+
+		if (!res.ok) {
+			return rejectWithValue('Failed to edit payment method')
+		}
+
+		if (res.status == 204) {
+			return { id, ...updatedPaymentMethod }
+		}
+
+		const data = await res.json()
+		return data
+	}
+)
+
+export const deletePaymentMethod = createAsyncThunk(
+	'paymentMethods/deletePaymentMethod',
+	async (id, { getState, rejectWithValue }) => {
+		const token = getState().auth.accessToken
+		const res = await fetch(`http://localhost:5212/api/PaymentMethods/${id}`, {
+			method: 'DELETE',
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
+
+		if (!res.ok) {
+			return rejectWithValue('Failed to delete payment method')
+		}
+
+		return id
+	}
+)
+
+const paymentMethodsSlice = createSlice({
 	name: 'paymentMethods',
 	initialState,
 	reducers: {},
 	extraReducers: builder => {
 		builder
 			.addCase(fetchPaymentMethods.pending, state => {
-				state.isLoading = true
-				state.error = null
+				state.isFetching = true
+				state.status = 'loading'
 			})
 			.addCase(fetchPaymentMethods.fulfilled, (state, action) => {
-				state.isLoading = false
+				state.isFetching = false
+				state.status = 'succeeded'
 				state.paymentMethods = action.payload
-				state.error = null
+				state.error = ''
 			})
 			.addCase(fetchPaymentMethods.rejected, (state, action) => {
-				state.isLoading = false
+				state.isFetching = false
+				state.status = 'failed'
 				state.error = action.error.message
-				console.log('rejected', action.error.message)
+			})
+			.addCase(addNewPaymentMethod.fulfilled, (state, action) => {
+				state.paymentMethods.push(action.payload)
+				state.isFetching = false
+				state.status = 'succeeded'
+				state.error = ''
+			})
+			.addCase(addNewPaymentMethod.rejected, (state, action) => {
+				state.isFetching = false
+				state.status = 'failed'
+				state.error = action.error.message
+			})
+			.addCase(addNewPaymentMethod.pending, state => {
+				state.isFetching = true
+				state.status = 'loading'
+			})
+			.addCase(editPaymentMethod.fulfilled, (state, action) => {
+				state.isFetching = false
+				state.status = 'succeeded'
+				state.error = ''
+			})
+			.addCase(editPaymentMethod.rejected, (state, action) => {
+				state.isFetching = false
+				state.status = 'failed'
+				state.error = action.error.message
+			})
+			.addCase(editPaymentMethod.pending, state => {
+				state.isFetching = true
+				state.status = 'loading'
+			})
+			.addCase(deletePaymentMethod.fulfilled, (state, action) => {
+				state.paymentMethods = state.paymentMethods.filter(pm => pm.id !== action.payload)
+				state.isFetching = false
+				state.status = 'succeeded'
+				state.error = ''
+			})
+			.addCase(deletePaymentMethod.rejected, (state, action) => {
+				state.isFetching = false
+				state.status = 'failed'
+				state.error = action.error.message
+			})
+			.addCase(deletePaymentMethod.pending, state => {
+				state.isFetching = true
+				state.status = 'loading'
+			})
+			.addCase(logoutThunk.fulfilled, state => {
+				state.paymentMethods = []
+				state.error = ''
+				state.status = 'idle'
+				state.isFetching = false
 			})
 	},
 })

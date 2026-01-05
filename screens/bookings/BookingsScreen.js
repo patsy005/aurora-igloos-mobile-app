@@ -28,6 +28,8 @@ function BookingsScreen({ navigation }) {
 		return <BookingListItem booking={itemData.item} />
 	}
 
+	console.log(bookingsData)
+
 	return (
 		<>
 			{isLoading && <Spinner />}

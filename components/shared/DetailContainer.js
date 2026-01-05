@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
 	contentContainer: {
 		paddingVertical: 12,
 		paddingHorizontal: 10,
-		paddingBottom: 60,
+		paddingBottom: 100,
 		gap: 20,
 	},
 	iconsContainer: {
