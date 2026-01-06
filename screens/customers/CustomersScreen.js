@@ -1,5 +1,3 @@
-import { Text } from 'react-native'
-import { getCustomers } from '../../constants/dummy-data'
 import ListScreen from '../screen/ListScreen'
 import CustomerListItem from '../../components/customers/CustomerListItem'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,16 +8,14 @@ import Spinner from '../../components/shared/Spinner'
 
 function CustomersScreen({ navigation }) {
 	const customersData = useSelector(state => state.customers.customers)
-	const isLoading = useSelector(state => state.customers.isLoading)
-	const isBookingsLoading = useSelector(state => state.bookings.isLoading)
+	const isLoading = useSelector(state => state.customers.isFetching)
+	const isBookingsLoading = useSelector(state => state.bookings.isFetching)
 	const dispatch = useDispatch()
 
 	useEffect(() => {
 		dispatch(fetchCustomers())
 		dispatch(fetchBookings())
 	}, [])
-
-	console.log(customersData.length)
 
 	function onAddCustomer() {
 		navigation.navigate('CustomerForm')

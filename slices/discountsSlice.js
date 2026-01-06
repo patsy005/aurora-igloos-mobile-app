@@ -1,149 +1,130 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { API_URL } from '../constants/consts'
+import { logoutThunk } from './authSlice'
+import { apiFetch } from './_fetchWithAuth'
 
 const initialState = {
 	discounts: [],
-	isLoading: false,
-	error: null,
+	error: '',
+	status: 'idle',
+	isFetching: false,
 }
 
 export const fetchDiscounts = createAsyncThunk('discounts/fetchDiscounts', async () => {
-	const res = await fetch(`${API_URL}/api/Discounts`)
-
-	if (!res.ok) {
-		throw new Error('Failed to fetch discounts')
-	}
-
+	const res = await fetch('http://10.0.2.2:5212/api/Discounts')
 	const data = await res.json()
-
+	console.log(data)
 	return data
 })
 
-export const addNewDiscount = createAsyncThunk('discounts/addNewDiscount', async discount => {
-	const res = await fetch(`${API_URL}/api/Discounts`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
+export const addNewDiscount = createAsyncThunk('discounts/addNewDiscount', async (newDiscount, thunkApi) => {
+	return await apiFetch(
+		'/Discounts',
+		{
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(newDiscount),
 		},
-		body: JSON.stringify(discount),
-	})
-
-	if (!res.ok) {
-		throw new Error('Failed to add new discount')
-	}
-
-	if (res.status === 204) return { ...discount, id: Date.now() }
-
-	const data = await res.json()
-
-	return data
+		thunkApi
+	)
 })
 
-export const editDiscount = createAsyncThunk('discounts/editDiscount', async ({ id, discount }) => {
-	const discountData = { id: id, ...discount }
-
-	const res = await fetch(`${API_URL}/api/Discounts/${id}`, {
-		method: 'PUT',
-		headers: {
-			'Content-Type': 'application/json',
+export const editDiscount = createAsyncThunk('discounts/editDiscount', async ({ id, updatedDiscount }, thunkApi) => {
+	const result = await apiFetch(
+		`/Discounts/${id}`,
+		{
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(updatedDiscount),
 		},
-		body: JSON.stringify(discountData),
-	})
+		thunkApi
+	)
 
-	if (!res.ok) {
-		const errorMessage = await res.text()
-		console.log(errorMessage)
-		throw new Error('Failed to edit discount')
-	}
-
-	if (res.status === 204) return discount
-
-	const data = await res.json()
-
-	return data
+	//  JEŚLI backend zwrócił 204 → sami składamy payload
+	return result ?? { id, ...updatedDiscount }
 })
 
-export const deleteDiscount = createAsyncThunk('discounts/deleteDiscount', async id => {
-	const res = await fetch(`${API_URL}/api/Discounts/${id}`, {
-		method: 'DELETE',
-	})
-
-	if (!res.ok) {
-		throw new Error('Failed to delete discount')
-	}
-
+export const deleteDiscount = createAsyncThunk('discounts/deleteDiscount', async (id, thunkApi) => {
+	await apiFetch(`/Discounts/${id}`, { method: 'DELETE' }, thunkApi)
 	return id
 })
 
-export const discountsSlice = createSlice({
+const discountsSlice = createSlice({
 	name: 'discounts',
 	initialState,
 	reducers: {},
 	extraReducers: builder => {
 		builder
-			.addCase(fetchDiscounts.pending, state => {
-				state.isLoading = true
-				state.error = null
-			})
 			.addCase(fetchDiscounts.fulfilled, (state, action) => {
-				state.isLoading = false
 				state.discounts = action.payload
+				state.status = 'idle'
+				state.isFetching = false
+			})
+			.addCase(fetchDiscounts.pending, state => {
+				state.status = 'loading'
+				state.isFetching = true
 			})
 			.addCase(fetchDiscounts.rejected, (state, action) => {
-				state.isLoading = false
+				state.status = 'error'
 				state.error = action.error.message
-			})
-
-			.addCase(addNewDiscount.pending, state => {
-				state.isLoading = true
-				state.error = null
-				console.log('new discount pending')
+				state.isFetching = false
 			})
 			.addCase(addNewDiscount.fulfilled, (state, action) => {
-				state.isLoading = false
 				state.discounts.push(action.payload)
-				state.error = null
-				console.log('new discount fulfilled')
+				state.isFetching = false
+				state.status = 'idle'
+				state.error = ''
+			})
+			.addCase(addNewDiscount.pending, state => {
+				state.isFetching = true
+				state.status = 'loading'
 			})
 			.addCase(addNewDiscount.rejected, (state, action) => {
-				state.isLoading = false
-				state.error = action.error.message
-				console.log('new discount rejected')
-			})
-
-			.addCase(editDiscount.pending, state => {
-				state.isLoading = true
-				state.error = null
-				console.log('edit discount pending')
+				state.isFetching = false
+				state.status = 'error'
+				state.error = action.payload
 			})
 			.addCase(editDiscount.fulfilled, (state, action) => {
-				state.isLoading = false
 				const index = state.discounts.findIndex(discount => discount.id === action.payload.id)
-				state.discounts[index] = action.payload
-				state.error = null
-				console.log('edit discount fulfilled')
+				if (index !== -1) {
+					state.discounts[index] = action.payload
+				}
+				state.isFetching = false
+				state.status = 'idle'
+				state.error = ''
+			})
+			.addCase(editDiscount.pending, state => {
+				state.isFetching = true
+				state.status = 'loading'
 			})
 			.addCase(editDiscount.rejected, (state, action) => {
-				state.isLoading = false
-				state.error = action.error.message
-				console.log('edit discount rejected')
-			})
-
-			.addCase(deleteDiscount.pending, state => {
-				state.isLoading = true
-				state.error = null
-				console.log('delete discount pending')
+				state.isFetching = false
+				state.status = 'error'
+				state.error = action.payload
 			})
 			.addCase(deleteDiscount.fulfilled, (state, action) => {
-				state.isLoading = false
 				state.discounts = state.discounts.filter(discount => discount.id !== action.payload)
-				state.error = null
-				console.log('delete discount fulfilled')
+				state.isFetching = false
+				state.status = 'idle'
+				state.error = ''
+			})
+			.addCase(deleteDiscount.pending, state => {
+				state.isFetching = true
+				state.status = 'loading'
 			})
 			.addCase(deleteDiscount.rejected, (state, action) => {
-				state.isLoading = false
-				state.error = action.error.message
-				console.log('delete discount rejected')
+				state.isFetching = false
+				state.status = 'error'
+				state.error = action.payload
+			})
+			.addCase(logoutThunk.fulfilled, state => {
+				state.discounts = []
+				state.error = ''
+				state.status = 'idle'
+				state.isFetching = false
 			})
 	},
 })

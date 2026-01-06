@@ -1,10 +1,10 @@
 import { StyleSheet, TextInput, View } from 'react-native'
 import { Colors } from '../../constants/colors'
 
-function Input({style, textInputConfig}) {
+function Input({ style, textInputConfig }) {
 	return (
 		<View style={styles.inputContainer}>
-			<TextInput style={styles.input} {...textInputConfig} />
+			<TextInput style={styles.input} placeholderTextColor={Colors.primary86} {...textInputConfig} />
 		</View>
 	)
 }
@@ -19,8 +19,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		paddingHorizontal: 15,
 		borderRadius: 8,
-        justifyContent: 'center',
-
+		justifyContent: 'center',
 	},
 	input: {
 		color: Colors.white,

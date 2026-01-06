@@ -1,54 +1,61 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { API_URL } from '../constants/consts'
+import { apiFetch } from './_fetchWithAuth'
+
+export const fetchDashboardSales = createAsyncThunk('dashboard/fetchSales', async ({ months = 12 } = {}, thunkApi) => {
+	return await apiFetch(`/dashboard/sales?months=${months}`, {}, thunkApi)
+})
+
+export const fetchDashboardStats = createAsyncThunk('dashboard/fetchStats', async ({ days = 30 } = {}, thunkApi) => {
+	return await apiFetch(`/dashboard/stats?days=${days}`, {}, thunkApi)
+})
 
 const initialState = {
-	days: 30,
-	isLoading: false,
-	error: null,
-    data: [],
+	sales: [],
+	salesMonths: 12,
+	isLoadingSales: false,
+	salesError: null,
+
+	stats: null,
+	isLoadingStats: false,
+	statsError: null,
+	statsDays: 30,
 }
 
-export const fetchDashboardData = createAsyncThunk(
-	'dashboard/fetchDashboardData',
-	async (days = 30, { rejectWithValue }) => {
-		try {
-			const response = await fetch(`${API_URL}/stats?days=${days}`)
-			if (!response.ok) {
-				throw new Error('Server error')
-			}
-			const data = await response.json()
-			return data
-		} catch (error) {
-			return rejectWithValue(error.message)
-		}
-	}
-)
-
-export const dashboardSlice = createSlice({
+const dashboardSlice = createSlice({
 	name: 'dashboard',
 	initialState,
-	reducers: {
-		setDays: (state, action) => {
-			state.days = action.payload
-		},
-	},
+	reducers: {},
 	extraReducers: builder => {
 		builder
-			.addCase(fetchDashboardData.pending, state => {
-				state.isLoading = true
-				state.error = null
+			.addCase(fetchDashboardSales.pending, state => {
+				state.isLoadingSales = true
+				state.salesError = null
 			})
-			.addCase(fetchDashboardData.fulfilled, (state, action) => {
-				state.isLoading = false
-				state.error = null
-				state.data = action.payload
+			.addCase(fetchDashboardSales.fulfilled, (state, action) => {
+				state.sales = action.payload ?? []
+				state.isLoadingSales = false
+				state.salesError = null
+				state.salesMonths = action.meta.arg?.months ?? state.salesMonths ?? 12
 			})
-			.addCase(fetchDashboardData.rejected, (state, action) => {
-				state.isLoading = false
-				state.error = action.payload
+			.addCase(fetchDashboardSales.rejected, (state, action) => {
+				state.isLoadingSales = false
+				state.salesError = action.error?.message ?? 'Failed to load chart data'
+			})
+			.addCase(fetchDashboardStats.pending, state => {
+				state.isLoadingStats = true
+				state.statsError = null
+			})
+			.addCase(fetchDashboardStats.fulfilled, (state, action) => {
+				state.stats = action.payload
+				state.isLoadingStats = false
+				state.statsError = null
+				state.statsDays = action.meta.arg?.days ?? state.statsDays ?? 30
+			})
+			.addCase(fetchDashboardStats.rejected, (state, action) => {
+				state.isLoadingStats = false
+				state.statsError = action.payload ?? action.error?.message ?? 'Failed to load dashboard stats'
 			})
 	},
 })
 
-export const { setDays } = dashboardSlice.actions
 export default dashboardSlice.reducer

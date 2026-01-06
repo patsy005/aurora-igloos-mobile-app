@@ -1,15 +1,13 @@
-import { Text } from 'react-native'
-import { getForumPosts } from '../../constants/dummy-data'
 import ListScreen from '../screen/ListScreen'
 import ForumListItem from '../../components/forum/ForumListItem'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchForumPosts } from '../../slices/forumSlice'
+import { fetchForumPosts } from '../../slices/forumPostsSlice'
 import { useEffect } from 'react'
 import Spinner from '../../components/shared/Spinner'
 
 function ForumScreen({ navigation }) {
-	const posts = useSelector(state => state.forum.forumPosts)
-	const isLoading = useSelector(state => state.forum.isLoading)
+	const posts = useSelector(state => state.forumPosts.forumPosts)
+	const isLoading = useSelector(state => state.forumPosts.isLoading)
 	const dispatch = useDispatch()
 
 	useEffect(() => {

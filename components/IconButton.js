@@ -4,21 +4,20 @@ import { Octicons } from '@expo/vector-icons'
 import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '../constants/colors'
 
-function IconButton({ iconName, iconType,  color, size, onPress }) {
+function IconButton({ iconName, iconType, color, size, onPress }) {
+	let icon
 
-    let icon;
+	if (iconType === 'FontAwesome6') {
+		icon = <FontAwesome6 name={iconName} color={color} size={size} />
+	}
 
-    if(iconType === 'FontAwesome6') {
-        icon = <FontAwesome6 name={iconName} color={color} size={size} />
-    }
+	if (iconType === 'Ionicons') {
+		icon = <Ionicons name={iconName} color={color} size={size} />
+	}
 
-    if(iconType === 'Ionicons') {
-        icon = <Ionicons name={iconName} color={color} size={size} />
-    }
-
-    if(iconType === 'Octicons') {
-        icon = <Octicons name={iconName} color={color} size={size} />
-    }
+	if (iconType === 'Octicons') {
+		icon = <Octicons name={iconName} color={color} size={size} />
+	}
 
 	return (
 		<Pressable
@@ -33,13 +32,20 @@ export default IconButton
 
 const styles = StyleSheet.create({
 	iconContainer: {
-		padding: 6,
+		padding: 10,
 		borderWidth: 1,
-		borderColor: 'transparent',
+		borderColor: Colors.primary37,
+		backgroundColor: Colors.primary19,
+		borderRadius: 10,
+		shadowColor: Colors.primary67,
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.1,
+		shadowRadius: 4,
+		elevation: 2,
 	},
 	iconContainerPressed: {
-		borderRadius: 10,
-		// padding: 5,
+		backgroundColor: Colors.primary37,
 		borderColor: Colors.primary67,
+		transform: [{ scale: 0.95 }],
 	},
 })

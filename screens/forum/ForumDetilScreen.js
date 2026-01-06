@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text } from 'react-native'
+import { ScrollView, StyleSheet } from 'react-native'
 import { Colors } from '../../constants/colors'
 import ForumDetail from '../../components/forum/ForumDetail'
 import { useSelector } from 'react-redux'
@@ -6,12 +6,12 @@ import Spinner from '../../components/shared/Spinner'
 
 function ForumDetilScreen({ route }) {
 	const postId = route.params.postId
-	const posts = useSelector(state => state.forum.forumPosts)
+	const posts = useSelector(state => state.forumPosts.forumPosts)
 	const post = posts?.find(post => post.id === postId)
-	const isLoading = useSelector(state => state.forum.isLoading)
+	const isLoading = useSelector(state => state.forumPosts.isLoading)
 
 	return (
-		<ScrollView style={styles.screen}>
+		<ScrollView style={styles.screen} contentContainerStyle={styles.scrollContent}>
 			{isLoading && <Spinner />}
 			{!isLoading && post && <ForumDetail post={post} />}
 		</ScrollView>
@@ -26,5 +26,8 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.primary6,
 		paddingVertical: 20,
 		paddingHorizontal: 15,
+	},
+	scrollContent: {
+		paddingBottom: 40,
 	},
 })

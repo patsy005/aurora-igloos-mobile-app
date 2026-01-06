@@ -1,85 +1,63 @@
 import { StyleSheet, Text, View } from 'react-native'
-import Dropdown from '../Dropdown'
+import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '../../constants/colors'
 import OverviewItem from './OverviewItem'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchDashboardData, setDays } from '../../slices/dashboardSlice'
+import { fetchDashboardStats } from '../../slices/dashboardSlice'
 import Spinner from '../shared/Spinner'
 
 function OverviewList() {
 	const dispatch = useDispatch()
-	const data = useSelector(state => state.dashboard.data)
-	const [days, setDays] = useState(30)
-	const isLoading = useSelector(state => state.dashboard.isLoading)
-
-	console.log(data)
+	const stats = useSelector(state => state.dashboard.stats)
+	const isLoadingStats = useSelector(state => state.dashboard.isLoadingStats)
 
 	useEffect(() => {
-		dispatch(fetchDashboardData())
-	}, [])
+		dispatch(fetchDashboardStats({ days: 14 }))
+	}, [dispatch])
 
-	function onChangeDays() {
-		dispatch(fetchDashboardData(days))
-		setDays(days)
-	}
-
-	const daysOptions = [
-		{ label: 'Last 30 days', value: 30 },
-		{ label: 'Last 60 days', value: 60 },
-		{ label: 'Last 90 days', value: 90 },
-	]
 	return (
-		<>
-        {isLoading && <Spinner />}
-			{!isLoading && data && (
-				<View style={styles.container}>
-					<View>
-						<Text style={styles.sectionText}>Overview</Text>
-						<Dropdown
-							data={daysOptions}
-							onChange={onChangeDays}
-							placeholder="Select number of days"
-							selectedValue={days}
-							isEditing={false}
-						/>
-					</View>
+		<View style={styles.container}>
+			{/* Header */}
+			<View style={styles.header}>
+				<View style={styles.headerLeft}>
+					<Ionicons name="stats-chart" size={20} color={Colors.primary37} />
+					<Text style={styles.headerTitle}>Overview</Text>
+				</View>
+				<Text style={styles.periodText}>Statistics from last 14 days</Text>
+			</View>
 
+			{/* Stats Cards */}
+			{isLoadingStats ? (
+				<Spinner />
+			) : (
+				<View style={styles.statsContainer}>
 					<OverviewItem
 						statName="Bookings"
-						statValue={data.bookings}
-						statPerc={data.bookingChangePercent}
-						color={Colors.pinkLight}
-						iconName="calendar-heart"
-						iconColor={Colors.pinkDark}
-						iconType="MaterialCommunityIcons"
-						size={24}
-					/>
-
-					<OverviewItem
-						statName="check ins"
-						statValue={data.checkIns}
-						statPerc={data.checkInChangePercent}
-						color={Colors.greenLight}
-						iconName="bag-suitcase-outline"
-						iconColor={Colors.greenDark}
-						iconType="MaterialCommunityIcons"
-						size={24}
-					/>
-
-					<OverviewItem
-						statName="occupancy"
-						statValue={data.occupancy}
-						statPerc={data.occupancyChangePercent}
-						color={Colors.orangeLight}
-						iconName="stats-chart"
-						iconColor={Colors.orangeDark}
+						statValue={stats?.bookings ?? 0}
+						statPerc={stats?.bookingChangePercent ?? 0}
+						iconName="calendar"
 						iconType="Ionicons"
-						size={24}
+					/>
+
+					<OverviewItem
+						statName="Check-ins"
+						statValue={stats?.checkIns ?? 0}
+						statPerc={stats?.checkInChangePercent ?? 0}
+						iconName="log-in"
+						iconType="Ionicons"
+					/>
+
+					<OverviewItem
+						statName="Occupancy"
+						statValue={`${stats?.occupancy ?? 0}%`}
+						statPerc={stats?.occupancyChangePercent ?? 0}
+						iconName="business"
+						iconType="Ionicons"
 					/>
 				</View>
 			)}
-		</>
+		</View>
 	)
 }
 
@@ -87,23 +65,47 @@ export default OverviewList
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
-		backgroundColor: Colors.primary13,
-		gap: 20,
-		paddingVertical: 20,
-		paddingHorizontal: 15,
-		borderRadius: 8,
-		elevation: 4,
-		shadowColor: 'black',
+		backgroundColor: Colors.boxBg,
+		borderRadius: 16,
+		borderWidth: 1,
+		borderColor: Colors.primary19,
+		overflow: 'hidden',
+		shadowColor: Colors.primary67,
 		shadowOffset: { width: 0, height: 2 },
-		shadowRadius: 5,
-		shadowOpacity: 0.26,
+		shadowOpacity: 0.1,
+		shadowRadius: 8,
+		elevation: 4,
 	},
-	sectionText: {
-		color: Colors.primary97,
-		fontWeight: 'bold',
-		letterSpacing: 1,
-		marginBottom: 20,
+	header: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		backgroundColor: Colors.primary19,
+		paddingHorizontal: 16,
+		paddingVertical: 12,
+		borderBottomWidth: 1,
+		borderBottomColor: Colors.primary37,
+	},
+	headerLeft: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		gap: 8,
+		flex: 1,
+	},
+	headerTitle: {
 		fontSize: 16,
+		fontWeight: '600',
+		color: Colors.primary97,
+		textTransform: 'uppercase',
+		letterSpacing: 0.5,
+	},
+	periodText: {
+		fontSize: 13,
+		color: Colors.primary67,
+		fontStyle: 'italic',
+	},
+	statsContainer: {
+		padding: 16,
+		gap: 12,
 	},
 })

@@ -1,5 +1,5 @@
 import { useLayoutEffect } from 'react'
-import { ScrollView, StyleSheet, Text } from 'react-native'
+import { ScrollView, StyleSheet } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import EmployeeForm from '../../components/employees/EmployeeForm'
 import { Colors } from '../../constants/colors'

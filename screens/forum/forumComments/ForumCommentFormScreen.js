@@ -1,5 +1,5 @@
 import { useLayoutEffect } from 'react'
-import { StyleSheet, Text } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import ForumCommentForm from '../../../components/forum/forumComment/ForumCommentForm'
 import { useSelector } from 'react-redux'
@@ -8,7 +8,7 @@ import Spinner from '../../../components/shared/Spinner'
 function ForumCommentFormScreen({ route, navigation }) {
 	const postId = route?.params?.postId
 	const commentId = route?.params?.commentId
-	const isLoading = useSelector(state => state.forum.isLoading)
+	const isLoading = useSelector(state => state.forumPosts.isLoading)
 
 	const isEditing = !!commentId
 

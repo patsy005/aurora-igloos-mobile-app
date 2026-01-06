@@ -1,88 +1,101 @@
 import { StyleSheet, Text, View } from 'react-native'
-import StatIcon from './StatIcon'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { Ionicons } from '@expo/vector-icons'
 import { Colors } from '../../constants/colors'
 
-function OverviewItem({ statName, statValue, statPerc, color, iconName, iconColor, iconType, size }) {
-	const isPositive = statPerc > 0 ? true : false
+function OverviewItem({ statName, statValue, statPerc, iconName, iconType = 'Ionicons' }) {
+	const isPositive = statPerc >= 0
 
-	const iconContainerStyles = {
-		backgroundColor: color,
-		borderRadius: 50,
-		height: 40,
-		width: 40,
-		justifyContent: 'center',
-		alignItems: 'center',
-		marginBottom: 10,
-	}
-
-	const statPercentageContainerStyle = () => {
-		return {
-			backgroundColor: isPositive ? '#4bf84724' : '#c1040f36',
-			borderRadius: 8,
-			padding: 5,
-			flexDirection: 'row',
-			justifyContent: 'center',
-			alignItems: 'center',
-			gap: 5,
-		}
-	}
-
-	const statPercentageStyle = () => {
-		return {
-			color: isPositive ? Colors.greenBright : Colors.red,
-			fontWeight: 'bold',
-			fontSize: 12,
-		}
-	}
 	return (
-		<View style={style.container}>
-			<View style={iconContainerStyles}>
-				<StatIcon iconName={iconName} iconColor={iconColor} iconType={iconType} size={size} />
+		<View style={styles.container}>
+			{/* Icon */}
+			<View style={styles.iconContainer}>
+				<Ionicons name={iconName} size={28} color={Colors.primary37} />
 			</View>
 
-			<View style={style.statsContainer}>
-				<Text style={style.statName}>{statName}</Text>
-				<Text style={style.statValue}>{statName === 'occupancy' ? statValue + '%' : statValue}</Text>
+			{/* Stats */}
+			<View style={styles.statsContainer}>
+				<Text style={styles.statName}>{statName}</Text>
+				<Text style={styles.statValue}>{statValue}</Text>
 			</View>
 
-			<View style={statPercentageContainerStyle()}>
-				<Text style={statPercentageStyle()}>{isPositive ? '+' : '-'}</Text>
-				<Text style={statPercentageStyle()}>{statPerc}%</Text>
-			</View>
+			{/* Percentage Badge */}
+			{statPerc !== 0 && (
+				<View style={[styles.percentageContainer, isPositive ? styles.percentagePositive : styles.percentageNegative]}>
+					<Ionicons
+						name={isPositive ? 'trending-up' : 'trending-down'}
+						size={14}
+						color={isPositive ? Colors.primary97 : Colors.primary97}
+					/>
+					<Text style={styles.percentageText}>
+						{isPositive ? '+' : ''}
+						{statPerc}%
+					</Text>
+				</View>
+			)}
 		</View>
 	)
 }
 
 export default OverviewItem
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
 	container: {
-		backgroundColor: Colors.primary6,
-		borderRadius: 8,
-		elevation: 4,
-		shadowColor: 'black',
-		shadowOffset: { width: 0, height: 2 },
-		shadowRadius: 5,
-		shadowOpacity: 0.26,
-		paddingVertical: 15,
-		paddingHorizontal: 10,
 		flexDirection: 'row',
-		justifyContent: 'space-between',
 		alignItems: 'center',
+		backgroundColor: Colors.primary19,
+		borderRadius: 12,
+		padding: 16,
+		borderWidth: 1,
+		borderColor: Colors.primary37,
+		gap: 12,
+	},
+	iconContainer: {
+		width: 56,
+		height: 56,
+		borderRadius: 28,
+		backgroundColor: Colors.primary6,
+		justifyContent: 'center',
+		alignItems: 'center',
+		borderWidth: 2,
+		borderColor: Colors.primary37,
 	},
 	statsContainer: {
-		gap: 10,
-		marginBottom: 10,
+		flex: 1,
+		gap: 4,
 	},
 	statName: {
-		color: Colors.greyLight,
+		fontSize: 12,
+		color: Colors.primary67,
 		textTransform: 'uppercase',
-		letterSpacing: 1,
+		letterSpacing: 0.5,
+		fontWeight: '500',
 	},
 	statValue: {
-		fontSize: 18,
+		fontSize: 24,
 		fontWeight: 'bold',
+		color: Colors.primary97,
+	},
+	percentageContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		paddingHorizontal: 10,
+		paddingVertical: 6,
+		borderRadius: 12,
+		gap: 4,
+	},
+	percentagePositive: {
+		backgroundColor: 'rgba(34, 197, 94, 0.2)',
+		borderWidth: 1,
+		borderColor: 'rgba(34, 197, 94, 0.4)',
+	},
+	percentageNegative: {
+		backgroundColor: 'rgba(239, 68, 68, 0.2)',
+		borderWidth: 1,
+		borderColor: 'rgba(239, 68, 68, 0.4)',
+	},
+	percentageText: {
+		fontSize: 12,
+		fontWeight: '600',
 		color: Colors.primary97,
 	},
 })

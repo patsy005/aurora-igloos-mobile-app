@@ -1,5 +1,3 @@
-import { Text } from 'react-native'
-import { getIgloos } from '../../constants/dummy-data'
 import ListScreen from '../screen/ListScreen'
 import IglooListItem from '../../components/igloos/IglooListItem'
 import { useDispatch, useSelector } from 'react-redux'

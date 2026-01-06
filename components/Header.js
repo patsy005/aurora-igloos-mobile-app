@@ -1,25 +1,71 @@
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Image, Pressable, StyleSheet, Text, View, Alert } from 'react-native'
 import { FontAwesome6 } from '@expo/vector-icons'
 import { Octicons } from '@expo/vector-icons'
 import { Colors } from '../constants/colors'
 import IconButton from './IconButton'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { fetchMe, logoutThunk, selectUser } from '../slices/authSlice'
+import { useNavigation } from '@react-navigation/native'
 
 function Header() {
+	const dispatch = useDispatch()
+	const navigation = useNavigation()
+	const user = useSelector(selectUser)
+
+	useEffect(() => {
+		dispatch(fetchMe())
+	}, [dispatch])
+
+	async function handleLogout() {
+		Alert.alert('Logout', 'Are you sure you want to logout?', [
+			{ text: 'Cancel', style: 'cancel' },
+			{
+				text: 'Logout',
+				style: 'destructive',
+				onPress: async () => {
+					try {
+						await dispatch(logoutThunk()).unwrap()
+						navigation.reset({
+							index: 0,
+							routes: [{ name: 'Login' }],
+						})
+					} catch (e) {
+						console.log('Logout error:', e)
+					}
+				},
+			},
+		])
+	}
+
+	// Extract user data
+	const userName = user?.person?.name || user?.name || 'User'
+	const userSurname = user?.person?.surname || user?.surname || ''
+	const userEmail = user?.person?.email || user?.email || user?.login || 'email@example.com'
+	const userPhotoUrl = user?.employee?.photoUrl || user?.photoUrl
+
 	return (
 		<View style={styles.header}>
 			<View style={styles.flexRow}>
-				<View style={styles.imageContainer}>
-					<Image style={styles.image} source={require('../assets/images/user.jpg')} />
+				<View style={styles.avatarWrapper}>
+					<View style={styles.imageContainer}>
+						{userPhotoUrl ? (
+							<Image style={styles.image} source={{ uri: `http://10.0.2.2:5212/${userPhotoUrl}` }} />
+						) : (
+							<Image style={styles.image} source={require('../assets/images/user.jpg')} />
+						)}
+					</View>
+					<View style={styles.activeIndicator} />
 				</View>
-				<View>
-					<Text style={[styles.textShared, styles.textName]}>Alice Wonderland</Text>
-					<Text style={[styles.textShared, styles.textEmail]}>a.wonderland@mail.com</Text>
+				<View style={styles.userInfo}>
+					<Text style={[styles.textShared, styles.textName]}>
+						{userName} {userSurname}
+					</Text>
+					<Text style={[styles.textShared, styles.textEmail]}>{userEmail}</Text>
 				</View>
 			</View>
-			<View style={styles.iconsContainer}>
-				<IconButton iconName="comment" color={Colors.white} size={20} onPress={() => {}} iconType='FontAwesome6' />
-				<IconButton iconName="bell" color={Colors.white} size={20} onPress={() => {}} iconType='FontAwesome6' />
-				<IconButton iconName="sign-out" color={Colors.white} size={20} onPress={() => {}} iconType='Octicons' />
+			<View style={styles.logoutContainer}>
+				<IconButton iconName="sign-out" color={Colors.primary67} size={22} onPress={handleLogout} iconType="Octicons" />
 			</View>
 		</View>
 	)
@@ -33,43 +79,64 @@ const styles = StyleSheet.create({
 		color: Colors.white,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
+		alignItems: 'center',
 		paddingTop: 50,
+		paddingBottom: 12,
 		paddingHorizontal: 20,
-		gap: 15,
+	},
+	flexRow: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		gap: 12,
+		flex: 1,
+	},
+	avatarWrapper: {
+		position: 'relative',
 	},
 	imageContainer: {
-		width: 40,
-		height: 40,
-		borderRadius: 50,
-		borderWidth: 1,
-		borderColor: Colors.primary67,
+		width: 44,
+		height: 44,
+		borderRadius: 22,
+		borderWidth: 2,
+		borderColor: Colors.primary37,
 		overflow: 'hidden',
+		backgroundColor: Colors.primary19,
 	},
 	image: {
 		width: '100%',
 		height: '100%',
-		// borderRadius: 50,
 		objectFit: 'cover',
 		aspectRatio: 1 / 1,
+	},
+	activeIndicator: {
+		position: 'absolute',
+		bottom: 2,
+		right: 2,
+		width: 12,
+		height: 12,
+		borderRadius: 6,
+		backgroundColor: '#4ade80',
+		borderWidth: 2,
+		borderColor: Colors.primary13,
+	},
+	userInfo: {
+		flex: 1,
+		gap: 2,
 	},
 	textShared: {
 		color: Colors.white,
 		fontSize: 14,
 	},
 	textName: {
-		fontWeight: 'bold',
-		color: Colors.primary67,
+		fontWeight: '700',
+		color: Colors.primary97,
+		fontSize: 15,
 	},
 	textEmail: {
-		color: Colors.primary97,
+		color: Colors.primary67,
+		fontSize: 13,
 	},
-	iconsContainer: {
-		flexDirection: 'row',
-		gap: 5,
-		alignItems: 'center',
+	logoutContainer: {
+		paddingLeft: 12,
 	},
-    flexRow: {
-        flexDirection: 'row',
-        gap: 15,
-    }
 })
