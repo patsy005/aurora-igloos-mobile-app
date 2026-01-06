@@ -1,5 +1,3 @@
-import { Text } from 'react-native'
-import { DUMMY_DISCOUNTS } from '../../constants/dummy-data'
 import ListScreen from '../screen/ListScreen'
 import DiscountListItem from '../../components/discounts/DiscountListItem'
 import { useDispatch, useSelector } from 'react-redux'
@@ -25,7 +23,7 @@ function DiscountsScreen({ navigation }) {
 	}
 	return (
 		<>
-		{isLoading && <Spinner />}
+			{isLoading && <Spinner />}
 			{!isLoading && (
 				<ListScreen
 					onAdd={addDiscountHandler}

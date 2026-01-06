@@ -1,5 +1,3 @@
-import { Text } from 'react-native'
-import { getEmployees } from '../../constants/dummy-data'
 import EmployeeListItem from '../../components/employees/EmployeeListItem'
 import ListScreen from '../screen/ListScreen'
 import { useDispatch, useSelector } from 'react-redux'

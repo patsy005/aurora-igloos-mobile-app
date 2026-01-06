@@ -1,5 +1,3 @@
-import { Text } from 'react-native'
-import { getCustomers } from '../../constants/dummy-data'
 import ListScreen from '../screen/ListScreen'
 import CustomerListItem from '../../components/customers/CustomerListItem'
 import { useDispatch, useSelector } from 'react-redux'
@@ -18,8 +16,6 @@ function CustomersScreen({ navigation }) {
 		dispatch(fetchCustomers())
 		dispatch(fetchBookings())
 	}, [])
-
-	// console.log(customersData)
 
 	function onAddCustomer() {
 		navigation.navigate('CustomerForm')

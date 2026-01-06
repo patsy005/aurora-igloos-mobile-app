@@ -1,7 +1,4 @@
-import { ScrollView, StyleSheet, Text } from 'react-native'
 import ForumCommentListItem from '../../../components/forum/forumComment/ForumCommentListItem'
-import { Colors } from '../../../constants/colors'
-import { getForumPosts } from '../../../constants/dummy-data'
 import ListScreen from '../../screen/ListScreen'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'

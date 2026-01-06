@@ -130,7 +130,7 @@ function ForumForm({ postId }) {
 			<ScrollView
 				style={styles.scrollView}
 				contentContainerStyle={styles.scrollContent}
-				keyboardShouldPersistTaps="handled" // ✅ żeby dropdown + inputy działały
+				keyboardShouldPersistTaps="handled" // żeby dropdown + inputy działały
 				showsVerticalScrollIndicator={false}>
 				{/* Header */}
 				<View style={styles.header}>
@@ -366,7 +366,7 @@ const styles = StyleSheet.create({
 	},
 
 	errorText: {
-		color: Colors.red, // '#ff9393'
+		color: Colors.red,
 		fontSize: 12,
 		marginTop: 6,
 		marginLeft: 4,

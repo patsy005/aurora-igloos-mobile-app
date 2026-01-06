@@ -118,7 +118,6 @@ const styles = StyleSheet.create({
 	button: {
 		height: 50,
 		justifyContent: 'space-between',
-		// backgroundColor: '#fff',
 		backgroundColor: Colors.primary6,
 		flexDirection: 'row',
 		width: '100%',

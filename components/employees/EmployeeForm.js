@@ -514,7 +514,7 @@ function EmployeeForm({ employeeId }) {
 							{errors.role && <Text style={styles.errorText}>{errors.role.message}</Text>}
 						</View>
 
-						{/* ✅ USER ROLE */}
+						{/*  USER ROLE */}
 						<View style={styles.inputContainer}>
 							<FormLabel>User role</FormLabel>
 							<Controller

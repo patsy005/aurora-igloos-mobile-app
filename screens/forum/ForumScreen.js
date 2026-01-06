@@ -1,5 +1,3 @@
-import { Text } from 'react-native'
-import { getForumPosts } from '../../constants/dummy-data'
 import ListScreen from '../screen/ListScreen'
 import ForumListItem from '../../components/forum/ForumListItem'
 import { useDispatch, useSelector } from 'react-redux'
@@ -15,8 +13,6 @@ function ForumScreen({ navigation }) {
 	useEffect(() => {
 		dispatch(fetchForumPosts())
 	}, [dispatch])
-
-	console.log(posts)
 
 	function addPostHandler() {
 		navigation.navigate('PostForm')

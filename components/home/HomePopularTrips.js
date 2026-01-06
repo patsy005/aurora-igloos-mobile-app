@@ -12,7 +12,7 @@ function HomePopularTrips({ trips, bookings, navigation }) {
 			return (trips ?? []).slice(0, 5).map(t => ({ ...t, bookingsCount: 0 }))
 		}
 
-		// policz ile razy trip występuje w bookingach
+		//  ile razy trip występuje w bookingach
 		const countMap = {}
 		for (const b of bookings) {
 			const tripId = b?.idTrip

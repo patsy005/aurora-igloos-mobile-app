@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text } from 'react-native'
+import { ScrollView, StyleSheet } from 'react-native'
 import { Colors } from '../../constants/colors'
 import ForumDetail from '../../components/forum/ForumDetail'
 import { useSelector } from 'react-redux'

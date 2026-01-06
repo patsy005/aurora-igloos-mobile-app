@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import { useEffect, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { StyleSheet, Text, View, ScrollView, Switch, Platform } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, Switch, Platform, Alert } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Input from '../form/Input'
@@ -22,7 +22,6 @@ function CustomerForm({ customerId }) {
 		return customers?.find(c => c.id === customerId) ?? null
 	}, [customerId, customers])
 
-	// ✅ nowa logika: customer jest userem jeśli ma idUser
 	const isUser = !!customerToEdit?.idUser
 
 	// PASSWORD:
@@ -75,10 +74,8 @@ function CustomerForm({ customerId }) {
 		setValue('postalCode', customerToEdit.postalCode ?? '')
 		setValue('country', customerToEdit.country ?? '')
 
-		// login tylko gdy istnieje (albo jak już był)
 		setValue('login', customerToEdit.login ?? '')
 
-		// ✅ jeśli już user → nie pozwalamy tworzyć usera (ukryjemy UI)
 		if (customerToEdit.idUser) {
 			setValue('createUser', false)
 		}
@@ -92,7 +89,6 @@ function CustomerForm({ customerId }) {
 	}
 
 	async function onSubmit(data) {
-		// bazowy payload jak na web
 		const newCustomer = {
 			name: data.name,
 			surname: data.surname,
@@ -106,12 +102,10 @@ function CustomerForm({ customerId }) {
 			country: data.country,
 		}
 
-		// ✅ jeśli customer już jest userem -> tylko login do zmiany
 		if (isUser) {
 			newCustomer.login = data.login
 		}
 
-		// ✅ jeśli customer nie jest userem i zaznaczono createUser -> tworzymy konto
 		if (!isUser && data.createUser) {
 			newCustomer.createUser = true
 			newCustomer.login = data.login
@@ -137,8 +131,10 @@ function CustomerForm({ customerId }) {
 
 			await dispatch(fetchCustomers())
 			navigation.goBack()
+			Alert.alert('Success', `Customer ${customerId ? 'updated' : 'added'} successfully`)
 		} catch (e) {
 			console.log('Submit error:', e)
+			Alert.alert('Error', `Failed to ${customerId ? 'update' : 'add'} customer`)
 		}
 	}
 
@@ -370,7 +366,7 @@ function CustomerForm({ customerId }) {
 						{errors.country && <Text style={styles.errorText}>{errors.country.message}</Text>}
 					</View>
 
-					{/* ✅ CREATE USER: pokazuj tylko jeśli customer NIE jest userem */}
+					{/*  CREATE USER: pokazuj tylko jeśli customer NIE jest userem */}
 					{!isUser && (
 						<View style={styles.switchRow}>
 							<FormLabel>Create user</FormLabel>
@@ -389,7 +385,7 @@ function CustomerForm({ customerId }) {
 						</View>
 					)}
 
-					{/* ✅ LOGIN: jeśli customer jest userem -> pokazuj zawsze */}
+					{/*  LOGIN: jeśli customer jest userem -> pokazuj zawsze */}
 					{isUser && (
 						<View style={styles.field}>
 							<FormLabel>Login</FormLabel>
@@ -417,7 +413,7 @@ function CustomerForm({ customerId }) {
 						</View>
 					)}
 
-					{/* ✅ LOGIN + PASSWORD: tylko gdy nie ma idUser i createUser = true */}
+					{/*  LOGIN + PASSWORD: tylko gdy nie ma idUser i createUser = true */}
 					{!isUser && createUser && (
 						<>
 							<View style={styles.field}>

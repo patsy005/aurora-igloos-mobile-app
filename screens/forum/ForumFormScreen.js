@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native'
 import { useEffect, useLayoutEffect } from 'react'
-import { StyleSheet, Text } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import ForumForm from '../../components/forum/ForumForm'
 import { useDispatch, useSelector } from 'react-redux'
@@ -11,8 +11,6 @@ import { fetchForumCategories } from '../../slices/forumCategorySlice'
 function ForumFormScreen({ route, navigation }) {
 	const postId = route?.params?.postId
 	const isLoading = useSelector(state => state.forumPosts.isLoading)
-	const isLoadingEmployees = useSelector(state => state.employees.isLoading)
-	const isLoadingCategories = useSelector(state => state.forumCategories.isLoading)
 	const dispatch = useDispatch()
 
 	const isEditing = !!postId

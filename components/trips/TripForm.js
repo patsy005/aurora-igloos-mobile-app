@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import { useEffect, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { StyleSheet, Text, View, Pressable, Image, Platform, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, Pressable, Image, Platform, ScrollView, Alert } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import * as ImagePicker from 'expo-image-picker'
 import * as DocumentPicker from 'expo-document-picker'
@@ -157,8 +157,10 @@ function TripForm({ tripId }) {
 
 			await dispatch(fetchTrips())
 			navigation.goBack()
+			Alert.alert('Success', `Trip ${tripId ? 'updated' : 'added'} successfully`)
 		} catch (e) {
 			console.log('Submit error:', e)
+			Alert.alert('Error', `Failed to ${tripId ? 'update' : 'add'} trip`)
 		}
 	}
 

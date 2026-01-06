@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet } from 'react-native'
 import BookingDetail from '../../components/bookings/BookingDetail'
 import { Colors } from '../../constants/colors'
 import { useSelector } from 'react-redux'

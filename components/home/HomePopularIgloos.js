@@ -7,12 +7,12 @@ function HomePopularIgloos({ igloos, bookings, navigation }) {
 	const top5 = useMemo(() => {
 		if (!igloos?.length) return []
 
-		// jeśli nie ma bookingów -> fallback (np. pierwsze 5)
+		// jeśli nie ma bookingów -> fallback (pierwsze 5)
 		if (!bookings?.length) {
 			return (igloos ?? []).slice(0, 5).map(i => ({ ...i, bookingsCount: 0 }))
 		}
 
-		// policz ile razy igloo występuje w bookingach
+		// ile razy igloo występuje w bookingach
 		const countMap = {}
 		for (const b of bookings) {
 			const iglooId = b?.idIgloo

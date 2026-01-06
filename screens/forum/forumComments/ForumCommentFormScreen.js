@@ -1,5 +1,5 @@
 import { useLayoutEffect } from 'react'
-import { StyleSheet, Text } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import ForumCommentForm from '../../../components/forum/forumComment/ForumCommentForm'
 import { useSelector } from 'react-redux'

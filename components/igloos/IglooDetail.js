@@ -1,9 +1,7 @@
 import { Image, StyleSheet, Text, View, ScrollView } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import DetailContainer from '../shared/DetailContainer'
-import IconButton from '../IconButton'
 import { Colors } from '../../constants/colors'
-import Rate from '../shared/Rate'
 import { useDispatch } from 'react-redux'
 import { deleteIgloo, fetchIgloos } from '../../slices/igloosSlice'
 
@@ -22,21 +20,31 @@ function IglooDetail({ igloo }) {
 		})
 	}
 
-	function onDeleteIgloo() {
-		dispatch(deleteIgloo(igloo.id))
-			.then(() => dispatch(fetchIgloos()))
-			.then(() => navigation.goBack())
+	async function onDeleteIgloo() {
+		// dispatch(deleteIgloo(igloo.id))
+		// 	.then(() => dispatch(fetchIgloos()))
+		// 	.then(() => navigation.goBack())
+
+		try {
+			await dispatch(deleteIgloo(igloo.id)).unwrap?.()
+			await dispatch(fetchIgloos())
+			Alert.alert('Success', 'Igloo deleted successfully', [{ text: 'OK' }])
+			navigation.goBack()
+		} catch (e) {
+			console.log('Delete error:', e)
+			Alert.alert('Error', 'Failed to delete igloo')
+		}
 	}
 
 	return (
 		<DetailContainer onEdit={onEditIgloo} onDelete={onDeleteIgloo}>
-			<ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+			<ScrollView
+				showsVerticalScrollIndicator={false}
+				style={styles.scrollView}
+				contentContainerStyle={styles.scrollContent}>
 				{/* Hero Image */}
 				<View style={styles.imageContainer}>
-					<Image
-						source={{ uri: `http://10.0.2.2:5212/${igloo.photoUrl}` }}
-						style={styles.image}
-					/>
+					<Image source={{ uri: `http://10.0.2.2:5212/${igloo.photoUrl}` }} style={styles.image} />
 					{hasDiscount && (
 						<View style={styles.discountOverlay}>
 							<Text style={styles.discountBadgeText}>-{igloo.discount.discount1}%</Text>
@@ -82,7 +90,6 @@ function IglooDetail({ igloo }) {
 						<Text style={styles.cardValue}>#{igloo.id}</Text>
 					</View>
 				</View>
-
 
 				{/* Promotion Section */}
 				{hasDiscount && (
@@ -299,5 +306,5 @@ const styles = StyleSheet.create({
 		fontSize: 12,
 		color: Colors.primary97,
 		fontWeight: '500',
-	}
+	},
 })

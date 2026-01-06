@@ -10,7 +10,6 @@ function EmployeeDetail({ employee }) {
 	const navigation = useNavigation()
 	const dispatch = useDispatch()
 
-	// Guard clause - if employee is undefined, return null
 	if (!employee) {
 		return null
 	}

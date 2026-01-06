@@ -30,10 +30,8 @@ export default Button
 
 const styles = StyleSheet.create({
 	button: {
-		// backgroundColor: Colors.primary86,
 		borderRadius: 6,
 		padding: 10,
-		// color: Colors.primary6,
 		width: 'auto',
 		minWidth: 100,
 		alignSelf: 'flex-end',

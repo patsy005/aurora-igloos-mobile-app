@@ -1,19 +1,28 @@
 import { Image, StyleSheet, View, ScrollView } from 'react-native'
 import IconButton from '../IconButton'
 import { Colors } from '../../constants/colors'
+import { useSelector } from 'react-redux'
+import { selectCanDelete, selectCanManage, selectRole } from '../../slices/authSlice'
 
 function DetailContainer({ onEdit, onDelete, children }) {
+	const canManage = useSelector(selectCanManage)
+	const canDelete = useSelector(selectCanDelete)
+
 	return (
 		<ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
 			<View style={styles.iconsContainer}>
-				<IconButton iconName="edit" iconType="FontAwesome6" color={Colors.primary67} size={24} onPress={onEdit} />
-				<IconButton
-					iconName="trash-can"
-					iconType="FontAwesome6"
-					color={Colors.primary67}
-					size={24}
-					onPress={onDelete}
-				/>
+				{canManage && (
+					<IconButton iconName="edit" iconType="FontAwesome6" color={Colors.primary67} size={24} onPress={onEdit} />
+				)}
+				{canDelete && (
+					<IconButton
+						iconName="trash-can"
+						iconType="FontAwesome6"
+						color={Colors.primary67}
+						size={24}
+						onPress={onDelete}
+					/>
+				)}
 			</View>
 
 			{children}

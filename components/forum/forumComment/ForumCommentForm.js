@@ -54,14 +54,14 @@ function ForumCommentForm({ postId, commentId }) {
 	useEffect(() => {
 		if (!postId || !commentId) return
 
-		// 1) spróbuj z forumComments (najpewniejsze)
+		// 1) forumComments
 		const c1 = (forumComments ?? []).find(c => c.id === commentId && c.idPost === postId)
 		if (c1) {
 			setValue('comment', c1.comment ?? '')
 			return
 		}
 
-		// 2) fallback: z posta (jeśli masz w poście forumComment[])
+		// 2) fallback: z posta
 		const post = (posts ?? []).find(p => p.id === postId)
 		const c2 = post?.forumComment?.find(x => x.id === commentId)
 		if (c2) setValue('comment', c2.comment ?? '')
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
 	},
 
 	errorText: {
-		color: Colors.red, // '#ff9393'
+		color: Colors.red,
 		fontSize: 12,
 		marginTop: 6,
 		marginLeft: 4,

@@ -42,8 +42,6 @@ function HomeScreen() {
 		dispatch(fetchBookings())
 	}, [dispatch])
 
-	console.log(trips)
-
 	const showSpinner = isLoadingStats && !hasStats
 
 	if (showSpinner) return <Spinner />

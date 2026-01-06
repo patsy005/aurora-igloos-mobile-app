@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import { useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { StyleSheet, Text, View, Pressable, Image, Platform, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, Pressable, Image, Platform, ScrollView, Alert } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import * as ImagePicker from 'expo-image-picker'
 import * as DocumentPicker from 'expo-document-picker'
@@ -20,8 +20,6 @@ function IglooForm({ iglooId }) {
 
 	const dispatch = useDispatch()
 	const navigation = useNavigation()
-
-	console.log(discounts)
 
 	const iglooToEdit = useMemo(() => {
 		if (!iglooId) return null
@@ -134,14 +132,15 @@ function IglooForm({ iglooId }) {
 			if (iglooId) {
 				formData.append('Id', String(iglooId))
 				await dispatch(editIgloo({ id: iglooId, updatedIgloo: formData })).unwrap?.()
-				await dispatch(fetchIgloos())
 			} else {
 				await dispatch(addNewIgloo(formData)).unwrap?.()
-				await dispatch(fetchIgloos())
 			}
+			await dispatch(fetchIgloos())
 			navigation.goBack()
+			Alert.alert('Success', `Igloo ${iglooId ? 'updated' : 'added'} successfully`)
 		} catch (e) {
 			console.log('Submit error:', e)
+			Alert.alert('Error', `Failed to ${iglooId ? 'update' : 'add'} igloo`)
 		}
 	}
 

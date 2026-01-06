@@ -16,10 +16,29 @@ function DiscountDetail({ discount }) {
 	}
 
 	function onDeleteDiscount() {
-		dispatch(deleteDiscount(discount.id))
-			.unwrap()
-			.then(() => navigation.goBack())
-			.then(() => dispatch(fetchDiscounts()))
+		// dispatch(deleteDiscount(discount.id))
+		// 	.unwrap()
+		// 	.then(() => navigation.goBack())
+		// 	.then(() => dispatch(fetchDiscounts()))
+
+		Alert.alert('Delete Discount', 'Are you sure you want to delete this discount?', [
+			{ text: 'Cancel', style: 'cancel' },
+			{
+				text: 'Delete',
+				style: 'destructive',
+				onPress: async () => {
+					try {
+						await dispatch(deleteDiscount(discount.id)).unwrap()
+						await dispatch(fetchDiscounts())
+						Alert.alert('Success', 'Discount deleted successfully')
+						if (navigation.canGoBack()) navigation.goBack()
+						else navigation.navigate('DrawerNavigation', { screen: 'Discounts' })
+					} catch (err) {
+						Alert.alert('Error', 'Failed to delete discount')
+					}
+				},
+			},
+		])
 	}
 
 	return (

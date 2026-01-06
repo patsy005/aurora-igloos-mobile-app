@@ -1,8 +1,6 @@
 import { useNavigation } from '@react-navigation/native'
-import { getForumPosts } from '../../constants/dummy-data'
 import DetailContainer from '../shared/DetailContainer'
 import { Image, StyleSheet, Text, View, Pressable, Alert } from 'react-native'
-import IconButton from '../IconButton'
 import { Colors } from '../../constants/colors'
 import { deleteForumPost, fetchForumPosts } from '../../slices/forumPostsSlice'
 import { useDispatch } from 'react-redux'

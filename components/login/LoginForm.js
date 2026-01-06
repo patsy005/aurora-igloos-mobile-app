@@ -40,67 +40,69 @@ function LoginForm() {
 
 	return (
 		<View style={styles.screen}>
-			<View style={styles.formContainer}>
-				<View style={styles.inputContainer}>
-					<FormLabel>Login</FormLabel>
+			<View style={styles.centerContainer}>
+				<View style={styles.formContainer}>
+					<View style={styles.inputContainer}>
+						<FormLabel>Login</FormLabel>
 
-					<Controller
-						control={control}
-						name="login"
-						rules={{
-							required: 'Please enter a login',
-							minLength: { value: 3, message: 'Name must be at least 3 characters' },
-							maxLength: { value: 50, message: 'Name must be at most 50 characters' },
-						}}
-						render={({ field: { onChange, onBlur, value } }) => (
-							<Input
-								textInputConfig={{
-									onChangeText: onChange,
-									onBlur,
-									value,
-									autoCapitalize: 'none',
-									autoCorrect: false,
-								}}
-							/>
-						)}
-					/>
+						<Controller
+							control={control}
+							name="login"
+							rules={{
+								required: 'Please enter a login',
+								minLength: { value: 3, message: 'Name must be at least 3 characters' },
+								maxLength: { value: 50, message: 'Name must be at most 50 characters' },
+							}}
+							render={({ field: { onChange, onBlur, value } }) => (
+								<Input
+									textInputConfig={{
+										onChangeText: onChange,
+										onBlur,
+										value,
+										autoCapitalize: 'none',
+										autoCorrect: false,
+									}}
+								/>
+							)}
+						/>
 
-					{errors.login && <Text style={styles.errorText}>{errors.login.message}</Text>}
-				</View>
+						{errors.login && <Text style={styles.errorText}>{errors.login.message}</Text>}
+					</View>
 
-				<View style={styles.inputContainer}>
-					<FormLabel>Password</FormLabel>
+					<View style={styles.inputContainer}>
+						<FormLabel>Password</FormLabel>
 
-					<Controller
-						control={control}
-						name="password"
-						rules={{
-							required: 'Please enter a password',
-							minLength: { value: 6, message: 'Password must be at least 6 characters' },
-						}}
-						render={({ field: { onChange, onBlur, value } }) => (
-							<Input
-								textInputConfig={{
-									onChangeText: onChange,
-									onBlur,
-									value,
-									secureTextEntry: true,
-									autoCapitalize: 'none',
-									autoCorrect: false,
-								}}
-							/>
-						)}
-					/>
+						<Controller
+							control={control}
+							name="password"
+							rules={{
+								required: 'Please enter a password',
+								minLength: { value: 6, message: 'Password must be at least 6 characters' },
+							}}
+							render={({ field: { onChange, onBlur, value } }) => (
+								<Input
+									textInputConfig={{
+										onChangeText: onChange,
+										onBlur,
+										value,
+										secureTextEntry: true,
+										autoCapitalize: 'none',
+										autoCorrect: false,
+									}}
+								/>
+							)}
+						/>
 
-					{errors.password && <Text style={styles.errorText}>{errors.password.message}</Text>}
-				</View>
+						{errors.password && <Text style={styles.errorText}>{errors.password.message}</Text>}
+					</View>
 
-				{errors.root?.message && <Text style={styles.errorText}>{errors.root.message}</Text>}
+					{errors.root?.message && <Text style={styles.errorText}>{errors.root.message}</Text>}
 
-				<View style={styles.buttonsContainer}>
-					<Button onPress={handleSubmit(onSubmit)} disabled={isSubmitting}>
-						{isSubmitting ? 'Logging in...' : 'Login'}
-					</Button>
+					<View style={styles.buttonsContainer}>
+						<Button onPress={handleSubmit(onSubmit)} disabled={isSubmitting}>
+							{isSubmitting ? 'Logging in...' : 'Login'}
+						</Button>
+					</View>
 				</View>
 			</View>
 		</View>
@@ -114,18 +116,22 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: Colors.primary6,
 	},
+	centerContainer: {
+		flex: 1,
+		justifyContent: 'center',
+		paddingHorizontal: 20,
+	},
 	formContainer: {
-		marginTop: 20,
-		paddingVertical: 16,
-		paddingHorizontal: 10,
+		paddingVertical: 24,
+		paddingHorizontal: 20,
 		backgroundColor: Colors.primary13,
-		borderRadius: 8,
+		borderRadius: 16,
 		gap: 20,
-		elevation: 4,
+		elevation: 8,
 		shadowColor: 'black',
-		shadowOffset: { width: 0, height: 2 },
-		shadowRadius: 5,
-		shadowOpacity: 0.26,
+		shadowOffset: { width: 0, height: 4 },
+		shadowRadius: 8,
+		shadowOpacity: 0.3,
 	},
 	inputContainer: {
 		gap: 10,
@@ -137,5 +143,6 @@ const styles = StyleSheet.create({
 	buttonsContainer: {
 		flexDirection: 'row',
 		justifyContent: 'flex-end',
+		marginTop: 8,
 	},
 })

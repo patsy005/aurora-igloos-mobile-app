@@ -1,7 +1,6 @@
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
 import ListItemContainer from '../shared/ListItemContainer'
 import { Colors } from '../../constants/colors'
-import Rate from '../shared/Rate'
 import { useNavigation } from '@react-navigation/native'
 
 function IglooListItem({ igloo }) {

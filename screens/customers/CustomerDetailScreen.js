@@ -14,7 +14,7 @@ function CustomerDetailScreen({ route }) {
 	const customerId = route.params.customerId
 
 	const customers = useSelector(state => state.customers.customers) ?? []
-	const isLoading = useSelector(state => state.customers.isFetching) // ✅ u Ciebie w slice jest isFetching
+	const isLoading = useSelector(state => state.customers.isFetching)
 
 	const customer = useMemo(() => {
 		return customers.find(c => c.id === customerId)
@@ -24,7 +24,7 @@ function CustomerDetailScreen({ route }) {
 		dispatch(fetchBookings())
 	}, [dispatch])
 
-	// ✅ kluczowe: jeśli customer zniknie (np. po delete) -> wyjdź z detail
+	// jeśli customer zniknie (np. po delete) -> wyjdź z detail
 	useEffect(() => {
 		if (!isLoading && !customer) {
 			navigation.goBack()

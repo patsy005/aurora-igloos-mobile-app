@@ -17,10 +17,20 @@ function TripDetail({ trip }) {
 		})
 	}
 
-	function onDeleteTrip() {
-		dispatch(deleteTrip(trip.id))
-			.then(() => dispatch(fetchTrips()))
-			.then(() => navigation.goBack())
+	async function onDeleteTrip() {
+		// dispatch(deleteTrip(trip.id))
+		// 	.then(() => dispatch(fetchTrips()))
+		// 	.then(() => navigation.goBack())
+
+		try {
+			await dispatch(deleteTrip(trip.id)).unwrap?.()
+			await dispatch(fetchTrips())
+			Alert.alert('Success', 'Trip deleted successfully', [{ text: 'OK' }])
+			navigation.goBack()
+		} catch (e) {
+			console.log('Delete error:', e)
+			Alert.alert('Error', 'Failed to delete trip')
+		}
 	}
 
 	const getDifficultyColor = levelId => {

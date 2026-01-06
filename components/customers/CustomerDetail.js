@@ -21,12 +21,31 @@ function CustomerDetail({ customer }) {
 	}
 
 	function onDeleteCustomer() {
-		dispatch(deleteCustomer(customer.id))
-			.then(() => dispatch(fetchCustomers()))
-			.then(() => {
-				if (navigation.canGoBack()) navigation.goBack()
-				else navigation.navigate('DrawerNavigation', { screen: 'Customers' })
-			})
+		// dispatch(deleteCustomer(customer.id))
+		// 	.then(() => dispatch(fetchCustomers()))
+		// 	.then(() => {
+		// 		if (navigation.canGoBack()) navigation.goBack()
+		// 		else navigation.navigate('DrawerNavigation', { screen: 'Customers' })
+		// 	})
+
+		Alert.alert('Delete Customer', 'Are you sure you want to delete this customer?', [
+			{ text: 'Cancel', style: 'cancel' },
+			{
+				text: 'Delete',
+				style: 'destructive',
+				onPress: async () => {
+					try {
+						await dispatch(deleteCustomer(customer.id)).unwrap()
+						await dispatch(fetchCustomers())
+						Alert.alert('Success', 'Customer deleted successfully')
+						if (navigation.canGoBack()) navigation.goBack()
+						else navigation.navigate('DrawerNavigation', { screen: 'Customers' })
+					} catch (err) {
+						Alert.alert('Error', 'Failed to delete customer')
+					}
+				},
+			},
+		])
 	}
 
 	function renderBookingItem({ item: booking }) {

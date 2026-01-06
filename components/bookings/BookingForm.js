@@ -25,7 +25,7 @@ const DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/ // YYYY-MM-DD
 
 function formatDateOnly(date) {
 	if (!date) return null
-	// jeśli to już string YYYY-MM-DD
+	// YYYY-MM-DD
 	if (typeof date === 'string') return date
 	const d = new Date(date)
 	if (Number.isNaN(d.getTime())) return null
@@ -158,7 +158,7 @@ function BookingForm({ bookingId }) {
 			country: '',
 
 			// booking
-			idIgloo: null, // Dropdown item {label,value}
+			idIgloo: null,
 			tripId: null,
 			paymentMethodId: null,
 
@@ -181,7 +181,6 @@ function BookingForm({ bookingId }) {
 		dispatch(fetchPaymentMethods())
 	}, [dispatch])
 
-	// bookingType logic (show/hide + clear like web)
 	const bookingType = watch('bookingType')
 	const showIgloo = bookingType === 'igloo' || bookingType === 'both'
 	const showTrip = bookingType === 'trip' || bookingType === 'both'
@@ -247,7 +246,7 @@ function BookingForm({ bookingId }) {
 		[paymentMethods]
 	)
 
-	// prefill edit (jak web)
+	// prefill edit
 	useEffect(() => {
 		if (!bookingToEdit) return
 
@@ -257,13 +256,11 @@ function BookingForm({ bookingId }) {
 
 		setValue('bookingType', type)
 
-		// customer (ustawiamy email → auto-wypełni jeśli jest w customers)
 		setValue('idCustomer', bookingToEdit.idCustomer ?? null)
 
 		const cust = (customers ?? []).find(c => c.id === bookingToEdit.idCustomer)
 		if (cust) {
 			setValue('customerEmail', cust.email ?? '')
-			// reszta pól wpadnie z useEffect existingCustomer
 		} else {
 			setValue('customerName', bookingToEdit.customerName ?? '')
 			setValue('customerSurname', bookingToEdit.customerSurname ?? '')
@@ -612,8 +609,6 @@ function BookingForm({ bookingId }) {
 											placeholder="Select igloo"
 											selectedValue={value}
 											isEditing={isEditing}
-											// jeśli Twój Dropdown ma props na wysokość listy:
-											// listMaxHeight={320}
 										/>
 									)}
 								/>
@@ -825,7 +820,6 @@ function BookingForm({ bookingId }) {
 											const d = parseDateOnlyToDate(value)
 											if (!d) return 'Enter a valid date (YYYY-MM-DD)'
 
-											// jak w web: gdy both -> między check-in/out
 											if (bookingType === 'both') {
 												if (!checkIn || !checkOut) return 'Set check-in and check-out first'
 												if (!isBetweenDates(value, checkIn, checkOut)) {
@@ -972,7 +966,7 @@ const styles = StyleSheet.create({
 	},
 
 	errorText: {
-		color: Colors.red, // '#ff9393'
+		color: Colors.red,
 		fontSize: 12,
 		marginTop: 6,
 		marginLeft: 4,
